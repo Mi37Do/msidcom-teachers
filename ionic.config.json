@@ -1,0 +1,7 @@
+{
+  "name": "msidcom-prof.app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

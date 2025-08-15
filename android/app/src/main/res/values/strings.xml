@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">msidcom-prof.app</string>
+    <string name="title_activity_main">msidcom-prof.app</string>
+    <string name="package_name">msidcom.prof.app</string>
+    <string name="custom_url_scheme">msidcom.prof.app</string>
+</resources>
