@@ -41,7 +41,7 @@
           <input type="file" @change="async (event) => {
             loading = true
             const file = event.target.files[0];
-
+            newMessage.type = 'Piece_jouinte'
             if (!file) {
               null
               return;
@@ -162,8 +162,8 @@ watch(() => route.params.id, async () => {
 const initStore = () => {
   Object.assign(newMessage, {
     discuss: route.params.id,
-    message: '',
-    pieces_jointe: '',
+    message: null,
+    pieces_jointe: null,
     type: 'Message'
   })
 }
@@ -173,7 +173,9 @@ const sendMessage = async () => {
     if (newMessage.type === 'Message') {
       delete newMessage.pieces_jointe
     }
+
     let response = await axios.post(`/api/messages/`, newMessage)
+
     initStore()
     await useMessages.getMessages(`discuss=${route.params.id}`)
     useMessages.getChats()

@@ -3,8 +3,10 @@
     <div class="w-full flex gap-4 items-center">
       <span class="truncate font-medium text-[1.05rem] flex-1 capitalize">{{ item.designation }}</span>
 
-      <div class="h-6 w-20 bg-primary-3/20 rounded-full flex items-center justify-center text-xs text-primary-3">{{
-        item.type }}</div>
+      <div
+        :class="item.type === 'Annonce' ? 'bg-warning/20 text-warning' : item.type === 'Devoir' ? 'bg-primary-3/20 text-primary-3' : 'bg-primary/20 text-primary'"
+        class="h-6 w-20  rounded-full flex items-center justify-center text-xs  font-medium">{{
+          item.type }}</div>
     </div>
 
     <span class=" font-medium">Posté le {{ format(item.created

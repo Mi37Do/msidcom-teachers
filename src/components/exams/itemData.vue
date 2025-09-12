@@ -7,7 +7,9 @@
         <span class="font-medium">{{ item.specialite_designations }}</span>
       </span>
 
-      <div class="w-fit px-2 flex items-center font-medium h-6 bg-error/20 rounded-full text-error">24H</div>
+      <div
+        v-if="differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) < 24 && differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) > 0"
+        class="w-fit px-2 flex items-center font-medium h-6 bg-error/20 rounded-full text-error">25h</div>
     </div>
 
     <div class="flex gap-1.5">
@@ -18,13 +20,13 @@
     </div>
 
 
-    <div v-if="item.file"
+    <button v-if="item.file" @click="saveFile(item.file)"
       class="flex gap-3 items-center bg-primary/20 fill-primary py-1.5 px-2.5 rounded-lg text-primary font-medium text-xs w-fit">
-      <div @click="handleDownload(item.file)" class="flex justify-center">
+      <div class="flex justify-center">
         <file-alt :class="'fill-primary'" class="w-5" />
       </div>
       <span>PDF d'examen</span>
-    </div>
+    </button>
 
     <div class="flex gap-1.5 font-medium text-gray-500">
       <span class="">Publier le </span>
@@ -37,23 +39,23 @@
 
 <script setup>
 import fileAlt from '@/assets/icons/fileAlt.vue';
-import { format } from 'date-fns';
+import { differenceInHours, format, parse } from 'date-fns';
 import { ref } from 'vue';
-import { useRoomStore } from '@/stores/rooms';
-import { useSubjectStore } from '@/stores/subjects';
-import { useDownloadBase64 } from '@/composables/useDownloadBase64'
+import { useDownloadFile } from '@/composables/downloadFile';
 
-const { downloadBase64 } = useDownloadBase64()
+
+const { downloadFile } = useDownloadFile()
 
 const props = defineProps(['item'])
-const useRoom = useRoomStore()
-const useSubject = useSubjectStore()
 const rootElement = ref(null)
 
 defineExpose({ rootElement })
 
-function handleDownload(base64String) {
-  downloadBase64(base64String, 'file.pdf', 'application/pdf')
+// Trigger from UI
+const saveFile = (base64String) => {
+  let uniqueName = `examen_${props.item.specialite_designations.replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}.pdf`
+
+  downloadFile(uniqueName, base64String, 'application/pdf')
 }
 </script>
 

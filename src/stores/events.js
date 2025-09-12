@@ -19,11 +19,11 @@ export const useEventStore = defineStore('event', () => {
         let response = await axios.get(`/api/Event/${id}/`)
         focusedEvents.value = response.data
       } else if (filter) {
-        let response = await axios.get(`/api/Event/?${filter}`)
+        let response = await axios.get(`/api/events_sql/?${filter}`)
         filtredEvents.value = response.data
         events.value = response.data
       } else {
-        let response = await axios.get('/api/Event/')
+        let response = await axios.get('/api/events_sql/')
         filtredEvents.value = response.data
         events.value = response.data
       }

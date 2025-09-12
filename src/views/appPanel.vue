@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen bg-[#F5F5F5] flex flex-col">
-    <div class="w-full h-20 bg-primary-2/30 p-3 flex items-center">
+    <div class="w-full h-28 pt-10  bg-primary-2/30 p-3 flex items-center">
       <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
 
       <div class="flex gap-3 items-center ml-auto">
@@ -17,7 +17,7 @@
     <div class="flex-1 overflow-hidden">
       <router-view></router-view>
     </div>
-    <nav class="w-full h-20 bg-white border-t border-border-color grid grid-cols-4 py-3 px-6 gap-3">
+    <nav class="w-full h-16 bg-white border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
       <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost">
         <ruler class="w-5" />
       </router-link>

@@ -8,7 +8,10 @@
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
 
           <img src="@/assets/pics/logoSquare.svg" class="w-28" alt="">
-          <div class="flex items-center pixa-title">
+          <div class="flex items-center pixa-title my-2">
+            msidcom - enseignant
+          </div>
+          <div class="flex items-center pixa-title-2">
             {{ t('translation.connexion') }}
           </div>
           <div class="h-px w-full bg-slate-600"></div>
@@ -122,12 +125,12 @@ const login = async () => {
   loading.value = true
   axios.defaults.headers.common['Authorization'] = ''
   try {
-    let response = await axios.post(`/api/Login`, user)
+    let response = await axios.post(`/api/Login_PROF`, user)
 
     Cookies.set('token', response.data.token)
     axios.defaults.headers.common['Authorization'] = 'token ' + Cookies.get('token')
 
-    await useWidget.configWeb()
+    // await useWidget.configWeb()
 
     router.push({ name: 'app-panel' })
   } catch (error) {

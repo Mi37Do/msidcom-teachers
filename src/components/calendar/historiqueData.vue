@@ -24,7 +24,13 @@
         <add-circle class="w-5" />
       </button>
 
-      <file-alt v-else class="fill-primary w-5" />
+      <button v-else @click="
+        () => {
+          saveFile(item.justification)
+        }
+      " class="btn btn-square btn-ghost">
+        <file-alt class="fill-primary w-5" />
+      </button>
 
     </div>
   </div>
@@ -38,10 +44,20 @@ import { useWidgetStore } from '@/stores/widget';
 import elipsisH from '@/assets/icons/elipsisH.vue';
 import { ref } from 'vue';
 import { format } from 'date-fns';
+import { useDownloadFile } from '@/composables/downloadFile';
 
 const props = defineProps(['item'])
 const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
+
+const { downloadFile } = useDownloadFile()
+
+// Trigger from UI
+const saveFile = (base64String) => {
+  let uniqueName = `justification_${props.item.type}_${useWidget.authUser.userDetail.first_name}_${useWidget.authUser.userDetail.last_name}_${format(props.item.date_heure_abs, 'dd_MM_yyyy')}.pdf`
+  downloadFile(uniqueName, base64String, 'application/pdf')
+}
+
 </script>
 
 <style lang="scss" scoped></style>

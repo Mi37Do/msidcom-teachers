@@ -103,6 +103,7 @@ const filters = ref([
     designation: 'Absent'
   }
 ])
+
 </script>
 
 <style lang="scss" scoped></style>

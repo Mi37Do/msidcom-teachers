@@ -15,7 +15,7 @@
               }} </span>
 
             <div class="w-full flex gap-3 font-medium">
-              <span>le {{ t('translation.from') }} {{ item.from_time ?
+              <span>le {{ item.date_event }} {{ t('translation.from') }} {{ item.from_time ?
                 format(parse(item.from_time, 'HH:mm:ss', new Date()), 'HH:mm') : 'N/A' }}
                 {{
                   t('translation.to') }} {{
@@ -36,7 +36,10 @@
               {{ item.description }}</p>
           </div>
 
-          <button :style="{ background: currentTheme.secondary }"
+          <button v-if="!item.sous_inscription" @click="() => {
+            useEvent.focusedEvents = item
+            useWidget.subscriptionModal = true
+          }" :style="{ background: currentTheme.secondary }"
             class="btn btn-sm pixa-btn text-white border-0">s'inscrire</button>
 
         </DisclosurePanel>
@@ -47,6 +50,8 @@
 
 <script setup>
 import angleIcon from '@/assets/icons/angleIcon.vue';
+import { useEventStore } from '@/stores/events';
+import { useWidgetStore } from '@/stores/widget';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { format, parse } from 'date-fns';
 import { ref } from 'vue';
@@ -54,6 +59,8 @@ import { useI18n } from 'vue-i18n';
 
 const props = defineProps(['item'])
 const emits = defineEmits(['openEvents'])
+const useWidget = useWidgetStore()
+const useEvent = useEventStore()
 const { t } = useI18n()
 
 const themes = [

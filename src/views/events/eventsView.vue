@@ -5,6 +5,8 @@
 
   <div v-else class="w-full h-full flex flex-col gap-3 relative">
 
+    <subscription-modal />
+
     <div class="h-14 flex items-center px-6">
       <span class="pixa-title-2">{{ t('translation.events') }}</span>
     </div>
@@ -86,6 +88,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted } from 'vue';
+import subscriptionModal from '@/components/events/subscriptionModal.vue';
 import { fr } from 'date-fns/locale'
 import {
   format,
@@ -141,7 +144,7 @@ const getEventsForDate = (date, events) => {
 
 onMounted(async () => {
   try {
-    await useEvent.getEvents()
+    await useEvent.getEvents(null, `concernee=Prof`)
     loading.value = false
   } catch (error) {
     console.error(error)

@@ -3,8 +3,8 @@
     class="max-w-[300px] p-2 rounded-lg h-fit flex flex-col gap-2 items-end">
     <span>{{ message.message }}</span>
 
-    <div v-if="message.type === 'Piece_jouinte'" @click="downloadPdf(message.file)" class="w-10 h-10 ">
-      <downloadFile class="w-10 fill-primary" />
+    <div v-if="message.type === 'Piece_jouinte'" @click="saveFile(message.pieces_jointe)" class="w-10 h-10 ">
+      <downloadFiles class="w-10 fill-primary" />
     </div>
     <div class="hidden">
       {{ message }}
@@ -13,8 +13,10 @@
 </template>
 
 <script setup>
-import downloadFile from '@/assets/icons/downloadFile.vue';
+import downloadFiles from '@/assets/icons/downloadFile.vue';
+import { useDownloadFile } from '@/composables/downloadFile';
 import { useWidgetStore } from '@/stores/widget'
+import { format } from 'date-fns';
 
 const props = defineProps(['message', 'side'])
 const useWidget = useWidgetStore()
@@ -22,14 +24,12 @@ const useWidget = useWidgetStore()
 console.log(props.message);
 
 
+const { downloadFile } = useDownloadFile()
 
-const downloadPdf = (file) => {
-  const link = document.createElement('a')
-  link.href = file
-  link.download = 'file.pdf'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+// Trigger from UI
+const saveFile = (base64String) => {
+  let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}.pdf`
+  downloadFile(uniqueName, base64String, 'application/pdf')
 }
 </script>
 

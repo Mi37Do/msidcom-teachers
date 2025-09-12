@@ -130,6 +130,7 @@ export const useWidgetStore = defineStore('widget', () => {
   const deleteChapter = ref(false)
 
   const editPassword = ref(false)
+  const subscriptionModal = ref(false)
 
   const lateModal = ref(false)
   const addNote = reactive({
@@ -233,7 +234,7 @@ export const useWidgetStore = defineStore('widget', () => {
 
   const addToast = (item) => {
     toasts.value.push({
-      id: uuid.v1(),
+      // id: uuid.v1(),
       color: item.color,
       msg: item.msg,
     })
@@ -404,5 +405,6 @@ export const useWidgetStore = defineStore('widget', () => {
     communCaledarModal,
     summonDetail,
     addImage,
+    subscriptionModal,
   }
 })

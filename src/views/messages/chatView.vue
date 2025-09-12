@@ -2,7 +2,7 @@
   <div v-if="!useMessages.messages || !useMessages.focusedChat" class="w-full h-full flex items-center justify-center">
     <span class="loading loading-spinner loading-sm"></span>
   </div>
-  <div v-else class="w-full h-full  flex flex-col">
+  <div v-else class="w-full h-full  flex flex-col overflow-hidden">
     <router-link :to="{ name: 'chats-view' }"
       class="w-full h-16 border-y border-border-color p-3 flex gap-3 items-center bg-white">
       <arrow-icon class="w-5 rotate-180 fill-primary" />
@@ -51,15 +51,35 @@
     </div>
 
     <form @submit.prevent="sendMessage" class="w-full h-fit flex flex-col border-t border-border-color">
-      <span v-if="newMessage.type === 'Piece_jouinte'" class="w-full pt-4 pb-1 px-4 flex items-center">Piéce jointe
-        uploader ...</span>
+      <div v-if="newMessage.type === 'Piece_jouinte'">
+        <span v-if="loadFile" class="w-full pt-4 pb-1 px-4 flex items-center animate-pulse font-medium">Téléchargement
+          en
+          cours ...</span>
+
+        <div v-else @click="() => {
+          newMessage.type = 'Message'
+          newMessage.pieces_jointe = null
+        }" class="w-full px-3 pt-3 flex items-center justify-between">
+
+          <div class="flex-1 flex gap-3">
+            <file-alt class="w-8 fill-secondary-2"></file-alt>
+            <span class="flex items-center font-medium text-secondary-2">Fichier télécharger</span>
+          </div>
+
+          <button class="btn btn-sm btn-square btn-ghost">
+            <times class="w-6" />
+          </button>
+        </div>
+      </div>
+
+
 
       <div class="w-full h-16  p-3 flex gap-3 items-center justify-between">
         <div class="btn btn-sm btn-square btn-outline relative">
           <input type="file" @change="async (event) => {
-            loading = true
-            const file = event.target.files[0];
 
+            loadFile = true
+            const file = event.target.files[0];
             if (!file) {
               null
               return;
@@ -68,13 +88,16 @@
               newMessage.type = 'Piece_jouinte'
               newMessage.pieces_jointe = base64
             }
+            loadingFalse()
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
         <input type="text" v-model="newMessage.message" :required="newMessage.type === 'Message'"
           class="pixa-input flex-1">
         <button type="submit" class="btn btn-sm btn-square btn-outline">
-          <MessageIcon class="w-5" />
+
+          <span v-if="loading" class="loading loading-spinner loading-sm"></span>
+          <MessageIcon v-else class="w-5" />
         </button>
 
       </div>
@@ -94,7 +117,9 @@ import paperClip from '@/assets/icons/paperClip.vue';
 import MessageIcon from '@/assets/icons/messageIcon.vue';
 import { useFileToBase64 } from '@/composables/useFileToBase64';
 import { useWidgetStore } from '@/stores/widget';
+import fileAlt from '@/assets/icons/fileAlt.vue';
 import arrowIcon from '@/assets/icons/arrowIcon.vue';
+import times from '@/assets/icons/times.vue';
 
 const chatContainer = ref(null)
 const useMessages = useMessagesStore()
@@ -103,7 +128,8 @@ const { convertToBase64 } = useFileToBase64()
 const route = useRoute()
 const useUsers = useUserStore()
 const useWidget = useWidgetStore()
-
+const loading = ref(false)
+const loadFile = ref(false)
 const newMessage = reactive({
   discuss: route.params.id,
   message: null,
@@ -135,6 +161,13 @@ const handleScroll = () => {
     shouldAutoScroll.value =
       container.scrollHeight - container.scrollTop - container.clientHeight < 50
   }
+}
+
+const loadingFalse = () => {
+
+  setTimeout(() => {
+    loadFile.value = false
+  }, 2000)
 }
 
 // Combined mounted hook
@@ -187,6 +220,7 @@ const initStore = () => {
 }
 
 const sendMessage = async () => {
+  loading.value = true
   try {
     if (newMessage.type === 'Message') {
       delete newMessage.pieces_jointe
@@ -199,6 +233,7 @@ const sendMessage = async () => {
   } catch (error) {
     console.error(error)
   }
+  loading.value = false
 }
 </script>
 
