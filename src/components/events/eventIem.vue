@@ -12,7 +12,7 @@
           <div class="flex-1 h-full flex flex-col overflow-hidden">
             <span :style="{ color: currentTheme.secondary }" class="text-lg font-medium truncate capitalize">{{
               item.titre
-              }} </span>
+            }} </span>
 
             <div class="w-full flex gap-3 font-medium">
               <span>le {{ item.date_event }} {{ t('translation.from') }} {{ item.from_time ?
@@ -36,7 +36,7 @@
               {{ item.description }}</p>
           </div>
 
-          <button v-if="!item.sous_inscription" @click="() => {
+          <button v-if="item.sous_inscription" @click="() => {
             useEvent.focusedEvents = item
             useWidget.subscriptionModal = true
           }" :style="{ background: currentTheme.secondary }"
