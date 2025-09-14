@@ -61,7 +61,6 @@ export const useSubjectStore = defineStore('subject', () => {
         let response = await axios.get('/api/Matiere/')
         subjects.value = response.data
         filtredSubjects.value = response.data
-        localStorage.setItem('subjects', JSON.stringify(subjects.value))
       }
     } catch (error) {
       console.error(error)
@@ -77,7 +76,6 @@ export const useSubjectStore = defineStore('subject', () => {
     try {
       let response = await axios.get('/api/Matiere_spec/')
       coefs.value = response.data
-      localStorage.setItem('coefs', JSON.stringify(coefs.value))
     } catch (error) {
       console.error(error)
 

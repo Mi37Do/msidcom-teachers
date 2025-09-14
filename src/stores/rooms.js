@@ -23,9 +23,8 @@ export const useRoomStore = defineStore('room', () => {
         let response = await axios.get(`/api/Classe/${id}/`)
         focusedClass.value = response.data
       } else {
-        let response = await axios.get('/api/Classe/')
-        classes.value = response.data
-        localStorage.setItem('classes', JSON.stringify(classes.value))
+        let response = await axios.get('/api/Classe_par_Prof_sql/')
+        classes.value = response.data?.Classe
       }
     } catch (error) {
       console.error(error)
@@ -69,7 +68,6 @@ export const useRoomStore = defineStore('room', () => {
       } else {
         let response = await axios.get('/api/Salle/')
         rooms.value = response.data
-        localStorage.setItem('rooms', JSON.stringify(rooms.value))
       }
     } catch (error) {
       console.error(error)

@@ -16,8 +16,8 @@
 
     <div class="flex-1 overflow-hidden">
       <div class="h-full overflow-auto">
-        <div v-if="useSubject.matiereSpecialite.length > 0" class="h-fit flex flex-col gap-2 pb-3">
-          <!----> <item-data-class v-for="classe in filteredClasses" :key="classe.id" :item="classe" />
+        <div v-if="useRoom.classes.length > 0" class="h-fit flex flex-col gap-2 pb-3">
+          <!----> <item-data-class v-for="classe in useRoom.classes" :key="classe.classe_id" :item="classe" />
 
         </div>
       </div>
@@ -61,6 +61,8 @@ const hasClasses = computed(() =>
 onMounted(async () => {
   try {
     await useRoom.getClasses();
+    console.log(useRoom.classes);
+
   } catch (error) {
     console.error('Failed to load classes:', error);
     // Consider adding error state handling here

@@ -206,7 +206,7 @@ export const useWidgetStore = defineStore('widget', () => {
       authUser.userDetail = response.data
 
       console.log(authUser.userDetail)
-
+      /** */
       for (let index = 0; index < authUser.userDetail.matiere.length; index++) {
         const element = authUser.userDetail.matiere[index]
         await useSubject.getMatiereSpecialite(element)
