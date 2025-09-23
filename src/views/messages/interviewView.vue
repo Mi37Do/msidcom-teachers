@@ -31,7 +31,7 @@ const tempProfs = ref([])
 onMounted(async () => {
   try {
     // await useMessages.getInterviews()
-    await useMessages.getInterviews()
+    await useMessages.getInterviews(`prof=${useWidget.authUser.userDetail.id}`)
     await useUsers.getProfs()
     await useStudent.getStudents(null, `prof=${useWidget.authUser.userDetail.id}`)
     tempStudents.value = useStudent.filterdStudents.map(item => {

@@ -18,6 +18,8 @@
       <file-alt class="w-5 fill-primary" />
       Piéces jointe
     </div>
+    <span v-if="item.date_limite" class=" font-medium text-error">Date limite {{ format(item.date_limite
+      , 'dd/MM/yyyy') }}</span>
   </div>
 </template>
 
@@ -29,8 +31,6 @@ import fileAlt from '@/assets/icons/fileAlt.vue';
 
 const props = defineProps(['item', 'classes'])
 const useWidget = useWidgetStore()
-
-console.log(props.item);
 
 </script>
 

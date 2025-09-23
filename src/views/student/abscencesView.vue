@@ -18,33 +18,7 @@
         </commun-dropdown>
       </div>
 
-      <div class="flex items-center gap-[10px]">
-        <span class="text-[14px]">{{ t('translation.from') }}</span>
 
-        <VDatePicker v-model="rangeFrom" locale="fr" color="calendar-color" :masks="mask"
-          :model-config="{ type: 'string', format: 'yyyy-MM-dd' }">
-          <template #default="{ inputValue, inputEvents }">
-            <div class="flex items-center relative">
-              <input class="pixa-input flex-1 px-3 placeholder:capitalize w-[140px]" :placeholder="'JJ-MM-YYYY'"
-                :value="inputValue" v-on="inputEvents" />
-              <Calendar class="absolute w-[16px] h-[16px] right-3" />
-            </div>
-          </template>
-        </VDatePicker>
-
-        <span class="text-[14px]">{{ t('translation.to') }}</span>
-
-        <VDatePicker v-model="rangeTo" locale="fr" color="calendar-color" :masks="mask"
-          :model-config="{ type: 'string', format: 'yyyy-MM-dd' }">
-          <template #default="{ inputValue, inputEvents }">
-            <div class="flex items-center relative">
-              <input class="pixa-input flex-1 px-3 placeholder:capitalize w-[140px]" :placeholder="'JJ-MM-YYYY'"
-                :value="inputValue" v-on="inputEvents" />
-              <Calendar class="absolute w-[16px] h-[16px] right-3" />
-            </div>
-          </template>
-        </VDatePicker>
-      </div>
     </div>
 
     <!-- Data Table -->

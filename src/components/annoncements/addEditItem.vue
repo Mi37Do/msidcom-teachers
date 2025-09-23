@@ -68,25 +68,23 @@
 
                   <div class="form-control w-full">
                     <div class="label">
-                      <span class="label-text capitalize">date limite (optionnel)<span
-                          class="text-red-500">*</span></span>
+                      <span class="label-text capitalize">date limite (optionnel)</span>
                     </div>
                     <button type="button" @click="showDatePicker = true"
                       class="pixa-input pb-0.5 text-slate-700 w-full flex items-center justify-between">
-                      <span>{{ format(tempDate, 'PPP', { locale: fr }) }}</span>
+                      <span>{{ tempDate ? format(tempDate, 'PPP', { locale: fr }) : '' }}</span>
                       <Calendar class="w-5 h-5" />
                     </button>
                   </div>
 
                   <div class="form-control w-full max-w-60">
                     <div class="label">
-                      <span class="label-text capitalize">piece jointe (optionnel)<span
-                          class="text-red-500">*</span></span>
+                      <span class="label-text capitalize">piece jointe (optionnel)</span>
                     </div>
                     <div class="flex-1 flex overflow-hidden flex-col gap-3 items-center">
 
                       <div class="btn btn-sm pixa-btn-form btn-ghost w-20 border border-primary relative">
-                        <input type="file" @change="onFileChange" required class="absolute opacity-0 inset-0 h-full">
+                        <input type="file" @change="onFileChange" class="absolute opacity-0 inset-0 h-full">
                         <upload-cloud />
 
                       </div>
@@ -154,7 +152,7 @@ const designation = ref('')
 const useRoom = useRoomStore()
 const route = useRoute()
 const useEvent = useEventStore()
-const tempDate = ref(new Date());
+const tempDate = ref(null);
 const mask = ref({ input: 'DD-MM-YYYY' })
 const rangeTo = ref(null)
 const tempFileName = ref('')
@@ -168,7 +166,7 @@ const itemToAdd = reactive(
     designation: '',
     description: '',
     classe: props.classe,
-    date_limite: new Date(),
+    date_limite: null,
     Prof: useWidget.authUser.userDetail.id
   }
 )
@@ -195,9 +193,10 @@ function closeModal() {
     designation: '',
     description: '',
     classe: props.classe,
-    date_limite: new Date(),
+    date_limite: null,
     Prof: useWidget.authUser.userDetail.id
   })
+  tempDate.value = null
   designation.value = ''
   loading.value = false
 }
@@ -207,7 +206,7 @@ const addItem = async () => {
   loading.value = true
   let response = null
   try {
-    itemToAdd.date_limite = format(tempDate.value, 'yyyy-MM-dd')
+    itemToAdd.date_limite = tempDate.value ? format(tempDate.value, 'yyyy-MM-dd') : null
     if (useWidget.addEditAnnoncement.add) {
       response = await axios.post(`/api/Annonce_prof/`, itemToAdd)
     } else {

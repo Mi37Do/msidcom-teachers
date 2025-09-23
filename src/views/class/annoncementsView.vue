@@ -24,7 +24,7 @@
       <div v-else class="w-full flex-1 flex items-center overflow-hidden">
         <div class="flex-1 h-full overflow-hidden">
           <div class="w-full h-full overflow-auto hidden-scrollbar">
-            <div class="h-fit flex flex-col gap-3">
+            <div class="h-fit flex flex-col gap-3 pb-3">
               <itemData v-for="item in useEvent.filtredAnnoncements" :key="item.id" :item="item" />
             </div>
           </div>
