@@ -222,6 +222,7 @@ const tempSpecialites = ref([])
 const useRoom = useRoomStore()
 const selectedSpecialite = ref(null)
 const specialiteFilter = ref(null)
+const matierSpecialites = ref([])
 
 const tempNote = reactive({
   moyenne: null,
@@ -240,16 +241,23 @@ onMounted(async () => {
     let response = await axios.get(`/api/Notes/?eleve=${route.params.studentId}`)
     notes.value = response.data
 
-    tempSpecialites.value = useSubject.matiereSpecialite.filter(i => i.specialite
-      === useRoom.focusedClass.specialite).map(item => {
-        return {
-          id: item.id,
-          designation: item.matiere_designations,
-          specialite: item.specialite,
-          nbr_test: item.nbr_test,
-          nbr_devoir: item.nbr_devoir
-        }
-      })
+    for (let index = 0; index < useWidget.authUser.userDetail.matiere.length; index++) {
+      const element = useWidget.authUser.userDetail.matiere[index]
+      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite)
+      console.log('matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite);
+
+      matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
+    }
+
+    tempSpecialites.value = matierSpecialites.value.map(item => {
+      return {
+        id: item.id,
+        designation: item.matiere_designations,
+        specialite: item.specialite,
+        nbr_test: item.nbr_test,
+        nbr_devoir: item.nbr_devoir
+      }
+    })
 
 
     selectedSpecialite.value = tempSpecialites.value[0].id

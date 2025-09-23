@@ -109,6 +109,7 @@ export const useSubjectStore = defineStore('subject', () => {
       } else {
         let response = await axios.get(`/api/Matiere_spec/?${filter}`)
         FiltredMatiereSpecialite.value = response.data
+        matiereSpecialite.value = response.data
       }
     } catch (error) {
       console.error(error)

@@ -118,18 +118,18 @@ const specialiteFilter = ref(null)
 onMounted(async () => {
 
   try {
-
-    tempSpecialite.value = useSubject.matiereSpecialite.filter(i => i.specialite
-      === useRoom.focusedClass.specialite).map(item => {
-        return {
-          id: item.id,
-          designation: item.matiere_designations,
-          specialite: item.specialite,
-        }
-      })
-    selectedSpecialite.value = tempSpecialite.value[0].id
-    specialiteFilter.value = tempSpecialite.value[0].specialite
-
+    /**
+        tempSpecialite.value = useSubject.matiereSpecialite.filter(i => i.specialite
+          === useRoom.focusedClass.specialite).map(item => {
+            return {
+              id: item.id,
+              designation: item.matiere_designations,
+              specialite: item.specialite,
+            }
+          })
+        selectedSpecialite.value = tempSpecialite.value[0].id
+        specialiteFilter.value = tempSpecialite.value[0].specialite
+    */
     await loadData()
     loading.value = false
   } catch (error) {
@@ -140,6 +140,9 @@ onMounted(async () => {
 const loadData = async () => {
   try {
     await useStudent.getStudents(null, `&classe=${route.params.id}`)
+
+
+    /**
     await loadNotes(selectedSpecialite.value)
 
     for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
@@ -156,7 +159,7 @@ const loadData = async () => {
     }
 
     tabs.value.push('exam')
-
+*/
   } catch (error) {
     console.error(error)
     useWidget.addToast({
@@ -165,7 +168,7 @@ const loadData = async () => {
     })
   }
 }
-
+/**
 
 const loadNotes = async (id) => {
   try {
@@ -176,7 +179,7 @@ const loadNotes = async (id) => {
   } catch (error) {
     console.error(error)
   }
-}
+} */
 
 </script>
 

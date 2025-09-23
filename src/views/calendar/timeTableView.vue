@@ -49,9 +49,9 @@ const selectedDay = ref('Dimanche')
 
 onMounted(async () => {
   try {
-    await useRoom.getRooms()
+    // await useRoom.getRooms()
     await useRoom.getContent(null, `&prof=${useWidget.authUser.userDetail.id}`)
-    await useSubject.getSubjects()
+    //await useSubject.getSubjects()
 
     console.log(useRoom.filtredContent)
 

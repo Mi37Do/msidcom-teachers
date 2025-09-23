@@ -206,7 +206,7 @@ export const useWidgetStore = defineStore('widget', () => {
       authUser.userDetail = response.data
 
       console.log(authUser.userDetail)
-      /** */
+      /**
       for (let index = 0; index < authUser.userDetail.matiere.length; index++) {
         const element = authUser.userDetail.matiere[index]
         await useSubject.getMatiereSpecialite(element)
@@ -215,7 +215,7 @@ export const useWidgetStore = defineStore('widget', () => {
       }
 
       useSubject.matiereSpecialite = matierSpecialites
-      useSubject.FiltredMatiereSpecialite = matierSpecialites
+      useSubject.FiltredMatiereSpecialite = matierSpecialites*/
 
       manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager
     } catch (error) {

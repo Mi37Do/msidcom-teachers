@@ -4,6 +4,8 @@
       class="flex-1 h-full  rounded-[10px] p-4 border border-border-color flex flex-col items-center overflow-hidden gap-2">
       <span class="font-semibold truncate">
         {{ item.matiere_designations }} - {{ item.type_cour }}</span>
+      <span class="capitalize">{{ t('translation.room') }} - {{
+        item.salle_designations }}</span>
       <span class="capitalize">{{ t('translation.classe') }} {{
         item.classe_designations.classe_specialite }} - {{
           item.classe_designations.class_number }}</span>
@@ -11,7 +13,7 @@
       <span class="capitalize flex gap-2 items-center">
         <clock :style="{ fill: currentTheme.secondary }" class="w-5" /> {{ item.from_time ? format(parse(item.from_time,
           'HH:mm:ss', new Date()), 'HH:mm') :
-        'N/A' }} - {{
+          'N/A' }} - {{
           item.to_time ? format(parse(item.to_time, 'HH:mm:ss', new Date()), 'HH:mm') :
             'N/A' }}
       </span>

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full overflow-hidden pb-3 px-6">
-
+    <!---->
     <div class="w-full h-full overflow-hidden">
       <div class="w-full h-full flex flex-col gap-3">
 
@@ -22,7 +22,7 @@
 
           <div class="w-full flex-1 flex flex-col gap-3 overflow-hidden">
             <div class="flex items-center justify-between w-full">
-              <!---->
+
               <nav class="w-fit rounded-xl grid grid-cols-3 gap-1 p-1 pixa-border">
                 <button @click="async () => {
                   trimester = 1
@@ -155,18 +155,28 @@ const tempSpecialite = ref([])
 const selectedSpecialite = ref(null)
 const specialiteFilter = ref(null)
 
+const matierSpecialites = ref([])
+
 onMounted(async () => {
 
   try {
+    for (let index = 0; index < useWidget.authUser.userDetail.matiere.length; index++) {
+      const element = useWidget.authUser.userDetail.matiere[index]
+      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite)
+      console.log('matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite);
 
-    tempSpecialite.value = useSubject.matiereSpecialite.filter(i => i.specialite
-      === useRoom.focusedClass.specialite).map(item => {
-        return {
-          id: item.id,
-          designation: item.matiere_designations,
-          specialite: item.specialite,
-        }
-      })
+      matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
+    }
+
+    tempSpecialite.value = matierSpecialites.value.map(item => {
+      return {
+        id: item.id,
+        designation: item.matiere_designations,
+        specialite: item.specialite,
+        nbr_test: item.nbr_test,
+        nbr_devoir: item.nbr_devoir
+      }
+    })
     selectedSpecialite.value = tempSpecialite.value[0].id
     specialiteFilter.value = tempSpecialite.value[0].specialite
 

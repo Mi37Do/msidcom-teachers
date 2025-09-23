@@ -12,10 +12,12 @@
           class="w-[32px] h-[32px] bg-gradient-to-br from-primary/40 to-primary/10 rounded-full flex items-center justify-center">
           <arrow-icon class="w-[24px] h-[24px] -rotate-180 fill-primary" />
         </div>
+        <!---->
         <span class="pixa-title-2 flex-1 leading-loose">
           {{ t('translation.class') + ' : ' }}
-          <span class="text-primary-3">{{useSubject.matiereSpecialite.find(i => i.specialite ===
-            useRoom.focusedClass.specialite).specialite_designations}} - {{ useRoom.focusedClass.class_num }}
+          <span class="text-primary-3">{{ useSubject.focusedSpecialite.designation }} - {{
+            useRoom.focusedClass.class_num
+          }}
           </span><span v-if="route.meta.section"> / {{ t('translation.' + route.meta.section) }}</span>
         </span>
       </router-link>
@@ -46,8 +48,15 @@ const route = useRoute()
 
 onMounted(async () => {
   try {
-
-    await useRoom.getClasses(route.params.id)
+    if (localStorage.getItem('current_class') && localStorage.getItem('current_specialite')) {
+      useRoom.focusedClass = JSON.parse(localStorage.getItem('current_class'))
+      useSubject.focusedSpecialite = JSON.parse(localStorage.getItem('current_specialite'))
+    } else {
+      await useRoom.getClasses(route.params.id)
+      await useSubject.getSpecialites(useRoom.focusedClass.specialite)
+      localStorage.setItem('current_class', JSON.stringify(useRoom.focusedClass))
+      localStorage.setItem('current_specialite', JSON.stringify(useSubject.focusedSpecialite))
+    }
 
     loading.value = false
   } catch (error) {
@@ -56,6 +65,8 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  localStorage.removeItem('current_class')
+  localStorage.removeItem('current_specialite')
   loading.value = true
 })
 </script>
