@@ -7,8 +7,7 @@
 
     await useMessages.getChats()
 
-  }" :class="route.params.id === item.id ? 'bg-primary/10' : ''"
-    class="w-full hover:bg-primary/10 flex p-2.5 gap-2.5 rounded-lg cursor-pointer">
+  }" class="w-full hover:bg-primary/10 flex p-2.5 gap-2.5 rounded-lg cursor-pointer">
 
 
 

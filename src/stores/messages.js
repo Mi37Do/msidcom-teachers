@@ -33,8 +33,6 @@ export const useMessagesStore = defineStore('messages', () => {
         let response = await axios.post(`/api/message_par_discussion_sql/`, {
           discussion_id: filter,
         })
-        console.log(response.data)
-
         messages.value = response.data.Messages
       } else {
         let response = await axios.get(`/api/messages/`)

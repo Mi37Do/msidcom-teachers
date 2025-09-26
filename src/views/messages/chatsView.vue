@@ -25,18 +25,21 @@
         </div>
       </div>
       <div v-if="useMessages.filtredChats.length > 0" class="w-full flex-1 overflow-hidden">
-        <div class="h-full overflow-auto hidden-scrollbar">
-          <div class="h-fit flex flex-col gap-1">
+        <div class="h-full overflow-y-auto hidden-scrollbar">
+          <div class="h-fit flex flex-col  overflow-x-hidden gap-1">
             <span class="text-secondary-2 font-medium">Administration</span>
+
+            <!-- -->
             <chatItem
-              :item="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager || i.from_user_id === useWidget.authUser.userDetail.manager)" />
+              :item="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)" />
             <span class="h-px bg-border-color"></span>
             <span class="text-secondary-2 font-medium mt-2">Parent d’élèves</span>
+
             <chatItem
-              v-for="item in filtredChats.filter(i => i.to_user_id !== useWidget.authUser.userDetail.manager && i.from_user_id !== useWidget.authUser.userDetail.manager)"
+              v-for="item in filtredChats.filter(i => i.
+                from_user_type !== useWidget.authUser.userDetail.manager_id && i.from_user_id !== useWidget.authUser.userDetail.manager_id)"
               :item="item" :key="item.id" />
 
-            <!-- .filter(i => i.to_user_id !== useWidget.authUser.userDetail.manager && i.from_user_id !== useWidget.authUser.userDetail.manager) -->
           </div>
         </div>
       </div>
@@ -83,9 +86,9 @@ onMounted(async () => {
     // await useMessages.getInterviews()
     await useMessages.getChats()
     await useStudent.getParents()
-    console.log(useMessages.chats)
     useMessages.filtredChats = useMessages.chats
 
+    console.log(useMessages.filtredChats)
     loading.value = false
   } catch (error) {
     console.error(error)

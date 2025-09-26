@@ -8,7 +8,10 @@
         @decrement="decrementMinutes" aria-label="Minutes" />
     </div>
 
-    <button type="button" @click="emit('hideTimePicker')" class="btn btn-primary">valider</button>
+    <button type="button" @click="emit('hideTimePicker', {
+      hours: localHours,
+      minutes: localMinutes
+    })" class="btn btn-primary">valider</button>
   </div>
 
 </template>

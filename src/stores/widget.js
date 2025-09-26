@@ -201,23 +201,11 @@ export const useWidgetStore = defineStore('widget', () => {
 
     try {
       let matierSpecialites = []
-      let response = await axios.get('/api/UserInfo')
+      let response = await axios.get('/api/Userinfo_sql_Apps')
       authUser.isAuthenticated = true
-      authUser.userDetail = response.data
+      authUser.userDetail = response.data.User
 
-      console.log(authUser.userDetail)
-      /**
-      for (let index = 0; index < authUser.userDetail.matiere.length; index++) {
-        const element = authUser.userDetail.matiere[index]
-        await useSubject.getMatiereSpecialite(element)
-
-        matierSpecialites = [...matierSpecialites, ...useSubject.matiereSpecialite]
-      }
-
-      useSubject.matiereSpecialite = matierSpecialites
-      useSubject.FiltredMatiereSpecialite = matierSpecialites*/
-
-      manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager
+      manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager_id
     } catch (error) {
       authUser.isAuthenticated = false
       console.error(error)

@@ -15,8 +15,7 @@
         <!---->
         <span class="pixa-title-2 flex-1 leading-loose">
           {{ t('translation.class') + ' : ' }}
-          <span class="text-primary-3">{{ useSubject.focusedSpecialite.designation }} - {{
-            useRoom.focusedClass.class_num
+          <span class="text-primary-3">{{ currentClass
           }}
           </span><span v-if="route.meta.section"> / {{ t('translation.' + route.meta.section) }}</span>
         </span>
@@ -45,19 +44,11 @@ const useWidget = useWidgetStore()
 const useSubject = useSubjectStore()
 const { t } = useI18n()
 const route = useRoute()
+const currentClass = ref('')
 
 onMounted(async () => {
   try {
-    if (localStorage.getItem('current_class') && localStorage.getItem('current_specialite')) {
-      useRoom.focusedClass = JSON.parse(localStorage.getItem('current_class'))
-      useSubject.focusedSpecialite = JSON.parse(localStorage.getItem('current_specialite'))
-    } else {
-      await useRoom.getClasses(route.params.id)
-      await useSubject.getSpecialites(useRoom.focusedClass.specialite)
-      localStorage.setItem('current_class', JSON.stringify(useRoom.focusedClass))
-      localStorage.setItem('current_specialite', JSON.stringify(useSubject.focusedSpecialite))
-    }
-
+    currentClass.value = localStorage.getItem('current_class')
     loading.value = false
   } catch (error) {
     console.error(error)

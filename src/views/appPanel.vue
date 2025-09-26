@@ -7,10 +7,15 @@
         <button class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0">
           <BellIcon class="w-[30px] h-[30px]" />
         </button>
-        <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative">
+        <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
           <router-link :to="{ name: 'profile-panel' }" class="w-11 h-11 absolute z-10"></router-link>
-          <img :src="useWidget.authUser.
-            userDetail.image" class="w-full h-full object-cover rounded-full" alt="">
+          <img v-if="useWidget.authUser.
+            userDetail.image" :src="useWidget.authUser.
+              userDetail.image" class="w-full h-full object-cover rounded-full" alt="">
+
+          <span v-else class="text-white text-lg font-semibold mb-0.5">{{ useWidget.authUser.
+            userDetail.first_name[0] }}{{ useWidget.authUser.
+              userDetail.last_name[0] }}</span>
         </div>
       </div>
     </div>

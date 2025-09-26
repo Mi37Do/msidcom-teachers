@@ -191,6 +191,8 @@
     "test_1": "test 1",
     "test_2": "test 2",
     "homework_1": "devoir 1",
-    "homework_2": "devoir 2"
+    "homework_2": "devoir 2",
+    "responsabilites": "responsabilités",
+    "personalInformations": "informations personelles"
   }
 }

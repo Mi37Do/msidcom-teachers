@@ -14,23 +14,18 @@
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.students') }}</span>
-      <!--
-      <div v-if="item.specialite" class="flex flex-wrap gap-0 5">
-        <span v-for="spec in item.specialite" :key="spec.id">{{ spec.matiere_designation }}</span>
-      </div>--><span class="truncate">{{ item.premier_eleve_info?.first_eleve_nom }} {{
+      <span class="truncate">{{ item.premier_eleve_info?.first_eleve_nom }} {{
         item.premier_eleve_info?.first_eleve_prenom }} {{
           item.premier_eleve_info?.
-            nombre_eleve_dans_la_classe > 0 ? `, ${item.premier_eleve_info?.nombre_eleve_dans_la_classe - 1} autres éléves`
+          ['nombre-eleve_dans_la_classe'] > 0 ? `, ${item.premier_eleve_info?.['nombre-eleve_dans_la_classe'] - 1} autres
+        éléves`
             : ''
-        }}</span>
+        }} {{ item.premier_eleve_info?.nombre_eleve_dans_la_classe }}</span>
     </div>
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.subject') }}</span>
-      <!--
-      <div v-if="item.specialite" class="flex flex-wrap gap-0 5">
-        <span v-for="spec in item.specialite" :key="spec.id">{{ spec.matiere_designation }}</span>
-      </div>--><span>{{ item.matiere_designation }}</span>
+      <span>{{ item.matiere_designation }}</span>
     </div>
     <span class="capitlize font-semibold px-3">Progression Programme</span>
     <div class="flex items-center gap-3 w-full px-3">
@@ -40,11 +35,10 @@
       <span class="text-primary font-semibold">66%</span>
     </div>
 
-    <router-link :to="{ name: 'class-panel', params: { id: item.classe_id } }"
-      class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{
-        t('translation.access') }}
+    <button @click="selectClass(item)" class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{
+      t('translation.access') }}
       <angle-icon class="w-5 h-5 -rotate-90" />
-    </router-link>
+    </button>
   </div>
 
 </template>
@@ -54,10 +48,18 @@ import calendar from '@/assets/icons/calendar.vue';
 import { useI18n } from 'vue-i18n';
 import communProgressBar from '../commun/communProgressBar.vue';
 import angleIcon from '@/assets/icons/angleIcon.vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps(['item'])
+const router = useRouter()
 
 const { t } = useI18n()
+
+const selectClass = (item) => {
+  let current = item.specialite_designation + ' - ' + item.class_num
+  localStorage.setItem('current_class', current)
+  router.push({ name: 'class-panel', params: { id: item.classe_id } })
+}
 </script>
 
 <style lang="scss" scoped></style>

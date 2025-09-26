@@ -13,7 +13,8 @@
           <div
             class="w-[70px] h-[70px] bg-primary-3 rounded-lg flex items-center justify-center relative p-0.5 overflow-hidden">
             <div class="w-full h-full">
-              <img :src="useWidget.authUser.userDetail.image" class="w-full h-full object-cover rounded-md" alt="">
+              <img v-if="useWidget.authUser.userDetail.image" :src="useWidget.authUser.userDetail.image"
+                class="w-full h-full object-cover rounded-md" alt="">
             </div>
             <div @click="useWidget.addImage = true" class="w-full h-full flex items-center justify-center absolute">
               <plus class="w-5 fill-white" />
@@ -23,16 +24,28 @@
           <div class="flex-1 flex flex-col">
             <span class="pixa-title-2 mt-2 truncate">{{ useWidget.authUser.userDetail.first_name }} {{
               useWidget.authUser.userDetail.last_name }}</span>
-            <span> Professeur en: <span v-for="(item, index) in useWidget.authUser.userDetail.matiere" :key="item"
-                class="text-primary-3">{{useSubject.matiereSpecialite.find(i => i.matiere === item) ?
-                  useSubject.matiereSpecialite.find(i => i.matiere === item).matiere_designations : 'N/A'
-                }}<span v-if="index + 1 !== useWidget.authUser.userDetail.matiere.length">, </span> </span></span>
+            <span> Professeur en: <span v-for="(item, index) in useWidget.authUser.userDetail.matieres
+              .matiere" :key="item" class="text-primary-3 capitalize font-medium">{{ item.designation
+              }} ,</span></span>
           </div>
 
         </div>
 
 
         <div class="w-full flex flex-col gap-3">
+
+          <span class="w-full h-px bg-border-color"></span>
+
+          <span class="text-[18px] capitalize font-[500]">{{ t('translation.responsabilites') }} :</span>
+          <div
+            class="h-fit rounded-[15px] px-3 py-6 flex flex-col justify-center gap-1.5 bg-[#F9F9F9] border border-border-color">
+            <span v-for="item in useWidget.authUser.userDetail.
+              responsabilite?.responsabilite" :key="item">- {{ item.description }}</span>
+          </div>
+
+          <span class="w-full h-px bg-border-color"></span>
+
+          <span class="text-[18px] capitalize font-[500]">{{ t('translation.personalInformations') }} :</span>
           <div
             class="h-[84px] rounded-[15px] p-3 flex flex-col justify-center gap-1.5 bg-[#F9F9F9] border border-border-color">
             <span class="text-[18px] capitalize font-[500]">{{ t('translation.fullName') }}</span>

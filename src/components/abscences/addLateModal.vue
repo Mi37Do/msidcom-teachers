@@ -29,7 +29,14 @@
                   }" />
                 </div>
                 <div v-else-if="showTimePicker" class="h-full w-full flex flex-col gap-1.5">
-                  <CommunTimePicker v-model="hoursTime" @hideTimePicker="showTimePicker = false" />
+                  <CommunTimePicker v-model="hoursTime" @hideTimePicker="(time) => {
+                    hoursTime.hours = time.hours
+                    tempHours = time.hours
+                    hoursTime.minutes = time.minutes
+                    tempMinutes = time.minutes
+                    console.log(hoursTime);
+                    showTimePicker = false
+                  }" />
                 </div>
                 <div v-else class="flex flex-col gap-1.5 w-full h-full">
                   <div class="flex flex-col gap-3 flex-1">
@@ -116,7 +123,7 @@
 import { useWidgetStore } from '@/stores/widget';
 import communDropdown from '../commun/communDropdown.vue';
 import { fr } from 'date-fns/locale'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import uploadCloud from '@/assets/icons/uploadCloud.vue';
 import {
   TransitionRoot,
@@ -178,10 +185,13 @@ const tempFileName = ref('')
 
 const roundToNearest = (val, step) => Math.round(val / step) * step;
 
+const tempHours = ref('')
+const tempMinutes = ref('')
 const hoursTime = reactive({
   hours: 7,
   minutes: roundToNearest(format(new Date(), 'mm'), 5)
 });
+
 
 function closeModal() {
   useWidget.addLateProf = false;
@@ -209,10 +219,13 @@ const addItem = async () => {
 
   try {
     // Combine date and time
-    const dateWithTime = new Date(tempDate.value);
-    dateWithTime.setHours(parseInt(hoursTime.hours));
-    dateWithTime.setMinutes(parseInt(hoursTime.minutes));
+    console.log(hoursTime);
 
+    const dateWithTime = new Date(tempDate.value);
+    dateWithTime.setHours(parseInt(tempHours.value));
+    dateWithTime.setMinutes(parseInt(tempMinutes.value));
+
+    /***/
     const response = await axios.post(`/api/Abs_Retard_Prof/`, {
       agent: useWidget.authUser.userDetail.id,
       date_heure_abs: dateWithTime.toISOString(),
