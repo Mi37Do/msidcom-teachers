@@ -29,13 +29,10 @@
               <ListboxOption v-slot="{ active, selected }" v-for="i in filters" :key="i.id" :value="i.designation"
                 as="template" @click="async () => {
                   selectedItem = i.id
-                  let response = await axios.patch(`/api/Eleve/${item.id}/`, {
+                  let response = await axios.patch(`/api/Eleve/${item.eleve_id}/`, {
                     present: selectedItem === 'Présent' ? true : false
                   })
-
-
-                  item.present = selectedItem === 'Présent' ? true : false
-
+                  emits('loadData')
                 }">
                 <li :class="[
                   active ? 'bg-primary/20 text-primary fill-primary' : 'text-gray-900',
@@ -93,6 +90,7 @@ const props = defineProps(['item'])
 const selectedItem = ref(props.item ? props.item.groupe : null)
 const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
+const emits = defineEmits(['loadData'])
 
 const filters = ref([
   {

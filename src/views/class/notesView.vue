@@ -82,8 +82,7 @@
                   <span class="loading loading-spinner loading-sm"></span>
                 </div>
                 <div v-else class="w-full flex-1 overflow-hidden">
-                  <commun-no-data
-                    v-if="useStudent.filterdStudents.filter(item => item.classe === route.params.id).length <= 0" />
+                  <commun-no-data v-if="useStudent.filterdStudents.length <= 0" />
 
                   <communTable v-else :grids="fullColumns">
 
@@ -101,8 +100,8 @@
                       </div>
                     </template>
                     <template #table_items>
-                      <itemData v-for="item in useStudent.filterdStudents" :key="item.id" :item="item"
-                        :selectedNotes="useSubject.filtredNotes.find(i => i.eleve === item.id)" :tab="selectedTab"
+                      <itemData v-for="item in useStudent.filterdStudents" :key="item.eleve_id" :item="item"
+                        :selectedNotes="useSubject.filtredNotes.find(i => i.eleve === item.eleve_id)" :tab="selectedTab"
                         :trimester="trimester === 1 ? 'First' : trimester === 2 ? 'Second' : 'Third'"
                         :specialite="selectedSpecialite">
                       </itemData>
@@ -189,7 +188,9 @@ onMounted(async () => {
 
 const loadData = async () => {
   try {
-    await useStudent.getStudents(null, `&classe=${route.params.id}`)
+    await useStudent.getStudents(null, route.params.id)
+    console.log(useStudent.filterdStudents.length);
+
     await loadNotes(selectedSpecialite.value)
 
     for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite

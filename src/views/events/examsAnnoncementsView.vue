@@ -38,7 +38,7 @@
 
     <div v-else class="flex-1 overflow-hidden">
       <div class="h-full overflow-auto">
-        <div v-if="useSubject.matiereSpecialite.length > 0" class="h-fit flex flex-col gap-2 pb-3">
+        <div v-if="useRoom.classes.length > 0" class="h-fit flex flex-col gap-2 pb-3">
           <item-data v-for="item in useRoom.filtredExams" :key="item.id" :item="item" />
 
         </div>
@@ -71,14 +71,14 @@ const selectedType = ref('Tout')
 
 onMounted(async () => {
   try {
-    console.log(useSubject.matiereSpecialite);
-
     await useRoom.getExams()
-    tempSpecialite.value = useSubject.matiereSpecialite.map(item => {
+
+    await useRoom.getClasses();
+
+    tempSpecialite.value = useRoom.classes.map(item => {
       return {
-        id: item.specialite,
-        matiereSpecialite: item.id,
-        designation: item.specialite_designations
+        id: item.specialite_id,
+        designation: item.specialite_designation
       }
     })
 

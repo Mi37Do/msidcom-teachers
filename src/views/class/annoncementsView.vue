@@ -61,7 +61,9 @@ const route = useRoute()
 
 onMounted(async () => {
   try {
-    await useEvent.getAnnoncements(null, `Prof=${useWidget.authUser.userDetail.id}`)
+    await useEvent.getAnnoncements()
+    console.log(useEvent.filtredAnnoncements);
+
     loading.value = false
   } catch (error) {
     console.error(error)

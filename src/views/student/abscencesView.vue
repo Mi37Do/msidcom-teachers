@@ -103,15 +103,6 @@ const filteredAbsences = computed(() => {
 });
 
 
-watch(() => [rangeFrom.value, rangeTo.value], async () => {
-  if (rangeFrom.value && rangeTo.value) {
-    console.log(`&created_range_before=${format(rangeTo.value, 'yyyy-MM-dd')}&created_range_after=${format(subDays(rangeFrom.value, 1), 'yyyy-MM-dd')}`)
-    await useStudent.getAbscences(route.params.id + `&created_range_before=${format(rangeTo.value, 'yyyy-MM-dd')}&created_range_after=${format(subDays(rangeFrom.value, 1), 'yyyy-MM-dd')}`)
-  } else {
-    await useStudent.getAbscences(route.params.id)
-  }
-})
-
 // Methods
 const handleTypeFilterChange = (id) => {
   selectedType.value = id;
@@ -132,14 +123,6 @@ onMounted(async () => {
 })
 
 
-const safeParseISO = (date) => {
-  if (!date) return null
-  try {
-    return typeof date === 'string' ? parseISO(date) : date
-  } catch {
-    return null
-  }
-}
 </script>
 
 <style lang="scss" scoped></style>

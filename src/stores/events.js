@@ -44,7 +44,7 @@ export const useEventStore = defineStore('event', () => {
         annoncements.value = response.data
         filtredAnnoncements.value = response.data
       } else {
-        let response = await axios.get('/api/Annonce_prof/')
+        let response = await axios.get('/api/Annonces_Prof_sql/')
         annoncements.value = response.data
         filtredAnnoncements.value = response.data
       }

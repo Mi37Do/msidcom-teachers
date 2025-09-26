@@ -10,10 +10,6 @@
 
         <div v-else class="w-full h-full flex flex-col gap-3 px-6">
 
-          <add-note-modal @load-data="async () => {
-            await loadNotes(selectedSpecialite)
-          }" />
-
           <div class="w-full flex-1 flex flex-col gap-3 overflow-hidden">
 
             <div class="flex-1 overflow-hidden">
@@ -40,8 +36,7 @@
                   <span class="loading loading-spinner loading-sm"></span>
                 </div>
                 <div v-else class="w-full flex-1 overflow-hidden">
-                  <commun-no-data
-                    v-if="useStudent.filterdStudents.filter(item => item.classe === route.params.id).length <= 0" />
+                  <commun-no-data v-if="useStudent.filterdStudents.length <= 0" />
 
                   <communTable v-else :grids="fullColumns">
 
@@ -91,9 +86,7 @@ import communNoData from "@/components/commun/communNoData.vue"
 import { useI18n } from "vue-i18n"
 import { useRoute } from "vue-router"
 import search from "@/assets/icons/search.vue"
-import { useRoomStore } from "@/stores/rooms"
 import { useSubjectStore } from "@/stores/subjects"
-import addNoteModal from "@/components/notes/addNoteModal.vue"
 import { useStudentStore } from "@/stores/students"
 
 const { t } = useI18n()
@@ -105,31 +98,15 @@ const loading = ref(true)
 
 const query = ref('')
 const loadingData = ref(false)
-const useRoom = useRoomStore()
 const useSubject = useSubjectStore()
 const useStudent = useStudentStore()
-const tabs = ref(['avrege', 'attendance'])
 const selectedTab = ref('avrege')
 
-const tempSpecialite = ref([])
 const selectedSpecialite = ref(null)
-const specialiteFilter = ref(null)
 
 onMounted(async () => {
 
   try {
-    /**
-        tempSpecialite.value = useSubject.matiereSpecialite.filter(i => i.specialite
-          === useRoom.focusedClass.specialite).map(item => {
-            return {
-              id: item.id,
-              designation: item.matiere_designations,
-              specialite: item.specialite,
-            }
-          })
-        selectedSpecialite.value = tempSpecialite.value[0].id
-        specialiteFilter.value = tempSpecialite.value[0].specialite
-    */
     await loadData()
     loading.value = false
   } catch (error) {
@@ -139,27 +116,9 @@ onMounted(async () => {
 
 const loadData = async () => {
   try {
-    await useStudent.getStudents(null, `&classe=${route.params.id}`)
+    await useStudent.getStudents(null, route.params.id)
+    console.log(useStudent.filterdStudents);
 
-
-    /**
-    await loadNotes(selectedSpecialite.value)
-
-    for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === useRoom.focusedClass.specialite).nbr_test; index++) {
-      tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === useRoom.focusedClass.specialite).nbr_test === 1 ? 'test' : `test_${index + 1}`)
-    }
-
-
-    for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === useRoom.focusedClass.specialite).nbr_test; index++) {
-      tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === useRoom.focusedClass.specialite).nbr_devoir === 1 ? 'homework' : `homework_${index + 1}`)
-    }
-
-    tabs.value.push('exam')
-*/
   } catch (error) {
     console.error(error)
     useWidget.addToast({
@@ -168,19 +127,6 @@ const loadData = async () => {
     })
   }
 }
-/**
-
-const loadNotes = async (id) => {
-  try {
-    loadingData.value = true
-    let filter = `${id}&Trimestre=${trimester.value === 1 ? 'First' : trimester.value === 2 ? 'Second' : 'Third'}`
-    await useSubject.getNotes(filter)
-    loadingData.value = false
-  } catch (error) {
-    console.error(error)
-  }
-} */
-
 </script>
 
 

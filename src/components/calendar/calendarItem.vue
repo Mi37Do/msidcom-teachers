@@ -7,8 +7,8 @@
       <span class="capitalize">{{ t('translation.room') }} - {{
         item.salle_designations }}</span>
       <span class="capitalize">{{ t('translation.classe') }} {{
-        item.classe_designations.classe_specialite }} - {{
-          item.classe_designations.class_number }}</span>
+        item.class_specialite }} - {{
+          item.salle_designation }}</span>
 
       <span class="capitalize flex gap-2 items-center">
         <clock :style="{ fill: currentTheme.secondary }" class="w-5" /> {{ item.from_time ? format(parse(item.from_time,
@@ -64,9 +64,6 @@ function getRandomTheme() {
   const index = Math.floor(Math.random() * themes.length)
   return themes[index]
 }
-
-console.log(props.item);
-
 
 // Example usage
 const currentTheme = ref(getRandomTheme())

@@ -13,7 +13,7 @@
       , 'dd/MM/yyyy - HH:mm') }}</span>
 
     <span>{{ item.description }}</span>
-    <div
+    <div v-if="item.piece_juinte"
       class="px-2.5 py-1.5 w-fit text-primary bg-primary/20 rounded-md text-xs font-medium flex gap-1.5 items-center">
       <file-alt class="w-5 fill-primary" />
       Piéces jointe

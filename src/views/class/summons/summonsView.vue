@@ -53,7 +53,7 @@ const useStudent = useStudentStore()
 
 onMounted(async () => {
 
-  await useStudent.getStudents(null, `&classe=${route.params.id}`)
+  await useStudent.getStudents(null, route.params.id)
 
   loading.value = false
 })

@@ -42,7 +42,7 @@
       </div>
     </router-link>
 
-    <div class="flex-1 overflow-hidden  bg-white">
+    <div v-viewer class="flex-1 overflow-hidden  bg-white">
       <div ref="chatContainer" class="h-full overflow-auto">
         <div class="h-fit flex flex-col gap-2 p-3">
           <message-item v-for="(msg, index) in useMessages.messages" :key="msg.id" :message="msg" :side="index % 2" />
@@ -87,6 +87,7 @@
               const base64 = await convertToBase64(file)
               newMessage.type = 'Piece_jouinte'
               newMessage.pieces_jointe = base64
+              newMessage.type_piece_jointe = isBase64Image(base64) ? 'image' : 'Piece_jointe'
             }
             loadingFalse()
           }" class="absolute inset-0 opacity-0">
@@ -135,7 +136,8 @@ const newMessage = reactive({
   message: null,
   pieces_jointe: null,
   type: 'Message',
-  sender: useWidget.authUser.userDetail.id
+  sender: useWidget.authUser.userDetail.id,
+  type_piece_jointe: 'image'
 })
 
 // Track if we should auto-scroll (false if user manually scrolls up)
@@ -176,7 +178,7 @@ onMounted(async () => {
   await useMessages.getChats(route.params.id)
   console.log(useMessages.focusedChat);
 
-  await useMessages.getMessages(`discuss=${route.params.id}`)
+  await useMessages.getMessages(route.params.id)
   await useMessages.getChats(route.params.id)
 
 
@@ -203,7 +205,7 @@ watch(() => useMessages.messages, () => {
 
 watch(() => route.params.id, async () => {
   useMessages.messages = []
-  await useMessages.getMessages(`discuss=${route.params.id}`)
+  await useMessages.getMessages(route.params.id)
 
 
   newMessage.discuss = route.params.id
@@ -222,18 +224,24 @@ const initStore = () => {
 const sendMessage = async () => {
   loading.value = true
   try {
+    console.log(newMessage);
+
     if (newMessage.type === 'Message') {
       delete newMessage.pieces_jointe
     }
     let response = await axios.post(`/api/messages/`, newMessage)
     initStore()
-    await useMessages.getMessages(`discuss=${route.params.id}`)
+    await useMessages.getMessages(route.params.id)
     useMessages.getChats()
 
   } catch (error) {
     console.error(error)
   }
   loading.value = false
+}
+
+function isBase64Image(base64) {
+  return base64.startsWith("data:image/")
 }
 </script>
 

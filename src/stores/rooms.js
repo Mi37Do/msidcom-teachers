@@ -36,20 +36,11 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
-  const getContent = async (id, filter) => {
+  const getContent = async () => {
     try {
-      if (id) {
-        let response = await axios.get(`/api/Planning_course/${id}/`)
-        focusedContent.value = response.data
-      } else if (filter) {
-        let response = await axios.get(`/api/Planning_course/?${filter}`)
-        filtredContent.value = response.data
-        contents.value = response.data
-      } else {
-        let response = await axios.get('/api/Planning_course/')
-        filtredContent.value = response.data
-        contents.value = response.data
-      }
+      let response = await axios.get('/api/Plannin_prof_sql/')
+      filtredContent.value = response.data.Planning
+      contents.value = response.data.Planning
     } catch (error) {
       console.error(error)
 

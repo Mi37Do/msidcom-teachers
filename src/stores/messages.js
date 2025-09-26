@@ -11,19 +11,15 @@ export const useMessagesStore = defineStore('messages', () => {
 
   const focusedInterview = ref(null)
 
-  const getChats = async (id, filter) => {
+  const getChats = async (id) => {
     try {
       if (id) {
         let response = await axios.get(`/api/discussions/${id}`)
         focusedChat.value = response.data
-      } else if (filter) {
-        let response = await axios.get(`/api/discussions/?${filter}`)
-        chats.value = response.data
-        filtredChats.value = response.data
       } else {
-        let response = await axios.get(`/api/discussions/`)
-        chats.value = response.data
-        filtredChats.value = response.data
+        let response = await axios.get(`/api/discussions_user_sql/`)
+        chats.value = response.data.Discussions
+        filtredChats.value = response.data.Discussions
         console.log(filtredChats.value)
       }
     } catch (error) {
@@ -34,8 +30,12 @@ export const useMessagesStore = defineStore('messages', () => {
   const getMessages = async (filter) => {
     try {
       if (filter) {
-        let response = await axios.get(`/api/messages/?${filter}`)
-        messages.value = response.data
+        let response = await axios.post(`/api/message_par_discussion_sql/`, {
+          discussion_id: filter,
+        })
+        console.log(response.data)
+
+        messages.value = response.data.Messages
       } else {
         let response = await axios.get(`/api/messages/`)
         messages.value = response.data

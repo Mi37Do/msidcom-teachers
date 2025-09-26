@@ -31,19 +31,18 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
-  const getStudents = async (id, filter) => {
+  const getStudents = async (id, classe) => {
     try {
       if (id) {
         let response = await axios.get(`/api/Eleve/${id}/`)
         focusedStudent.value = response.data
-      } else if (filter) {
-        let response = await axios.get(`/api/Eleve/?${filter}`)
-        students.value = response.data
-        students.value = students.value.map((item) => ({
-          ...item,
-          checked: false,
-        }))
-        filterdStudents.value = students.value
+      } else if (classe) {
+        let response = await axios.post(`/api/eleve_par_Classe_sql/`, {
+          class_id: classe,
+        })
+        students.value = response.data.Convocations
+        filterdStudents.value = response.data.Convocations
+        console.log(filterdStudents.value)
       } else {
         let response = await axios.get('/api/Eleve/')
         students.value = response.data
@@ -62,13 +61,11 @@ export const useStudentStore = defineStore('student', () => {
   const getAbscences = async (id, student) => {
     try {
       if (student) {
-        let response = await axios.get(`/api/Abs_Retard_Eleve/?eleve=${id}`)
-        abscences.value = response.data
-        filtredAbscences.value = response.data
-      } else {
-        let response = await axios.get(`/api/Abs_Retard_Prof/?prof=${id}`)
-        abscences.value = response.data
-        filtredAbscences.value = response.data
+        let response = await axios.post('/api/Abs_Retard_par_Eleve_sql/', {
+          eleve_id: id,
+        })
+        abscences.value = response.data.Abs_Retards
+        filtredAbscences.value = response.data.Abs_Retards
       }
     } catch (error) {
       console.error(error)

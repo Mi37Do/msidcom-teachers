@@ -127,9 +127,9 @@ const addItem = async () => {
       agent: useWidget.authUser.userDetail.id,
       date_heure_abs: itemToAdd.date_heure_abs,
       type: itemToAdd.type,
-      eleve: props.student.id
+      eleve: props.student.eleve_id
     })
-
+    emits('loadData')
     closeModal()
 
   } catch (error) {

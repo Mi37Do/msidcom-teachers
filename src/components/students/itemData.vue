@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'student-view', params: { studentId: item.id } }"
+  <router-link :to="{ name: 'student-view', params: { studentId: item.eleve_id } }"
     class="w-full py-2 border-b border-border-color hover:bg-slate-50 px-3 grid gap-1.5 grid-cols-3 h-14">
     <span class="my-auto truncate flex items-center gap-3">
       <span class="truncate">

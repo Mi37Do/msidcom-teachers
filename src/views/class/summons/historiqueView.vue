@@ -65,9 +65,6 @@ onMounted(async () => {
     let response = await axios.get(`/api/Convocations_eleve/?eleve__classe=${route.params.id}`)
     historique.value = response.data
     filtredHistorique.value = response.data
-
-    console.log(response.data)
-
   } catch (error) {
     console.error(error)
   }

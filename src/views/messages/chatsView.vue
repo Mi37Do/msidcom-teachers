@@ -24,18 +24,19 @@
             class="pixa-input-icon w-full pr-4 pl-10">
         </div>
       </div>
-
       <div v-if="useMessages.filtredChats.length > 0" class="w-full flex-1 overflow-hidden">
         <div class="h-full overflow-auto hidden-scrollbar">
           <div class="h-fit flex flex-col gap-1">
             <span class="text-secondary-2 font-medium">Administration</span>
             <chatItem
-              :item="useMessages.filtredChats.find(i => i.to_user === useWidget.authUser.userDetail.manager || i.from_user === useWidget.authUser.userDetail.manager)" />
+              :item="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager || i.from_user_id === useWidget.authUser.userDetail.manager)" />
             <span class="h-px bg-border-color"></span>
             <span class="text-secondary-2 font-medium mt-2">Parent d’élèves</span>
             <chatItem
-              v-for="item in filtredChats.filter(i => i.to_user !== useWidget.authUser.userDetail.manager && i.from_user !== useWidget.authUser.userDetail.manager)"
+              v-for="item in filtredChats.filter(i => i.to_user_id !== useWidget.authUser.userDetail.manager && i.from_user_id !== useWidget.authUser.userDetail.manager)"
               :item="item" :key="item.id" />
+
+            <!-- .filter(i => i.to_user_id !== useWidget.authUser.userDetail.manager && i.from_user_id !== useWidget.authUser.userDetail.manager) -->
           </div>
         </div>
       </div>
@@ -82,10 +83,7 @@ onMounted(async () => {
     // await useMessages.getInterviews()
     await useMessages.getChats()
     await useStudent.getParents()
-    console.log(useStudent.parents)
-
     console.log(useMessages.chats)
-
     useMessages.filtredChats = useMessages.chats
 
     loading.value = false
@@ -98,18 +96,15 @@ onMounted(async () => {
 const filtredChats = computed(() => {
   const search = query.value.trim().toLowerCase()
 
-  return useMessages.filtredChats.filter(chatItem => {
-    // make sure users_details is an array
-    return Array.isArray(chatItem.users_details) &&
-      chatItem.users_details.some(user => {
-        // optional chaining so we don't crash if a field is missing
-        return (
-          user.from_user_details?.first_name?.toLowerCase().includes(search) ||
-          user.from_user_details?.last_name?.toLowerCase().includes(search) ||
-          user.to_user_details?.first_name?.toLowerCase().includes(search) ||
-          user.to_user_details?.last_name?.toLowerCase().includes(search)
-        )
-      })
+  if (!search) return useMessages.chats
+
+  return useMessages.chats.filter(chatItem => {
+    return (
+      chatItem.from_user_first_name?.toLowerCase().includes(search) ||
+      chatItem.from_user_last_name?.toLowerCase().includes(search) ||
+      chatItem.to_user_first_name?.toLowerCase().includes(search) ||
+      chatItem.to_user_last_name?.toLowerCase().includes(search)
+    )
   })
 })
 </script>

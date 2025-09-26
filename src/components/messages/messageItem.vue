@@ -1,9 +1,13 @@
 <template>
-  <div :class="useWidget.authUser.userDetail.id === message.sender ? 'ml-auto bg-primary/20' : 'mr-auto bg-[#F5F5F5]'"
+  <div
+    :class="useWidget.authUser.userDetail.id === message.sender_id ? 'ml-auto bg-primary/20' : 'mr-auto bg-[#F5F5F5]'"
     class="max-w-[300px] p-2 rounded-lg h-fit flex flex-col gap-2 items-end">
-    <span>{{ message.message }}</span>
+    <span v-if="message.message">{{ message.message }}</span>
 
-    <div v-if="message.type === 'Piece_jouinte'" @click="saveFile(message.pieces_jointe)" class="w-10 h-10 ">
+    <div v-if="message.type_piece_jointe === 'image'" class="w-40 h-40 overflow-hidden rounded-md">
+      <img :src="message.pieces_jointe" class="w-full h-full object-cover">
+    </div>
+    <div v-else-if="message.type === 'Piece_jouinte'" @click="saveFile(message.pieces_jointe)" class="w-10 h-10 ">
       <downloadFiles class="w-10 fill-primary" />
     </div>
     <div class="hidden">

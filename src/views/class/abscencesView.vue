@@ -7,7 +7,9 @@
 
       }" :placeholder="t('translation.search')" class="pixa-input-icon w-full pr-4 pl-10">
     </div>
-    <commun-late-modal :student="useStudent.focusedStudent" :type="'student'" />
+    <commun-late-modal :student="useStudent.focusedStudent" :type="'student'" @load-data="async () => {
+      await loadData()
+    }" />
     <commun-table>
       <template #table_header>
         <div
@@ -22,7 +24,9 @@
       </template>
 
       <template #table_items>
-        <item-data v-for="item in useStudent.filterdStudents" :key="item.id" :item="item" />
+        <item-data v-for="item in useStudent.filterdStudents" :key="item.id" :item="item" @load-data="async () => {
+          await loadData()
+        }" />
       </template>
     </commun-table>
   </div>
@@ -49,12 +53,18 @@ const loading = ref(true)
 const useStudent = useStudentStore()
 
 onMounted(async () => {
-
-  await useStudent.getStudents(null, `&classe=${route.params.id}`)
-  console.log(useStudent.filterdStudents)
+  await loadData()
 
   loading.value = false
 })
+
+const loadData = async () => {
+  try {
+    await useStudent.getStudents(null, route.params.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 </script>
 

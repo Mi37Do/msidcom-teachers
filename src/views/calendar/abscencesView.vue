@@ -87,9 +87,11 @@ onMounted(async () => {
 
 const loadData = async () => {
   try {
-    let response = await axios.get(`/api/Abs_Retard_Prof/?prof=${useWidget.authUser.userDetail.id}`)
-    historique.value = response.data
-    filtredHistorique.value = response.data
+    let response = await axios.get(`/api/Abs_retard_Prof_sql/`)
+    console.log(response.data);
+
+    historique.value = response.data.Abs_retard_Prof
+    filtredHistorique.value = response.data.Abs_retard_Prof
 
     console.log(response.data)
 

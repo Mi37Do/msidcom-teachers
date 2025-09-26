@@ -1,7 +1,7 @@
 <template>
-  <router-link :to="{ name: 'chat-view', params: { id: item.id } }" @click="async () => {
+  <router-link :to="{ name: 'chat-view', params: { id: item.discussion_id } }" @click="async () => {
 
-    let response = await axios.patch(`/api/discussions/${item.id}/`, {
+    let response = await axios.patch(`/api/discussions/${item.discussion_id}/`, {
       opened: true
     })
 
@@ -16,21 +16,17 @@
     <div class="w-10 h-10 bg-[#6796a880] p-0.5 rounded-full overflow-hidden ">
       <div v-if="useWidget.authUser.userDetail.id === item.from_user"
         class="w-full h-full rounded-full overflow-hidden  flex items-center justify-center">
-        <img v-if="item.users_details[0].to_user_details.image" class="object-cover w-full h-full" :src="item.users_details
-        [0].to_user_details.image" alt="">
+        <img v-if="item.to_user_image" class="object-cover w-full h-full" :src="item.to_user_image" alt="">
         <span v-else class="uppercase font-semibold">{{
-          item.users_details[0].to_user_details.last_name[0] }}{{
-            item.users_details
-            [0].to_user_details.first_name[0] }}</span>
+          item.to_user_first_name[0] }}{{
+            item.to_user_last_name[0] }}</span>
       </div>
 
       <div v-else class="w-full h-full rounded-full overflow-hidden  flex items-center justify-center">
-        <img v-if="item.users_details[0].from_user_details.image" :src="item.users_details
-        [0].from_user_details.image" class="object-cover w-full h-full" alt="">
+        <img v-if="item.from_user_image" :src="item.from_user_image" class="object-cover w-full h-full" alt="">
         <span v-else class="uppercase font-semibold">{{
-          item.users_details[0].from_user_details.last_name[0] }}{{
-            item.users_details
-            [0].from_user_details.first_name[0] }}</span>
+          item.from_user_first_name[0] }}{{
+            item.from_user_last_name[0] }}</span>
       </div>
 
 
@@ -40,14 +36,14 @@
       <div v-if="useWidget.authUser.userDetail.id === item.from_user"
         class="flex-1 flex flex-col justify-center gap-1 overflow-hidden">
         <span class="font-medium w-full flex truncate gap-1.5">
-          <span>{{ item.users_details[0].to_user_details.first_name + ' ' +
-            item.users_details[0].to_user_details.last_name }} </span>
+          <span>{{ item.from_user_first_name + ' ' +
+            item.from_user_last_name }} </span>
         </span>
       </div>
       <div v-else class="flex-1 flex flex-col justify-center gap-1 overflow-hidden">
         <span class="font-medium w-full flex truncate gap-1.5">
-          <span>{{ item.users_details[0].from_user_details.first_name + ' ' +
-            item.users_details[0].from_user_details.last_name }} </span>
+          <span>{{ item.from_user_first_name + ' ' +
+            item.from_user_last_name }} </span>
         </span>
       </div>
       <div class="flex gap-1.5 items-center">

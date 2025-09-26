@@ -86,7 +86,7 @@ const addItem = async () => {
       prof: useWidget.authUser.userDetail.id,
       date: new Date(),
       motif: motif.value,
-      eleve: props.student.id
+      eleve: props.student.eleve_id
     })
 
     //emits('loadData')
