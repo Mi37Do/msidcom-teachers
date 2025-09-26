@@ -122,7 +122,7 @@ const addItem = async () => {
     response = await axios.patch(`/api/GET_or_PUT_User/${useWidget.authUser.userDetail.id}/`, {
       image: tempImage.value
     })
-
+    await useWidget.initData()
     closeModal()
 
     Object.assign(itemToAdd, {

@@ -43,9 +43,7 @@ import { useI18n } from 'vue-i18n';
 import { useEventStore } from '@/stores/events';
 import { useWidgetStore } from '@/stores/widget';
 import addEditItem from '@/components/annoncements/addEditItem.vue';
-import deleteModal from '@/components/commun/deleteModal.vue';
 import itemData from '@/components/annoncements/itemData.vue'
-import axios from 'axios';
 import { useSubjectStore } from '@/stores/subjects';
 import { useRoomStore } from '@/stores/rooms';
 import communNoData from '@/components/commun/communNoData.vue';

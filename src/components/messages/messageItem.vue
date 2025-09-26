@@ -4,12 +4,15 @@
     class="max-w-[300px] p-2 rounded-lg h-fit flex flex-col gap-2 items-end">
     <span v-if="message.message">{{ message.message }}</span>
 
-    <div v-if="message.type_piece_jointe === 'image'" class="w-40 h-40 overflow-hidden rounded-md">
-      <img :src="message.pieces_jointe" class="w-full h-full object-cover">
+    <div v-if="message.type === 'Piece_jouinte'">
+      <div v-if="message.type_piece_jointe === 'image'" class="w-40 h-40 overflow-hidden rounded-md">
+        <img :src="message.pieces_jointe" class="w-full h-full object-cover">
+      </div>
+      <div v-else @click="saveFile(message.pieces_jointe)" class="w-10 h-10 ">
+        <downloadFiles class="w-10 fill-primary" />
+      </div>
     </div>
-    <div v-else-if="message.type === 'Piece_jouinte'" @click="saveFile(message.pieces_jointe)" class="w-10 h-10 ">
-      <downloadFiles class="w-10 fill-primary" />
-    </div>
+
     <div class="hidden">
       {{ message }}
     </div>
@@ -24,9 +27,6 @@ import { format } from 'date-fns';
 
 const props = defineProps(['message', 'side'])
 const useWidget = useWidgetStore()
-
-console.log(props.message);
-
 
 const { downloadFile } = useDownloadFile()
 
