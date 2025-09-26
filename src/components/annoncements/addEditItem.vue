@@ -213,7 +213,7 @@ const addItem = async () => {
       response = await axios.put(`/api/Annonce_prof/${useRoom.focusedRoom.id}/`, itemToAdd)
     }
 
-    await useEvent.getAnnoncements(null, `Prof=${useWidget.authUser.userDetail.id}`)
+    await useEvent.getAnnoncements()
     closeModal()
 
   } catch (error) {
