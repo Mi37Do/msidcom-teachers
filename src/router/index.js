@@ -23,6 +23,11 @@ const router = createRouter({
       },
       children: [
         {
+          path: '/notifications',
+          name: 'notifications-panel',
+          component: () => import('../views/pages/notificationsView.vue'),
+        },
+        {
           path: '/profile',
           name: 'profile-panel',
           component: () => import('../views/pages/profileView.vue'),

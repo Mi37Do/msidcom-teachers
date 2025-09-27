@@ -130,7 +130,7 @@ const login = async () => {
     Cookies.set('token', response.data.token)
     axios.defaults.headers.common['Authorization'] = 'token ' + Cookies.get('token')
 
-    // await useWidget.configWeb()
+    await useWidget.getNotifications()
 
     router.push({ name: 'app-panel' })
   } catch (error) {

@@ -194,18 +194,28 @@ export const useWidgetStore = defineStore('widget', () => {
     return localStorage.getItem('user-language')
   }
 
+  const notifications = ref([])
+  const getNotifications = async () => {
+    try {
+      let response = await axios.get('/api/Notifications_sql')
+      console.log(response.data.Notifications)
+      notifications.value = response.data.Notifications
+    } catch (error) {}
+  }
+
   const initData = async () => {
     if (Cookies.get('token')) {
       axios.defaults.headers.common['Authorization'] = 'token ' + Cookies.get('token')
     }
 
     try {
-      let matierSpecialites = []
       let response = await axios.get('/api/Userinfo_sql_Apps')
       authUser.isAuthenticated = true
       authUser.userDetail = response.data.User
 
       manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager_id
+
+      //  await getNotifications()
     } catch (error) {
       authUser.isAuthenticated = false
       console.error(error)
@@ -250,27 +260,6 @@ export const useWidgetStore = defineStore('widget', () => {
     await getAnnee()
   }
 
-  const getWebConfig = () => {
-    if (localStorage.getItem('rooms')) {
-      useRooms.rooms = JSON.parse(localStorage.getItem('rooms'))
-    }
-    if (localStorage.getItem('classes')) {
-      useRooms.classes = JSON.parse(localStorage.getItem('classes'))
-    }
-
-    if (localStorage.getItem('specialites')) {
-      useSubject.specialites = JSON.parse(localStorage.getItem('specialites'))
-    }
-
-    if (localStorage.getItem('subjects')) {
-      useSubject.subjects = JSON.parse(localStorage.getItem('subjects'))
-    }
-
-    if (localStorage.getItem('annee')) {
-      annee.value = JSON.parse(localStorage.getItem('annee'))
-    }
-  }
-
   const signOut = async () => {
     localStorage.removeItem('subjects')
     localStorage.removeItem('rooms')
@@ -313,7 +302,7 @@ export const useWidgetStore = defineStore('widget', () => {
     } catch (error) {
       console.error(error)
 
-      useWidget.addToast({
+      addToast({
         msg: error.message,
         color: 'red',
       })
@@ -352,7 +341,6 @@ export const useWidgetStore = defineStore('widget', () => {
     addEditClass,
     classStatus,
     configWeb,
-    getWebConfig,
     signOut,
     addEditStudent,
     deleteModal,
@@ -394,5 +382,7 @@ export const useWidgetStore = defineStore('widget', () => {
     summonDetail,
     addImage,
     subscriptionModal,
+    notifications,
+    getNotifications,
   }
 })

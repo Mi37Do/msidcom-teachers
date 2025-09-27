@@ -4,9 +4,12 @@
       <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
 
       <div class="flex gap-3 items-center ml-auto">
-        <button class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0">
+        <router-link :to="{ name: 'notifications-panel' }"
+          class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
+          <span class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
+            useWidget.notifications.filter(i => !i.is_read).length}}</span>
           <BellIcon class="w-[30px] h-[30px]" />
-        </button>
+        </router-link>
         <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
           <router-link :to="{ name: 'profile-panel' }" class="w-11 h-11 absolute z-10"></router-link>
           <img v-if="useWidget.authUser.
@@ -51,6 +54,9 @@ import BellIcon from '@/assets/icons/bellIcon.vue';
 const useWidget = useWidgetStore()
 
 onMounted(() => {
+  setInterval(async () => {
+    await useWidget.getNotifications()
+  }, 60000)
 })
 
 </script>
