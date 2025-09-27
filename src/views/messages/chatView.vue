@@ -215,7 +215,7 @@ watch(() => route.params.id, async () => {
 const initStore = () => {
   Object.assign(newMessage, {
     discuss: route.params.id,
-    message: '',
+    message: null,
     pieces_jointe: '',
     type: 'Message'
   })
