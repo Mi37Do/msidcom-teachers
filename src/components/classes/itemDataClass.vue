@@ -58,6 +58,7 @@ const { t } = useI18n()
 const selectClass = (item) => {
   let current = item.specialite_designation + ' - ' + item.class_num
   localStorage.setItem('current_class', current)
+  localStorage.setItem('specialite', item.specialite_id)
   router.push({ name: 'class-panel', params: { id: item.classe_id } })
 }
 </script>

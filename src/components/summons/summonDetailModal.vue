@@ -20,25 +20,26 @@
               </div>
 
               <span class="capitalize font-medium text-[18px] pt-3">élève concerné</span>
-              <span class="text-secondary-2">{{ item.eleve_designations.eleve_designations_nom }} {{
-                item.eleve_designations.eleve_designations_prenom }}</span>
+              <span class="text-secondary-2">{{ item.eleve_nom }} {{
+                item.eleve_prenom }}</span>
 
               <span class="capitalize font-medium text-[18px] pt-3">motif De la convocation</span>
-              <span class="text-secondary-2 w-full break-words max-h-32 overflow-auto"> {{ item.motif }}</span>
+              <span class="text-secondary-2 w-full break-words max-h-32 overflow-auto"> {{ item.convocations_motif
+                }}</span>
 
               <span class="capitalize font-medium text-[18px] pt-3">tuteur légal de l’élève</span>
 
               <div class="flex items-center gap-3 w-full mt-1.5">
 
-                <div class="w-11 h-11 bg-[#F5F5F5] p-0.5 rounded-lg">
-                  <img src="" alt="">
+                <div class="w-11 h-11 bg-[#F5F5F5] p-0.5 rounded-lg overflow-hidden">
+                  <img v-if="item.parent_image" :src="item.parent_image" alt="" class="object-cover">
                 </div>
 
-                <span class="text-[18px]">{{ item.eleve_designations.eleve_parent_first_name }} {{
-                  item.eleve_designations.eleve_parent_last_name }}</span>
+                <span class="text-[18px]">{{ item.parent_first_name }} {{
+                  item.parent_last_name }}</span>
               </div>
 
-              <span class="mt-3">Signalé Le {{ format(item.date, 'dd-MM-yyyy HH:mm') }}</span>
+              <span class="mt-3">Signalé Le {{ format(item.convocation_date, 'dd-MM-yyyy HH:mm') }}</span>
 
             </DialogPanel>
           </TransitionChild>

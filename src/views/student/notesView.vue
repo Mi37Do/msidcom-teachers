@@ -241,10 +241,9 @@ onMounted(async () => {
     let response = await axios.get(`/api/Notes/?eleve=${route.params.studentId}`)
     notes.value = response.data
 
-    for (let index = 0; index < useWidget.authUser.userDetail.matiere.length; index++) {
-      const element = useWidget.authUser.userDetail.matiere[index]
-      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite)
-      console.log('matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite);
+    for (let index = 0; index < useWidget.authUser.userDetail.matieres.matiere.length; index++) {
+      const element = useWidget.authUser.userDetail.matieres.matiere[index].id
+      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + localStorage.getItem('specialite'))
 
       matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
     }

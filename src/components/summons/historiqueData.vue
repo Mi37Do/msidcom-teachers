@@ -3,12 +3,12 @@
     `grid grid-cols-2 gap-1.5`]">
     <span class="my-auto truncate flex items-center gap-3">
       <span class="font-medium truncate flex-1">
-        {{ item.eleve_designations.eleve_designations_prenom }} {{ item.eleve_designations.eleve_designations_nom
+        {{ item.eleve_nom }} {{ item.eleve_prenom
         }}</span>
     </span>
     <span class="my-auto truncate flex items-center gap-3">
       <span class="font-medium truncate flex-1">
-        {{ format(item.date, 'dd-MM-yyyy HH:mm') }}</span>
+        {{ format(item.convocation_date, 'dd-MM-yyyy HH:mm') }}</span>
 
       <button @click="() => {
         useStudent.focusedSummon = item

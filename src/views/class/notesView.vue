@@ -159,10 +159,10 @@ const matierSpecialites = ref([])
 onMounted(async () => {
 
   try {
-    for (let index = 0; index < useWidget.authUser.userDetail.matiere.length; index++) {
-      const element = useWidget.authUser.userDetail.matiere[index]
-      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite)
-      console.log('matiere=' + element + '&specialite=' + useRoom.focusedClass.specialite);
+    for (let index = 0; index < useWidget.authUser.userDetail.matieres.matiere.length; index++) {
+      const element = useWidget.authUser.userDetail.matieres.matiere[index].id
+      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' +
+        localStorage.getItem('specialite'))
 
       matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
     }
@@ -194,16 +194,16 @@ const loadData = async () => {
     await loadNotes(selectedSpecialite.value)
 
     for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === useRoom.focusedClass.specialite).nbr_test; index++) {
+      === localStorage.getItem('specialite')).nbr_test; index++) {
       tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === useRoom.focusedClass.specialite).nbr_test === 1 ? 'test' : `test_${index + 1}`)
+        === localStorage.getItem('specialite')).nbr_test === 1 ? 'test' : `test_${index + 1}`)
     }
 
 
     for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === useRoom.focusedClass.specialite).nbr_test; index++) {
+      === localStorage.getItem('specialite')).nbr_test; index++) {
       tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === useRoom.focusedClass.specialite).nbr_devoir === 1 ? 'homework' : `homework_${index + 1}`)
+        === localStorage.getItem('specialite')).nbr_devoir === 1 ? 'homework' : `homework_${index + 1}`)
     }
 
     tabs.value.push('exam')

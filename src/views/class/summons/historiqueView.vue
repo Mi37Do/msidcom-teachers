@@ -34,7 +34,7 @@
 
       <!---->
       <template #table_items>
-        <HistoriqueData v-for="item in filtredHistorique" :key="item.id" :item="item" />
+        <HistoriqueData v-for="item in filtredHistorique" :key="item.convocations_id" :item="item" />
       </template>
     </commun-table>
   </div>
@@ -62,9 +62,17 @@ const historique = ref([])
 
 onMounted(async () => {
   try {
-    let response = await axios.get(`/api/Convocations_eleve/?eleve__classe=${route.params.id}`)
-    historique.value = response.data
-    filtredHistorique.value = response.data
+    let response = await axios.post(`/api/Convocations_eleve_par_Prof_Classe_sql/`, {
+      class_id: route.params.id
+    })
+    console.log(response.data);
+
+    historique.value = response.data.
+      Convocations
+
+    filtredHistorique.value = response.data.
+      Convocations
+
   } catch (error) {
     console.error(error)
   }
