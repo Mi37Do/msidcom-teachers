@@ -7,7 +7,7 @@
         <router-link :to="{ name: 'notifications-panel' }"
           class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
           <span class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
-            useWidget.notifications.filter(i => !i.is_read).length}}</span>
+            unreadCount }}</span>
           <BellIcon class="w-[30px] h-[30px]" />
         </router-link>
         <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
@@ -47,16 +47,39 @@ import calendar from '@/assets/icons/calendar.vue';
 import ruler from '@/assets/icons/ruler.vue';
 import schedule from '@/assets/icons/schedule.vue';
 import comments from '@/assets/icons/comments.vue';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useWidgetStore } from '@/stores/widget';
 import BellIcon from '@/assets/icons/bellIcon.vue';
+import { useNotificationBadge } from '@/stores/notifications';
 
 const useWidget = useWidgetStore()
-
-onMounted(() => {
+const { initialize,
+  startPolling,
+  stopPolling,
+  markAsRead,
+  unreadCount,
+  notifications } = useNotificationBadge()
+let pollingInterval = null
+onMounted(async () => {
+  await initialize()
+  pollingInterval = startPolling(30000)
+  /**
   setInterval(async () => {
-    await useWidget.getNotifications()
-  }, 60000)
+    await getNotifications()
+  }, 10000)*/// 60000
+})
+
+const handleNotificationInApp = async (notification) => {
+  await markAsRead([notification.id])
+
+  // Navigate based on type
+  if (notification.type === 'ENTREVUE_DEMANDE' && notification.entrevue_id) {
+    //   router.push(`/entrevues/${notification.entrevue_id}`)
+  }
+}
+
+onUnmounted(() => {
+  stopPolling(pollingInterval)
 })
 
 </script>

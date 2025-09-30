@@ -19,7 +19,7 @@
 
       <div class="h-full overflow-auto">
         <div class="h-fit pb-6 flex flex-col gap-1.5 px-6">
-          <itemData v-for="not in useWidget.notifications" :key="not.id" :item="not" />
+          <itemData v-for="not in notifications" :key="not.id" :item="not" />
 
 
 
@@ -75,13 +75,16 @@ import itemData from '@/components/notifications/itemData.vue';
 import { onMounted, ref } from 'vue';
 import { useWidgetStore } from '@/stores/widget';
 import { format } from 'date-fns';
+import { useNotificationBadge } from '@/stores/notifications';
 
 const { t } = useI18n()
 const loading = ref(true)
 const useWidget = useWidgetStore()
+const { getNotifications, notifications } = useNotificationBadge()
 
 onMounted(async () => {
-  await useWidget.getNotifications()
+  await getNotifications()
+  console.log(notifications.value);
 
   loading.value = false
 })

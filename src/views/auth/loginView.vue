@@ -68,6 +68,7 @@ import eyeSlash from '@/assets/icons/eyeSlash.vue';
 import { useRouter } from 'vue-router';
 import { Capacitor } from '@capacitor/core'
 import { Keyboard } from '@capacitor/keyboard'
+import { useNotificationBadge } from '@/stores/notifications';
 
 const keyboardHeight = ref(0)
 const remainingHeight = ref(window.innerHeight)
@@ -78,6 +79,7 @@ const isPassword = ref(true)
 const user = reactive(
   { username: '', password: '' }
 )
+const useNotif = useNotificationBadge()
 const loading = ref(false)
 const errorMessage = reactive(
   {
@@ -125,12 +127,15 @@ const login = async () => {
   loading.value = true
   axios.defaults.headers.common['Authorization'] = ''
   try {
+    if (user.username.endsWith(' ')) {
+      user.username.trimEnd()
+    }
     let response = await axios.post(`/api/Login_PROF`, user)
 
     Cookies.set('token', response.data.token)
     axios.defaults.headers.common['Authorization'] = 'token ' + Cookies.get('token')
 
-    await useWidget.getNotifications()
+    await useNotif.getNotifications()
 
     router.push({ name: 'app-panel' })
   } catch (error) {
