@@ -3,11 +3,13 @@ import axios from 'axios'
 import { LocalNotifications } from '@capacitor/local-notifications'
 import { Badge } from '@capawesome/capacitor-badge'
 import { Capacitor } from '@capacitor/core'
+import { useRouter } from 'vue-router'
 
 export function useNotificationBadge() {
   const notifications = ref([])
   const lastCheckedIds = ref(new Set())
   const hasPermission = ref(false)
+  const router = useRouter()
 
   // Computed: Count of unread notifications
   const unreadCount = computed(() => {
@@ -207,7 +209,9 @@ export function useNotificationBadge() {
     try {
       // Your API call to mark as read
       // await axios.post('/api/notifications/mark-read', { ids: notificationIds })
-
+      let response = await axios.patch(`/api/Notification/${notificationIds}/`, {
+        is_read: true,
+      })
       // Update local state
       notifications.value = notifications.value.map((n) =>
         notificationIds.includes(n.id) ? { ...n, is_read: true } : n,
@@ -221,6 +225,8 @@ export function useNotificationBadge() {
 
       // Update badge with new count
       await updateBadgeCount(unreadCount.value)
+
+      router.push({ name: 'notifications-panel' })
     } catch (error) {
       console.error('Error marking as read:', error)
     }
