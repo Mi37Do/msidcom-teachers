@@ -19,7 +19,7 @@
     <div v-else class="flex-1 bg-white border-y border-border-color  overflow-hidden">
       <div v-if="useRoom.filtredContent.filter(i => i.cours_days === selectedDay).length > 0"
         class="w-full h-full overflow-y-auto py-3 px-6">
-        <div class="h-fit flex flex-col">
+        <div class="h-fit flex flex-col gap-1.5">
           <calendar-item v-for="item in useRoom.filtredContent.filter(i => i.cours_days === selectedDay)" :item="item"
             :key="item.id" />
         </div>

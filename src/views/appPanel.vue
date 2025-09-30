@@ -78,9 +78,10 @@ const handleNotificationInApp = async (notification) => {
   }
 }
 
+/**
 onUnmounted(() => {
   stopPolling(pollingInterval)
-})
+})*/
 
 </script>
 
