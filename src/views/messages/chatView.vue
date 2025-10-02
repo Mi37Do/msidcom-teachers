@@ -178,9 +178,11 @@ onMounted(async () => {
   await useMessages.getChats(route.params.id)
   console.log(useMessages.focusedChat);
 
-  await useMessages.getMessages(route.params.id)
-  await useMessages.getChats(route.params.id)
+  setInterval(async () => {
+    await useMessages.getMessages(route.params.id)
+  }, 5000)
 
+  await useMessages.getMessages(route.params.id)
 
   // Add scroll event listener
   if (chatContainer.value) {

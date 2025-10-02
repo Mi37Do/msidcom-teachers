@@ -27,12 +27,17 @@
       <div v-if="useMessages.filtredChats.length > 0" class="w-full flex-1 overflow-hidden">
         <div class="h-full overflow-y-auto hidden-scrollbar">
           <div class="h-fit flex flex-col  overflow-x-hidden gap-1">
-            <span class="text-secondary-2 font-medium">Administration</span>
+            <span
+              v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
+              class="text-secondary-2 font-medium">Administration</span>
 
             <!-- -->
             <chatItem
+              v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
               :item="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)" />
-            <span class="h-px bg-border-color"></span>
+            <span
+              v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
+              class="h-px bg-border-color"></span>
             <span class="text-secondary-2 font-medium mt-2">Parent d’élèves</span>
 
             <chatItem
@@ -87,8 +92,9 @@ onMounted(async () => {
     await useMessages.getChats()
     await useStudent.getParents()
     useMessages.filtredChats = useMessages.chats
-
-    console.log(useMessages.filtredChats)
+    setInterval(async () => {
+      await useMessages.getChats()
+    }, 5000)
     loading.value = false
   } catch (error) {
     console.error(error)
