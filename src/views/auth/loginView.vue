@@ -128,7 +128,7 @@ const login = async () => {
   axios.defaults.headers.common['Authorization'] = ''
   try {
     if (user.username.endsWith(' ')) {
-      user.username.trimEnd()
+      user.username = user.username.trimEnd()
     }
     let response = await axios.post(`/api/Login_PROF`, user)
 

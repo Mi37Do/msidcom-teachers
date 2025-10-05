@@ -57,7 +57,7 @@
 <script setup>
 import communNoData from "@/components/commun/communNoData.vue";
 import { useMessagesStore } from "@/stores/messages";
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/users";
 import addChatModal from "@/components/messages/addChatModal.vue";
 import chatItem from '@/components/messages/chatItem.vue'
@@ -86,13 +86,15 @@ const usersTypes = ref(
   ]
 )
 
+let intervalId = null
+
 onMounted(async () => {
   try {
     // await useMessages.getInterviews()
     await useMessages.getChats()
     await useStudent.getParents()
     useMessages.filtredChats = useMessages.chats
-    setInterval(async () => {
+    intervalId = setInterval(async () => {
       await useMessages.getChats()
     }, 5000)
     loading.value = false
@@ -115,6 +117,13 @@ const filtredChats = computed(() => {
       chatItem.to_user_last_name?.toLowerCase().includes(search)
     )
   })
+})
+
+onBeforeUnmount(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+    intervalId = null
+  }
 })
 </script>
 

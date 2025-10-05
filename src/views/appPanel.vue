@@ -7,7 +7,7 @@
         <router-link :to="{ name: 'notifications-panel' }"
           class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
           <span class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
-            unreadCount }}</span>
+            useNotif.unreadCount }}</span>
           <BellIcon class="w-[30px] h-[30px]" />
         </router-link>
         <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
@@ -53,16 +53,11 @@ import BellIcon from '@/assets/icons/bellIcon.vue';
 import { useNotificationBadge } from '@/stores/notifications';
 
 const useWidget = useWidgetStore()
-const { initialize,
-  startPolling,
-  stopPolling,
-  markAsRead,
-  unreadCount,
-  notifications } = useNotificationBadge()
+const useNotif = useNotificationBadge()
 let pollingInterval = null
 onMounted(async () => {
-  await initialize()
-  pollingInterval = startPolling(30000)
+  await useNotif.initialize()
+  pollingInterval = useNotif.startPolling(10000)
   /**
   setInterval(async () => {
     await getNotifications()
@@ -70,7 +65,7 @@ onMounted(async () => {
 })
 
 const handleNotificationInApp = async (notification) => {
-  await markAsRead([notification.id])
+  await useNotif.markAsRead([notification.id])
 
   // Navigate based on type
   if (notification.type === 'ENTREVUE_DEMANDE' && notification.entrevue_id) {

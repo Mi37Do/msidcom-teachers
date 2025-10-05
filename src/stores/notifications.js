@@ -4,9 +4,11 @@ import { LocalNotifications } from '@capacitor/local-notifications'
 import { Badge } from '@capawesome/capacitor-badge'
 import { Capacitor } from '@capacitor/core'
 import { useRouter } from 'vue-router'
+import { defineStore } from 'pinia'
 
-export function useNotificationBadge() {
+export const useNotificationBadge = defineStore('notifications', () => {
   const notifications = ref([])
+  const notificationsList = ref([])
   const lastCheckedIds = ref(new Set())
   const hasPermission = ref(false)
   const router = useRouter()
@@ -45,6 +47,7 @@ export function useNotificationBadge() {
     try {
       const response = await axios.get('/api/Notifications_sql')
       const newNotifications = response.data.Notifications
+      notificationsList.value = newNotifications
 
       // Get unread notifications
       const unreadNotifications = newNotifications.filter((n) => !n.is_read)
@@ -207,13 +210,17 @@ export function useNotificationBadge() {
   // Mark notifications as read and update badge
   const markAsRead = async (notificationIds) => {
     try {
-      // Your API call to mark as read
-      // await axios.post('/api/notifications/mark-read', { ids: notificationIds })
-      let response = await axios.patch(`/api/Notification/${notificationIds}/`, {
-        is_read: true,
-      })
-      // Update local state
+      // Mark each notification as read via API
+      await Promise.all(
+        notificationIds.map((id) => axios.patch(`/api/Notification/${id}/`, { is_read: true })),
+      )
+
+      // Update both local states
       notifications.value = notifications.value.map((n) =>
+        notificationIds.includes(n.id) ? { ...n, is_read: true } : n,
+      )
+
+      notificationsList.value = notificationsList.value.map((n) =>
         notificationIds.includes(n.id) ? { ...n, is_read: true } : n,
       )
 
@@ -225,10 +232,9 @@ export function useNotificationBadge() {
 
       // Update badge with new count
       await updateBadgeCount(unreadCount.value)
-
-      router.push({ name: 'notifications-panel' })
     } catch (error) {
       console.error('Error marking as read:', error)
+      throw error // Re-throw so component can handle it
     }
   }
 
@@ -242,19 +248,19 @@ export function useNotificationBadge() {
         if (extra.entrevue_id) {
           // Navigate to entrevue details
           console.log('Navigate to entrevue:', extra.entrevue_id)
-          // router.push(`/entrevues/${extra.entrevue_id}`)
+          router.push(`/entrevues/${extra.entrevue_id}`)
         }
         break
       case 'DISCUSSION':
         if (extra.discussion_id) {
           console.log('Navigate to discussion:', extra.discussion_id)
-          // router.push(`/discussions/${extra.discussion_id}`)
+          router.push(`/discussions/${extra.discussion_id}`)
         }
         break
       case 'ANNONCE':
         if (extra.annonce_id) {
           console.log('Navigate to annonce:', extra.annonce_id)
-          // router.push(`/annonces/${extra.annonce_id}`)
+          router.push(`/annonces/${extra.annonce_id}`)
         }
         break
       default:
@@ -301,6 +307,7 @@ export function useNotificationBadge() {
 
   return {
     notifications,
+    notificationsList,
     unreadCount,
     hasPermission,
     requestPermissions,
@@ -316,4 +323,4 @@ export function useNotificationBadge() {
     startPolling,
     stopPolling,
   }
-}
+})

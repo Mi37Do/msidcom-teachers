@@ -139,6 +139,7 @@ const newMessage = reactive({
   sender: useWidget.authUser.userDetail.id,
   type_piece_jointe: 'image'
 })
+let intervalId = null
 
 // Track if we should auto-scroll (false if user manually scrolls up)
 const shouldAutoScroll = ref(true)
@@ -178,7 +179,7 @@ onMounted(async () => {
   await useMessages.getChats(route.params.id)
   console.log(useMessages.focusedChat);
 
-  setInterval(async () => {
+  intervalId = setInterval(async () => {
     await useMessages.getMessages(route.params.id)
   }, 5000)
 
@@ -245,6 +246,13 @@ const sendMessage = async () => {
 function isBase64Image(base64) {
   return base64.startsWith("data:image/")
 }
+
+onBeforeUnmount(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+    intervalId = null
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

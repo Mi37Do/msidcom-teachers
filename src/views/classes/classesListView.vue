@@ -61,6 +61,8 @@ const hasClasses = computed(() =>
 onMounted(async () => {
   try {
     await useRoom.getClasses();
+    console.log(useRoom.classes);
+
   } catch (error) {
     console.error('Failed to load classes:', error);
     // Consider adding error state handling here
