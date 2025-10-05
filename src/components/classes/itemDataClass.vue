@@ -27,13 +27,6 @@
       <span class="capitlize font-semibold">{{ t('translation.subject') }}</span>
       <span>{{ item.matiere_designation }}</span>
     </div>
-    <span class="capitlize font-semibold px-3">Progression Programme</span>
-    <div class="flex items-center gap-3 w-full px-3">
-      <div class="flex-1">
-        <commun-progress-bar />
-      </div>
-      <span class="text-primary font-semibold">66%</span>
-    </div>
 
     <button @click="selectClass(item)" class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{
       t('translation.access') }}
