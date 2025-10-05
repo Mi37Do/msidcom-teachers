@@ -47,7 +47,7 @@
       </div>
       <div class="flex gap-1.5 items-center">
         <span class="truncate text-[0.8rem] flex-1">{{ item.last_message }}</span>
-        <div v-if="!item.opened && (item.last_message_from !== useWidget.authUser.userDetail.id)"
+        <div v-if="!item.opened && (item.last_message_from_id !== useWidget.authUser.userDetail.id)"
           class="w-1 h-1 bg-secondary-2 rounded-full"></div>
       </div>
 

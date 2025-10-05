@@ -54,8 +54,7 @@
         <div v-if="useStudent.focusedStudent.parents" class="col-span-2">
           <div class="flex gap-3">
             <div class="w-[90px] h-[90px] rounded-[18px] p-1 bg-border-color">
-              <div
-                class="w-full h-full bg-primary-3 rounded-[15px] overflow-hidden flex useStudent.focusedStudents-center justify-center">
+              <div class="w-full h-full bg-primary-3 rounded-[15px] overflow-hidden flex items-center justify-center">
                 <img v-if="useStudent.focusedStudent.photo" :src="useStudent.focusedStudent.photo"
                   class="object-cover w-full h-full" alt="">
                 <div v-else class="flex uppercase font-semibold text-white text-xl">{{

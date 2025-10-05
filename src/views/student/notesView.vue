@@ -176,7 +176,7 @@ v-else
                 selectedSpecialite).moyenne ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).moyenne : 'N/A'}}</span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'avg')
+              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'avrege')
                 "
                 class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
                 <edit class="w-5"></edit>
