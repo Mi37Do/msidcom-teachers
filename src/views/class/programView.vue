@@ -9,7 +9,7 @@
         selectedSpecialite = id
 
         specialiteFilter = tempSpecialite.find(i => i.id === selectedSpecialite).subject
-        await loadData(id)
+        //   await loadData(id)
         console.log(programs)
       }"></commun-dropdown>
     </div>
