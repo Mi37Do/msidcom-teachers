@@ -134,6 +134,7 @@ import { useSubjectStore } from "@/stores/subjects"
 import addNoteModal from "@/components/notes/addNoteModal.vue"
 import { useStudentStore } from "@/stores/students"
 import communDropdown from "@/components/commun/communDropdown.vue"
+import axios from "axios"
 
 const { t } = useI18n()
 const route = useRoute()
@@ -157,53 +158,86 @@ const specialiteFilter = ref(null)
 const matierSpecialites = ref([])
 
 onMounted(async () => {
-
   try {
-    for (let index = 0; index < useWidget.authUser.userDetail.matieres.matiere.length; index++) {
-      const element = useWidget.authUser.userDetail.matieres.matiere[index].id
-      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' +
-        localStorage.getItem('specialite'))
-
-      matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
-    }
-
-    tempSpecialite.value = matierSpecialites.value.map(item => {
-      return {
-        id: item.id,
-        designation: item.matiere_designations,
-        specialite: item.specialite,
-        nbr_test: item.nbr_test,
-        nbr_devoir: item.nbr_devoir
-      }
+    // Fetch matieres for the class
+    const response = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
+      class_id: route.params.id
     })
-    selectedSpecialite.value = tempSpecialite.value[0].id
-    specialiteFilter.value = tempSpecialite.value[0].specialite
+
+    const matieres = response.data.Matiere
+    const specialite = localStorage.getItem('specialite')
+    const userMatieres = useWidget.authUser.userDetail.matieres.matiere
+
+    // Fetch all matiere specialites in parallel
+    const promises = userMatieres.map(async (matiere) => {
+      await useSubject.getMatiereSpecialite(
+        null,
+        `matiere=${matiere.id}&specialite=${specialite}`
+      )
+
+      // Filter items that match matieres
+      return useSubject.matiereSpecialite.filter(spec =>
+        matieres.some(m => m.matiere_id === spec.matiere)
+      )
+    })
+
+    const results = await Promise.all(promises)
+    matierSpecialites.value = results.flat()
+
+    console.log(useSubject.matiereSpecialite)
+
+    // Map to tempSpecialite
+    tempSpecialite.value = matierSpecialites.value.map(item => ({
+      id: item.id,
+      designation: item.matiere_designations,
+      specialite: item.specialite,
+      nbr_test: item.nbr_test,
+      nbr_devoir: item.nbr_devoir
+    }))
+
+    // Set default values with safety check
+    if (tempSpecialite.value.length > 0) {
+      selectedSpecialite.value = tempSpecialite.value[0].id
+      specialiteFilter.value = tempSpecialite.value[0].specialite
+    }
 
     await loadData()
     loading.value = false
   } catch (error) {
     console.error(error)
+    useWidget.addToast({
+      msg: error.message,
+      color: 'red'
+    })
   }
 })
 
 const loadData = async () => {
   try {
     await useStudent.getStudents(null, route.params.id)
-    console.log(useStudent.filterdStudents.length);
+    console.log(useStudent.filterdStudents.length)
 
     await loadNotes(selectedSpecialite.value)
 
-    for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === localStorage.getItem('specialite')).nbr_test; index++) {
-      tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === localStorage.getItem('specialite')).nbr_test === 1 ? 'test' : `test_${index + 1}`)
+    const specialite = localStorage.getItem('specialite')
+    const currentSpecialite = useSubject.matiereSpecialite.find(
+      i => i.specialite === specialite
+    )
+
+    if (!currentSpecialite) {
+      throw new Error('Specialite not found')
     }
 
+    // Add test tabs
+    const nbrTest = currentSpecialite.nbr_test
+    for (let index = 0; index < nbrTest; index++) {
+      tabs.value.push(nbrTest === 1 ? 'test' : `test_${index + 1}`)
+    }
 
-    for (let index = 0; index < useSubject.matiereSpecialite.find(i => i.specialite
-      === localStorage.getItem('specialite')).nbr_test; index++) {
-      tabs.value.push(useSubject.matiereSpecialite.find(i => i.specialite
-        === localStorage.getItem('specialite')).nbr_devoir === 1 ? 'homework' : `homework_${index + 1}`)
+    // Add homework tabs
+    const nbrDevoir = currentSpecialite.nbr_devoir
+    for (let index = 0; index < nbrDevoir; index++) {
+      tabs.value.push(nbrDevoir === 1 ? 'homework' : `homework_${index + 1}`)
     }
 
     tabs.value.push('exam')
@@ -217,11 +251,11 @@ const loadData = async () => {
   }
 }
 
-
 const loadNotes = async (id) => {
   try {
     loadingData.value = true
-    let filter = `${id}&Trimestre=${trimester.value === 1 ? 'First' : trimester.value === 2 ? 'Second' : 'Third'}`
+    const trimesterMap = { 1: 'First', 2: 'Second', 3: 'Third' }
+    const filter = `${id}&Trimestre=${trimesterMap[trimester.value]}`
     await useSubject.getNotes(filter)
     loadingData.value = false
   } catch (error) {

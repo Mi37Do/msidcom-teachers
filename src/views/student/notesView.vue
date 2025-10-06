@@ -52,7 +52,7 @@ v-else
 
         <template #table_items>
 
-          <div class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2 capitalize">
+          <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2 capitalize">
             <span class="my-auto"> {{ t(`translation.attendance`) }}</span>
             <div class="flex items-center justify-between">
               <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
@@ -60,15 +60,10 @@ v-else
                 selectedSpecialite).assiduite ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).assiduite : 'N/A'}}</span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'attendance')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
           </div>
 
-          <div class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+          <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.test`) }} {{tempSpecialites.find(i => i.id ===
               selectedSpecialite).nbr_test > 1 ?
               1 : null}}</span>
@@ -79,16 +74,11 @@ v-else
                 selectedSpecialite).test_1 ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).test_1 : 'N/A'}} </span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'test_1')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
           </div>
 
           <div v-if="tempSpecialites.find(i => i.id === selectedSpecialite).nbr_test > 1"
-            class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+            class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.test`) }} 2</span>
 
             <div class="flex items-center justify-between">
@@ -98,16 +88,11 @@ v-else
                 selectedSpecialite).test_2 ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).test_2 : 'N/A'}} </span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'test_2')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
 
 
           </div>
-          <div class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+          <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.homework`) }} {{tempSpecialites.find(i => i.id ===
               selectedSpecialite).nbr_devoir >
               1 ?
@@ -120,15 +105,10 @@ v-else
                 selectedSpecialite).devoir_1 ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).devoir_1 : 'N/A'}} </span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'homework_1')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
           </div>
           <div v-if="tempSpecialites.find(i => i.id === selectedSpecialite).nbr_devoir > 1"
-            class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+            class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.homework`) }} 2</span>
 
             <div class="flex items-center justify-between">
@@ -139,14 +119,10 @@ v-else
                 selectedSpecialite).devoir_2 ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).devoir_2 : 'N/A'}}</span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'homework_2')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
+
             </div>
           </div>
-          <div class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+          <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.exam`) }}</span>
 
 
@@ -157,16 +133,11 @@ v-else
                 selectedSpecialite).examens ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).examens : 'N/A'}}</span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'exam')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
 
 
           </div>
-          <div class="w-full h-fit border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
+          <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.avg`) }}</span>
 
             <div class="flex items-center justify-between">
@@ -176,11 +147,6 @@ v-else
                 selectedSpecialite).moyenne ? tempNotes.find(i => i.matiere_spec ===
                   selectedSpecialite).moyenne : 'N/A'}}</span>
 
-              <button @click="addTempNote(tempNotes.find(i => i.matiere_spec === selectedSpecialite), 'avrege')
-                "
-                class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
-                <edit class="w-5"></edit>
-              </button>
             </div>
           </div>
         </template>
@@ -237,30 +203,54 @@ const tempNote = reactive({
 
 onMounted(async () => {
 
+
+
   try {
     let response = await axios.get(`/api/Notes/?eleve=${route.params.studentId}`)
     notes.value = response.data
 
-    for (let index = 0; index < useWidget.authUser.userDetail.matieres.matiere.length; index++) {
-      const element = useWidget.authUser.userDetail.matieres.matiere[index].id
-      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' + localStorage.getItem('specialite'))
 
-      matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
-    }
-
-    tempSpecialites.value = matierSpecialites.value.map(item => {
-      return {
-        id: item.id,
-        designation: item.matiere_designations,
-        specialite: item.specialite,
-        nbr_test: item.nbr_test,
-        nbr_devoir: item.nbr_devoir
-      }
+    // Fetch matieres for the class
+    const responseMatiere = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
+      class_id: route.params.id
     })
 
+    const matieres = responseMatiere.data.Matiere
+    const specialite = localStorage.getItem('specialite')
+    const userMatieres = useWidget.authUser.userDetail.matieres.matiere
 
-    selectedSpecialite.value = tempSpecialites.value[0].id
-    specialiteFilter.value = tempSpecialites.value[0].specialite
+    // Fetch all matiere specialites in parallel
+    const promises = userMatieres.map(async (matiere) => {
+      await useSubject.getMatiereSpecialite(
+        null,
+        `matiere=${matiere.id}&specialite=${specialite}`
+      )
+
+      // Filter items that match matieres
+      return useSubject.matiereSpecialite.filter(spec =>
+        matieres.some(m => m.matiere_id === spec.matiere)
+      )
+    })
+
+    const results = await Promise.all(promises)
+    matierSpecialites.value = results.flat()
+
+    console.log(useSubject.matiereSpecialite)
+
+    // Map to tempSpecialite
+    tempSpecialites.value = matierSpecialites.value.map(item => ({
+      id: item.id,
+      designation: item.matiere_designations,
+      specialite: item.specialite,
+      nbr_test: item.nbr_test,
+      nbr_devoir: item.nbr_devoir
+    }))
+
+    // Set default values with safety check
+    if (tempSpecialites.value.length > 0) {
+      selectedSpecialite.value = tempSpecialites.value[0].id
+      specialiteFilter.value = tempSpecialites.value[0].specialite
+    }
 
     tempNotes.value = response.data.filter(item => item.Trimestre === selectedTrimester.value)
 
