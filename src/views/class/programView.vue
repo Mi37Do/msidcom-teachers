@@ -8,7 +8,7 @@
       <commun-dropdown :list="tempSpecialite" :selected="selectedSpecialite" @on-selected-item="async (id) => {
         selectedSpecialite = id
 
-        specialiteFilter = tempSpecialite.find(i => i.id === selectedSpecialite).subject
+        //   specialiteFilter = tempSpecialite.find(i => i.id === selectedSpecialite).subject
         //   await loadData(id)
         console.log(programs)
       }"></commun-dropdown>
@@ -16,7 +16,7 @@
 
 
     <div v-if="programs.find(i => i.matiere_id ===
-      specialiteFilter)"
+      selectedSpecialite)"
       class="flex-1 overflow-hidden flex flex-col gap-3 bg-white border-y border-border-color  px-6 py-3">
 
       <div class="h-14 flex gap-3 my-1.5 items-center">
@@ -25,14 +25,14 @@
         </div>
         <div class="flex-1 flex flex-col gap-1.5">
           <span class="font-medium">{{programs.find(i => i.matiere_id ===
-            specialiteFilter).programe_designations}}</span>
+            selectedSpecialite).programe_designations}}</span>
           <div class="flex items-center gap-3 w-full ">
             <div class="flex-1">
               <commun-progress-bar :value="programs.find(i => i.matiere_id ===
-                specialiteFilter)?.progress_percentage" />
+                selectedSpecialite)?.progress_percentage" />
             </div>
             <span class="text-primary font-semibold">{{programs.find(i => i.matiere_id ===
-              specialiteFilter)?.progress_percentage}}%</span>
+              selectedSpecialite)?.progress_percentage}}%</span>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
         <div class="w-full h-full overflow-auto">
           <div class="h-fit flex flex-col gap-3 pb-3">
             <div v-for="(program, index) in programs.find(i => i.matiere_id ===
-              specialiteFilter)?.chapitres
+              selectedSpecialite)?.chapitres
           " :key="program" class="h-fit flex flex-col gap-3 border-b border-border-color pb-3">
               <span class="text-lg font-semibold text-secondary-2">{{ index + 1 }} - {{ program.chapitre_designation }}
                 ( {{program.cours.filter(i => i.est_accompli === true)?.length}}/{{
@@ -97,29 +97,25 @@ const specialiteFilter = ref(null)
 onMounted(async () => {
   try {
 
-    for (let index = 0; index < useWidget.authUser.userDetail.matieres.matiere.length; index++) {
-      const element = useWidget.authUser.userDetail.matieres.matiere[index].id
-      await useSubject.getMatiereSpecialite(null, 'matiere=' + element + '&specialite=' +
-        localStorage.getItem('specialite'))
 
-      matierSpecialites.value = [...matierSpecialites.value, ...useSubject.matiereSpecialite]
-    }
+    // Fetch matieres for the class
+    const responseMatiere = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
+      class_id: route.params.id
+    })
 
+    console.log(responseMatiere.data.Matiere
+    );
 
-
-
-    tempSpecialite.value = matierSpecialites.value.map(item => {
+    tempSpecialite.value = responseMatiere.data.Matiere.map(item => {
       return {
-        id: item.id,
-        designation: item.matiere_designations,
-        specialite: item.specialite,
-        subject: item.matiere,
+        id: item.matiere_id,
+        designation: item.matiere_designation,
       }
     })
 
 
     selectedSpecialite.value = tempSpecialite.value[0].id
-    specialiteFilter.value = tempSpecialite.value[0].subject
+    // specialiteFilter.value = tempSpecialite.value[0].subject
 
     console.log(specialiteFilter.value);
 
