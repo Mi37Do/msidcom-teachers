@@ -18,7 +18,7 @@
         <span v-if="tab === 'exam'">{{ selectedNotes.examens ? selectedNotes.examens : 'N/A' }}</span>
       </span>
 
-      <button @click="() => {
+      <button v-if="useWidget.currentYear" @click="() => {
         tempNotes.Trimestre = trimester
         tempNotes.matiere_spec = specialite
         Object.assign(useWidget.addNote, {
