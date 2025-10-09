@@ -54,7 +54,7 @@ const tempNotes = reactive({
   test_2: null,
   Trimestre: null, matiere_spec: null,
   devoir_2: null, examens: null,
-  anne: '7e837ea2-228f-4826-a882-5ae56a1d895e'
+  anne: useWidget.currentYear ? useWidget.currentYear.id : null,
 })
 const { t } = useI18n()
 

@@ -177,6 +177,8 @@ export const useWidgetStore = defineStore('widget', () => {
   const summonDetail = ref(false)
   const addImage = ref(false)
 
+  const currentYear = ref(null)
+
   const toggleLanguage = () => {
     const activeLanguage = localStorage.getItem('user-language')
     if (activeLanguage === 'ar') setLanguage('ar')
@@ -211,7 +213,12 @@ export const useWidgetStore = defineStore('widget', () => {
     try {
       let response = await axios.get('/api/Userinfo_sql_Apps')
       authUser.isAuthenticated = true
-      authUser.userDetail = response.data.User
+
+      console.log(response.data)
+
+      authUser.userDetail = response.data.User[0]
+
+      currentYear.value = response.data.Annee[0]
 
       manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager_id
 
@@ -384,5 +391,6 @@ export const useWidgetStore = defineStore('widget', () => {
     subscriptionModal,
     notifications,
     getNotifications,
+    currentYear,
   }
 })
