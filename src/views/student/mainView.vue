@@ -70,15 +70,18 @@
                 {{
                   useStudent.focusedStudent.parents_designations }}</span>
               <button @click="async () => {
+
                 try {
-                  let response = await axios.get(`/api/discussions/?to_user=${useStudent.focusedStudent.parents}`)
-                  if (response.data.length > 0) {
-                    router.push({ name: 'chat-view', params: { id: response.data[0].id } })
+                  let response = await axios.post(`/api/discussions_user_sql2/`, {
+                    user2: useStudent.focusedStudent.parents
+                  })
+                  if (response.data.Discussions.length > 0) {
+                    router.push({ name: 'chat-view', params: { id: response.data.Discussions[0].discussion_id } })
                   } else {
                     Object.assign(useWidget.addChatPassive, {
                       open: true,
                       to: useStudent.focusedStudent.parents,
-                      designation: useStudent.focusedStudent.parents_designations
+                      designation: item.parents_designations
                     })
                   }
                 } catch (error) {

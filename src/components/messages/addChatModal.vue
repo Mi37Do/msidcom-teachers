@@ -53,7 +53,7 @@
                                 class="w-[40px] h-[40px] bg-primary-3 rounded-full text-white flex items-center justify-center overflow-hidden">
                                 <img v-if="user.image" :src="user.image" class="object-cover w-full h-full" alt="">
                                 <span v-else class="uppercase  mt-1">{{ user.first_name[0] }}{{ user.last_name[0]
-                                  }}</span>
+                                }}</span>
                               </div>
 
                               <div class="flex items-center flex-1 overflow-hidden">
@@ -128,6 +128,7 @@ import communDropdown from '../commun/communDropdown.vue';
 import search from '@/assets/icons/search.vue';
 import axios from 'axios';
 import { useMessagesStore } from '@/stores/messages';
+import { useRouter } from 'vue-router';
 
 const useWidget = useWidgetStore()
 const useMessages = useMessagesStore()
@@ -135,6 +136,7 @@ const props = defineProps(['users', 'usersTypes'])
 const { t } = useI18n()
 const loading = ref(false)
 const selectedType = ref('PARENT')
+const router = useRouter()
 
 const selected = ref(props.users[0].id)
 
@@ -148,11 +150,17 @@ let response = null
 const addItem = async () => {
   loading.value = true
   try {
-    response = await axios.post(`/api/discussions/`, {
-      from_user: useWidget.authUser.userDetail.id,
-      to_user: selected.value
+    let response = await axios.post(`/api/discussions_user_sql2/`, {
+      user2: selected.value
     })
-
+    if (response.data.Discussions.length > 0) {
+      router.push({ name: 'chat-view', params: { id: response.data.Discussions[0].discussion_id } })
+    } else {
+      let response2 = await axios.post(`/api/discussions/`, {
+        from_user: useWidget.authUser.userDetail.id,
+        to_user: selected.value
+      })
+    }
     await useMessages.getChats()
     closeModal()
 
