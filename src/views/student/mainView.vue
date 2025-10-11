@@ -81,7 +81,7 @@
                     Object.assign(useWidget.addChatPassive, {
                       open: true,
                       to: useStudent.focusedStudent.parents,
-                      designation: item.parents_designations
+                      designation: useStudent.focusedStudent.parents_designations
                     })
                   }
                 } catch (error) {
