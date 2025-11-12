@@ -10,6 +10,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'loading-view',
+      component: () => import('@/views/loadingView.vue'),
+    },
+    {
+      path: '/login',
       name: 'login-view',
       component: () => import('@/views/auth/loginView.vue'),
     },

@@ -25,7 +25,8 @@
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.subject') }}</span>
-      <span>{{ item.matiere_designation }}</span>
+      <div class="flex gap-1 flex-wrap truncate"> <span v-for="mat in item.matiere_designation" :key="mat">{{
+        mat }},</span></div>
     </div>
 
     <button @click="selectClass(item)" class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{

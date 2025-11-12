@@ -14,6 +14,7 @@
     "ionic:serve": "npm run dev"
   },
   "dependencies": {
+    "@capacitor-community/file-opener": "^7.0.1",
     "@capacitor/android": "7.4.2",
     "@capacitor/app": "7.0.2",
     "@capacitor/background-runner": "^2.2.0",
@@ -23,6 +24,7 @@
     "@capacitor/haptics": "7.0.2",
     "@capacitor/keyboard": "^7.0.2",
     "@capacitor/local-notifications": "^7.0.3",
+    "@capacitor/preferences": "^7.0.2",
     "@capacitor/push-notifications": "^7.0.3",
     "@capacitor/status-bar": "7.0.2",
     "@capacitor/toast": "^7.0.2",
@@ -32,6 +34,7 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
+    "firebase": "^12.4.0",
     "js-cookie": "^3.0.5",
     "pinia": "^3.0.1",
     "tailwindcss-rtl": "^0.9.0",

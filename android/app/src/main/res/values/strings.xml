@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">msidcom</string>
-    <string name="title_activity_main">msidcom</string>
+    <string name="app_name">MSIDCOM Enseignant</string>
+
+    <string name="title_activity_main">MSIDCOM Enseignant</string>
     <string name="package_name">msidcom.prof.app</string>
     <string name="custom_url_scheme">msidcom.prof.app</string>
 </resources>

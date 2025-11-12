@@ -13,7 +13,7 @@
       , 'dd/MM/yyyy - HH:mm') }}</span>
 
     <span>{{ item.description }}</span>
-    <div v-if="item.piece_juinte"
+    <div v-if="item.piece_juinte" @click="saveFile(item.piece_juinte)"
       class="px-2.5 py-1.5 w-fit text-primary bg-primary/20 rounded-md text-xs font-medium flex gap-1.5 items-center">
       <file-alt class="w-5 fill-primary" />
       Piéces jointe
@@ -28,10 +28,16 @@ import Trash from '@/assets/icons/trash.vue';
 import { useWidgetStore } from '@/stores/widget';
 import { format } from 'date-fns';
 import fileAlt from '@/assets/icons/fileAlt.vue';
+import { useDownloadFile } from '@/composables/downloadFile';
 
 const props = defineProps(['item', 'classes'])
 const useWidget = useWidgetStore()
+const { downloadFile } = useDownloadFile()
 
+const saveFile = (base64String) => {
+  let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}`
+  downloadFile(uniqueName, base64String, 'application/pdf')
+}
 </script>
 
 <style lang="scss" scoped></style>

@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
 import { uuid } from 'vue-uuid'
 import { useRoomStore } from './rooms'
 import { useSubjectStore } from './subjects'
+import { Preferences } from '@capacitor/preferences'
 
 export const useWidgetStore = defineStore('widget', () => {
   const navBar = ref(false)
@@ -206,8 +207,14 @@ export const useWidgetStore = defineStore('widget', () => {
   }
 
   const initData = async () => {
-    if (Cookies.get('token')) {
-      axios.defaults.headers.common['Authorization'] = 'token ' + Cookies.get('token')
+    // First, try to get token from Preferences (persistent storage)
+    const { value } = await Preferences.get({ key: 'authToken-prof' })
+    console.log('Token from Preferences:', value)
+
+    if (value) {
+      // Set the token in cookies and axios headers
+      Cookies.set('token', value)
+      axios.defaults.headers.common['Authorization'] = 'token ' + value
     }
 
     try {

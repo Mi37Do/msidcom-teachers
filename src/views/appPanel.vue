@@ -43,40 +43,72 @@
 </template>
 
 <script setup>
-import calendar from '@/assets/icons/calendar.vue';
 import ruler from '@/assets/icons/ruler.vue';
 import schedule from '@/assets/icons/schedule.vue';
+import calendar from '@/assets/icons/calendar.vue';
 import comments from '@/assets/icons/comments.vue';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useWidgetStore } from '@/stores/widget';
 import BellIcon from '@/assets/icons/bellIcon.vue';
 import { useNotificationBadge } from '@/stores/notifications';
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
+import { Capacitor } from '@capacitor/core';
+import { useRouter } from 'vue-router';
 
-const useWidget = useWidgetStore()
-const useNotif = useNotificationBadge()
-let pollingInterval = null
+const { fcmToken, notification, error, initializeFCM } = useFirebaseMessaging();
+const useWidget = useWidgetStore();
+const useNotif = useNotificationBadge();
+const router = useRouter();
+
 onMounted(async () => {
-  await useNotif.initialize()
-  pollingInterval = useNotif.startPolling(10000)
-  /**
-  setInterval(async () => {
-    await getNotifications()
-  }, 10000)*/// 60000
-})
+  console.log('App mounted, initializing...');
 
-const handleNotificationInApp = async (notification) => {
-  await useNotif.markAsRead([notification.id])
+  // Initialize notification store (fetch initial count from API)
+  await useNotif.initialize();
 
-  // Navigate based on type
-  if (notification.type === 'ENTREVUE_DEMANDE' && notification.entrevue_id) {
-    //   router.push(`/entrevues/${notification.entrevue_id}`)
+  // Initialize FCM Push Notifications
+  if (Capacitor.isNativePlatform()) {
+    console.log('Native platform detected, initializing FCM...');
+    await initializeFCM();
+  } else {
+    // Web - check permission first
+    if (Notification.permission === 'granted') {
+      await initializeFCM();
+    } else {
+      console.log('Web notification permission not granted yet');
+    }
   }
-}
+});
 
-/**
-onUnmounted(() => {
-  stopPolling(pollingInterval)
-})*/
+// Watch for new push notifications
+watch(notification, async (newNotification) => {
+  if (newNotification) {
+    console.log('New push notification received:', newNotification);
+
+    // Refresh notification count from API
+    await useNotif.getNotifications();
+
+    // Handle navigation if notification contains action data
+    if (newNotification.data) {
+      const { type, entrevue_id, discussion_id, annonce_id } = newNotification.data;
+
+      // Optionally navigate or show in-app notification
+      // You can add a toast/alert here if needed
+    }
+
+    // Clear notification reference after handling
+    setTimeout(() => {
+      notification.value = null;
+    }, 5000);
+  }
+});
+
+// Watch for FCM errors
+watch(error, (newError) => {
+  if (newError) {
+    console.error('FCM Error:', newError);
+  }
+});
 
 </script>
 
