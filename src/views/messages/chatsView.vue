@@ -31,7 +31,6 @@
               v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
               class="text-secondary-2 font-medium">Administration</span>
 
-            <!-- -->
             <chatItem
               v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
               :item="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)" />
@@ -97,6 +96,9 @@ onMounted(async () => {
     intervalId = setInterval(async () => {
       await useMessages.getChats()
     }, 5000)
+    console.log(useMessages.filtredChats);
+
+
     loading.value = false
   } catch (error) {
     console.error(error)

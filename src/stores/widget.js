@@ -220,9 +220,6 @@ export const useWidgetStore = defineStore('widget', () => {
     try {
       let response = await axios.get('/api/Userinfo_sql_Apps')
       authUser.isAuthenticated = true
-
-      console.log(response.data)
-
       authUser.userDetail = response.data.User[0]
 
       currentYear.value = response.data.Annee[0]
