@@ -3,9 +3,9 @@
     <div :style="{ color: currentTheme.secondary, background: currentTheme.primary }"
       class="flex-1 h-full  rounded-[10px] p-4 border border-border-color flex flex-col items-center overflow-hidden gap-2">
       <span class="font-semibold truncate">
-        {{ item.matiere_designations }} - {{ item.type_cour }}</span>
+        {{ item.matiere_designation }} - {{ item.type_cour }}</span>
       <span class="capitalize">{{ t('translation.room') }} - {{
-        item.salle_designations }}</span>
+        item.salle_designation }}</span>
       <span class="capitalize">{{ t('translation.classe') }} {{
         item.class_specialite }} - {{
           item.salle_designation }}</span>

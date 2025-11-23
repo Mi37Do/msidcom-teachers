@@ -59,14 +59,11 @@ import {
   TransitionChild,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n';
-import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 import { Preferences } from '@capacitor/preferences';
 
-const { fcmToken } = useFirebaseMessaging();
-const props = defineProps(['item'])
+const props = defineProps(['item', 'token'])
 const useWidget = useWidgetStore()
 const loadingDelete = ref(false)
 const route = useRoute()
@@ -78,13 +75,15 @@ const closeModal = () => {
 }
 
 const deleteItem = async () => {
+  console.log(props.token);
+
   try {
     let reponseRemove = await axios.post('/api/device/unregister/', {
-      token: fcmToken
+      token: props.token
     })
     await Preferences.remove({ key: 'authToken-prof' });
     let response = await axios.post('/api/Logout')
-
+    closeModal()
     router.push({ name: 'login-view' })
   } catch (error) {
     console.error(error)

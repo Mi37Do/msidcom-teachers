@@ -3,7 +3,7 @@
     <div class="w-full h-full px-6 overflow-auto">
       <div class="h-fit py-6 flex flex-col gap-6">
 
-        <SignOutModal />
+        <SignOutModal :token="fcmToken" />
         <edit-password />
         <add-image />
 
@@ -92,20 +92,23 @@ import { useWidgetStore } from '@/stores/widget';
 import edit from '@/assets/icons/edit.vue';
 import plus from '@/assets/icons/plus.vue';
 import { useI18n } from 'vue-i18n';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useSubjectStore } from '@/stores/subjects';
 import addImage from "@/components/profile/addImage.vue";
 import signOut from '@/assets/icons/signOut.vue';
 import editPassword from '@/components/profile/editPassword.vue'
 import SignOutModal from '@/components/commun/signOutModal.vue';
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const useWidget = useWidgetStore()
 const useSubject = useSubjectStore()
+const { fcmToken, initializeFCM } = useFirebaseMessaging();
 const { t } = useI18n()
+const loading = ref(true)
 
-onMounted(() => {
-  console.log(useSubject.matiereSpecialite);
-
+onMounted(async () => {
+  await initializeFCM()
+  loading.value = false
 })
 
 </script>
