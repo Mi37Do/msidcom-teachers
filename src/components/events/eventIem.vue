@@ -12,7 +12,7 @@
           <div class="flex-1 h-full flex flex-col overflow-hidden">
             <span :style="{ color: currentTheme.secondary }" class="text-lg font-medium truncate capitalize">{{
               item.titre
-            }} </span>
+              }} </span>
 
             <div class="w-full flex gap-3 font-medium">
               <span>le {{ item.date_event }} {{ t('translation.from') }} {{ item.from_time ?
@@ -36,12 +36,17 @@
               {{ item.description }}</p>
           </div>
 
-          <button v-if="item.sous_inscription" @click="() => {
-            useEvent.focusedEvents = item
-            useWidget.subscriptionModal = true
-          }" :style="{ background: currentTheme.secondary }"
+          <button
+            v-if="item.sous_inscription && (!item.Subscribed_details.subscribed_prof_details.find(i => i.prof_id === useWidget.authUser.userDetail.id))"
+            @click="() => {
+              useEvent.focusedEvents = item
+              useWidget.subscriptionModal = true
+            }" :style="{ background: currentTheme.secondary }"
             class="btn btn-sm pixa-btn text-white border-0">s'inscrire</button>
-
+          <span
+            v-if="item.sous_inscription && (item.Subscribed_details.subscribed_prof_details.find(i => i.prof_id === useWidget.authUser.userDetail.id))"
+            class="font-semibold uppercase">Déja
+            inscrit</span>
         </DisclosurePanel>
       </Disclosure>
     </div>

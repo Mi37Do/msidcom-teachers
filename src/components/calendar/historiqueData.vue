@@ -54,8 +54,8 @@ const { downloadFile } = useDownloadFile()
 
 // Trigger from UI
 const saveFile = (base64String) => {
-  let uniqueName = `justification_${props.item.type}_${useWidget.authUser.userDetail.first_name}_${useWidget.authUser.userDetail.last_name}_${format(props.item.date_heure_abs, 'dd_MM_yyyy')}.pdf`
-  downloadFile(uniqueName, base64String, 'application/pdf')
+  let uniqueName = `justification_${props.item.type}_${useWidget.authUser.userDetail.first_name}_${useWidget.authUser.userDetail.last_name}_${format(props.item.date_heure_abs, 'dd_MM_yyyy')}`
+  downloadFile(uniqueName, base64String)
 }
 
 </script>

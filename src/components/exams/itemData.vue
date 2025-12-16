@@ -53,9 +53,9 @@ defineExpose({ rootElement })
 
 // Trigger from UI
 const saveFile = (base64String) => {
-  let uniqueName = `examen_${props.item.specialite_designations.replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}.pdf`
+  let uniqueName = `examen_${props.item.specialite_designations.replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}`
 
-  downloadFile(uniqueName, base64String, 'application/pdf')
+  downloadFile(uniqueName, base64String)
 }
 </script>
 

@@ -36,7 +36,7 @@ const { downloadFile } = useDownloadFile()
 
 const saveFile = (base64String) => {
   let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}`
-  downloadFile(uniqueName, base64String, 'application/pdf')
+  downloadFile(uniqueName, base64String)
 }
 </script>
 

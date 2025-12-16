@@ -32,8 +32,8 @@ const { downloadFile } = useDownloadFile()
 
 // Trigger from UI
 const saveFile = (base64String) => {
-  let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}.pdf`
-  downloadFile(uniqueName, base64String, 'application/pdf')
+  let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}`
+  downloadFile(uniqueName, base64String)
 }
 </script>
 
