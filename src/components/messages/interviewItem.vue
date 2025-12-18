@@ -18,11 +18,15 @@
       <span v-if="item.entrevue_hours" class="font-medium">{{ item.entrevue_hours }}</span>-->
     </div>
 
-
     <div class="flex gap-1.5 flex-1 truncate">
       <span class="text-secondary-2 capitalize">Tuteur : </span>
       <span>{{ item.parent_designations }}</span>
 
+    </div>
+
+    <div class="flex gap-1.5 flex-1">
+      <span class="text-secondary-2 capitalize">{{ t('translation.hours') }} : </span> <span>{{ item.prof_disponiblites
+      }}</span>
     </div>
 
     <div class="flex gap-1.5 flex-1">
