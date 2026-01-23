@@ -66,7 +66,6 @@
 </template>
 
 <script setup>
-import comments from '@/assets/icons/comments.vue';
 import checkIcon from '@/assets/icons/checkIcon.vue';
 import { format } from 'date-fns';
 import { ref } from 'vue';

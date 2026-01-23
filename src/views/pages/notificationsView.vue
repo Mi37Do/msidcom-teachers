@@ -10,7 +10,7 @@
 
         <!---->
         <span class="pixa-title-2 flex-1 leading-loose">
-          notifications
+          {{ t('translation.notifications') }}
         </span>
       </div>
     </div>

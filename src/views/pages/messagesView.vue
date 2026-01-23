@@ -3,9 +3,8 @@
     <div class="w-full flex items-center justify-between px-6">
       <nav class="w-fit rounded-xl flex gap-1 p-1 pixa-border">
         <router-link :to="{ name: 'chats-panel' }"
-          class="btn btn-sm pixa-btn-navigation btn-ghost">messagerie</router-link>
-        <router-link :to="{ name: 'interview-view' }" class="btn btn-sm pixa-btn-navigation btn-ghost">entrevue
-          programmé</router-link>
+          class="btn btn-sm pixa-btn-navigation btn-ghost">{{ t('translation.messaging') }}</router-link>
+        <router-link :to="{ name: 'interview-view' }" class="btn btn-sm pixa-btn-navigation btn-ghost">{{ t('translation.scheduledInterview') }}</router-link>
       </nav>
     </div>
 

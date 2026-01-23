@@ -11,7 +11,7 @@
     <button type="button" @click="emit('hideTimePicker', {
       hours: localHours,
       minutes: localMinutes
-    })" class="btn btn-primary">valider</button>
+    })" class="btn btn-primary">{{ t('translation.validate') }}</button>
   </div>
 
 </template>
@@ -19,6 +19,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import PickerColumn from './PickerColumn.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {

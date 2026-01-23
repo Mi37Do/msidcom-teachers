@@ -16,9 +16,9 @@
 
               <exclamation-icon class="w-12 fill-error" />
 
-              <span class="pixa-title-2">êtes-vous sûr?</span>
+              <span class="pixa-title-2">{{ t('translation.areYouSure') }}</span>
 
-              <span class="text-center">Êtes-vous sûr(e) de vouloir signaler une convocation à cette élève ?</span>
+              <span class="text-center">{{ t('translation.confirmSummon') }}</span>
 
 
               <div class="w-full flex flex-col">
@@ -38,7 +38,7 @@
                 <button type="submit" :disabled="loading" class="btn btn-sm pixa-btn-form btn-error w-52">
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
-                  <span v-else>signaler convocation</span>
+                  <span v-else>{{ t('translation.signalSummon') }}</span>
                 </button>
               </div>
             </DialogPanel>

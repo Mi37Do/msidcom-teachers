@@ -33,8 +33,7 @@
     </div>
 
     <form @submit.prevent="sendMessage" class="w-full h-fit flex flex-col border-t border-border-color">
-      <span v-if="newMessage.type === 'Piece_jouinte'" class="w-full pt-4 pb-1 px-4 flex items-center">Piéce jointe
-        uploader ...</span>
+      <span v-if="newMessage.type === 'Piece_jouinte'" class="w-full pt-4 pb-1 px-4 flex items-center">{{ t('translation.attachmentUploading') }}</span>
 
       <div class="w-full h-16  p-3 flex gap-3 items-center justify-between">
         <div class="btn btn-sm btn-square btn-outline relative">
@@ -53,7 +52,7 @@
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
-        <input type="text" v-model="newMessage.message" :required="newMessage.type === 'Message'"
+        <input type="text" v-model="newMessage.message"  minlength="50" :required="newMessage.type === 'Message'"
           class="pixa-input flex-1">
         <button type="submit" class="btn btn-sm btn-square btn-outline">
           <MessageIcon class="w-5" />
@@ -76,6 +75,9 @@ import paperClip from '@/assets/icons/paperClip.vue';
 import MessageIcon from '@/assets/icons/messageIcon.vue';
 import { useFileToBase64 } from '@/composables/useFileToBase64';
 import { useWidgetStore } from '@/stores/widget';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const chatContainer = ref(null)
 const useMessages = useMessagesStore()

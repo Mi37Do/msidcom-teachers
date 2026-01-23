@@ -11,7 +11,7 @@
 
       <div class="flex flex-col gap-3 pb-4 border-b border-border-color">
         <div class="w-full   flex items-center justify-between mt-1">
-          <span class="pixa-title-3">Nouvelle Discussion</span>
+          <span class="pixa-title-3">{{ t('translation.newDiscussion') }}</span>
 
           <button @click="useWidget.addChat = true" class="btn btn-sm btn-primary w-10 p-1">
             <plus class="fill-white w-5" />
@@ -29,7 +29,7 @@
           <div class="h-fit flex flex-col  overflow-x-hidden gap-1">
             <span
               v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
-              class="text-secondary-2 font-medium">Administration</span>
+              class="text-secondary-2 font-medium">{{ t('translation.administration') }}</span>
 
             <chatItem
               v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
@@ -37,7 +37,7 @@
             <span
               v-if="useMessages.filtredChats.find(i => i.to_user_id === useWidget.authUser.userDetail.manager_id || i.from_user_id === useWidget.authUser.userDetail.manager_id)"
               class="h-px bg-border-color"></span>
-            <span class="text-secondary-2 font-medium mt-2">Parent d’élèves</span>
+            <span class="text-secondary-2 font-medium mt-2">{{ t('translation.studentParents') }}</span>
 
             <chatItem
               v-for="item in filtredChats.filter(i => i.
@@ -77,10 +77,10 @@ const usersTypes = ref(
   [
     {
       id: 'PARENT',
-      designation: 'Parent'
+      designation: t('translation.parent')
     }, {
       id: 'PROF',
-      designation: 'Proffesseur'
+      designation: t('translation.professor')
     }
   ]
 )

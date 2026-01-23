@@ -3,9 +3,7 @@
     <span class="loading loading-spinner loading-sm"></span>
   </div>
   <div v-else class="w-full h-full  flex flex-col overflow-hidden">
-    <router-link :to="{ name: 'chats-view' }"
-      class="w-full h-16 border-y border-border-color p-3 flex gap-3 items-center bg-white">
-      <arrow-icon class="w-5 rotate-180 fill-primary" />
+    <div class="w-full h-16 border-y border-border-color p-3 flex gap-3 items-center bg-white">
       <div class="w-10 h-10 bg-primary/30 p-0.5 rounded-full">
         <div v-if="useWidget.authUser.userDetail.id === useMessages.focusedChat.from_user"
           class="w-full h-full rounded-full overflow-hidden  flex items-center justify-center">
@@ -40,7 +38,7 @@
             useMessages.focusedChat.users_details[0].from_user_details.last_name }} </span>
         </span>
       </div>
-    </router-link>
+    </div>
 
     <div v-viewer class="flex-1 overflow-hidden  bg-white">
       <div ref="chatContainer" class="h-full overflow-auto">
@@ -52,9 +50,8 @@
 
     <form @submit.prevent="sendMessage" class="w-full h-fit flex flex-col border-t border-border-color">
       <div v-if="newMessage.type === 'Piece_jouinte'">
-        <span v-if="loadFile" class="w-full pt-4 pb-1 px-4 flex items-center animate-pulse font-medium">Téléchargement
-          en
-          cours ...</span>
+        <span v-if="loadFile" class="w-full pt-4 pb-1 px-4 flex items-center animate-pulse font-medium">{{
+          t('translation.downloadInProgress') }}</span>
 
         <div v-else @click="() => {
           newMessage.type = 'Message'
@@ -63,7 +60,7 @@
 
           <div class="flex-1 flex gap-3">
             <file-alt class="w-8 fill-secondary-2"></file-alt>
-            <span class="flex items-center font-medium text-secondary-2">Fichier télécharger</span>
+            <span class="flex items-center font-medium text-secondary-2">{{ t('translation.fileDownloaded') }}</span>
           </div>
 
           <button class="btn btn-sm btn-square btn-ghost">
@@ -113,6 +110,7 @@ import messageItem from '@/components/messages/messageItem.vue';
 import { ref, onMounted, nextTick, watch, reactive, onBeforeUnmount } from 'vue'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/users';
 import paperClip from '@/assets/icons/paperClip.vue';
 import MessageIcon from '@/assets/icons/messageIcon.vue';
@@ -122,6 +120,7 @@ import fileAlt from '@/assets/icons/fileAlt.vue';
 import arrowIcon from '@/assets/icons/arrowIcon.vue';
 import times from '@/assets/icons/times.vue';
 
+const { t } = useI18n()
 const chatContainer = ref(null)
 const useMessages = useMessagesStore()
 
@@ -176,14 +175,14 @@ const loadingFalse = () => {
 // Combined mounted hook
 onMounted(async () => {
   useMessages.messages = []
-  await useMessages.getChats(route.params.id)
+  await useMessages.getChats(useWidget.adminDiscussion)
   console.log(useMessages.focusedChat);
 
   intervalId = setInterval(async () => {
-    await useMessages.getMessages(route.params.id)
+    await useMessages.getMessages(useWidget.adminDiscussion)
   }, 5000)
 
-  await useMessages.getMessages(route.params.id)
+  await useMessages.getMessages(useWidget.adminDiscussion)
 
   // Add scroll event listener
   if (chatContainer.value) {

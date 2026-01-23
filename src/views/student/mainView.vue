@@ -69,36 +69,12 @@
               <span class="pixa-title-3 truncate">
                 {{
                   useStudent.focusedStudent.parents_designations }}</span>
-              <button @click="async () => {
-
-                try {
-                  let response = await axios.post(`/api/discussions_user_sql2/`, {
-                    user2: useStudent.focusedStudent.parents
-                  })
-                  if (response.data.Discussions.length > 0) {
-                    router.push({ name: 'chat-view', params: { id: response.data.Discussions[0].discussion_id } })
-                  } else {
-                    Object.assign(useWidget.addChatPassive, {
-                      open: true,
-                      to: useStudent.focusedStudent.parents,
-                      designation: useStudent.focusedStudent.parents_designations
-                    })
-                  }
-                } catch (error) {
-                  console.error(error)
-                }
-
-              }"
-                class="btn btn-sm pixa-btn border border-primary bg-transparent hover:bg-primary/10 w-fit text-primary hover:border-primary">
-                <comment-primary class="w-4" />
-                {{ t('translation.contact') }}
-              </button>
             </div>
 
           </div>
         </div>
 
-        <span class="pixa-title-3 col-span-2 mb-2 mt-2">informations tuteur</span>
+        <span class="pixa-title-3 col-span-2 mb-2 mt-2">{{ t('translation.tutorInfo') }}</span>
         <span class="pixa-title-4">
           {{ t(`translation.phone`) }}</span>
 

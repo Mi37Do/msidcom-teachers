@@ -3,15 +3,10 @@ const chatsRoutes = [
     path: '/chats-panel',
     name: 'chats-panel',
     component: () => import('@/views/messages/chatsPanel.vue'),
-    redirect: { name: 'chats-view' },
+    redirect: { name: 'chat-view' },
     children: [
       {
-        path: '/chats',
-        name: 'chats-view',
-        component: () => import('@/views/messages/chatsView.vue'),
-      },
-      {
-        path: '/chat/:id',
+        path: '/chat',
         name: 'chat-view',
         component: () => import('@/views/messages/chatView.vue'),
       },

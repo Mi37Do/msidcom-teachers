@@ -64,7 +64,7 @@
                     </label>
 
                     <div class="flex gap-3 w-full items-center mt-3">
-                      <span class="uppercase">à</span>
+                      <span class="uppercase">{{ t('translation.atTime') }}</span>
                       <!--
                       <div class="flex gap-1.5 items-center w-60">
                         <communDropdown :list="useWidget.generateArrayFromRange(0, 23)" :selected="hoursTime.hours"
@@ -170,8 +170,8 @@ const uploadFile = ref(false)
 
 
 const types = ref([
-  { id: 'Absence', designation: 'Absence' },
-  { id: 'Retard', designation: 'Retard' }
+  { id: 'Absence', designation: t('translation.absenceType') },
+  { id: 'Retard', designation: t('translation.lateType') }
 ]);
 
 const itemToAdd = reactive({

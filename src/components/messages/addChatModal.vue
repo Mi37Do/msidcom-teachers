@@ -14,7 +14,7 @@
             <DialogPanel
               class="w-full max-w-md h-[600px] overflow-hidden transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
               <DialogTitle as="h3" class="flex items-center pixa-title-2">
-                Nouvelle Discussion
+                {{ t('translation.newDiscussion') }}
               </DialogTitle>
 
               <div class="w-full h-px bg-primary mt-3"></div>
@@ -27,7 +27,7 @@
                     class=" pixa-input-icon px-3 placeholder:capitalize  w-full" />
                 </div>
 
-                <span class="label-text capitalize mt-3">résultats <span class="text-red-500">*</span></span>
+                <span class="label-text capitalize mt-3">{{ t('translation.results') }} <span class="text-red-500">*</span></span>
 
                 <div class="flex-1 overflow-hidden">
                   <div class="w-full h-full overflow-auto">
@@ -65,7 +65,7 @@
                                     class="inline">
                                     <span v-if="user.fils.length > 0"
                                       class="overflow-hidden w-full flex gap-1 truncate">
-                                      <span>parent de :</span>
+                                      <span>{{ t('translation.parentOf') }}</span>
                                       <span v-for="item in user.fils" :key="item"
                                         class=" truncate flex-1 overflow-hidden">{{ item.nom
                                         }} {{
@@ -96,7 +96,7 @@
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
                   <span v-else>
-                    lancer discussion</span>
+                    {{ t('translation.startDiscussion') }}</span>
                 </button>
               </div>
             </DialogPanel>

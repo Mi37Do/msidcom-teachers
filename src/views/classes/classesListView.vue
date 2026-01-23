@@ -9,7 +9,7 @@
       <div class=" flex items-center gap-[10px] capitalize">
 
         <span class="pixa-title-2 flex-1 leading-loose mb-2">
-          mes classes :
+          {{ t('translation.myClasses') }} :
         </span>
       </div>
     </div>

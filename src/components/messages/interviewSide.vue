@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col p-3 border-l border-border-color">
     <div class="w-full h-12 border-b border-border-color pt-2 mt-1">
-      <span class="pixa-title-3">entrevue en attente</span>
+      <span class="pixa-title-3">{{ t('translation.pendingInterview') }}</span>
     </div>
 
     <div class="w-full flex-1 overflow-hidden">
@@ -17,7 +17,9 @@
 
 <script setup>
 import interviewItem from './interviewItem.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n()
 const props = defineProps(['list'])
 </script>
 

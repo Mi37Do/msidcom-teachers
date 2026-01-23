@@ -9,7 +9,7 @@
       <div class=" flex items-center gap-[10px] capitalize">
 
         <span class="pixa-title-2 flex-1 leading-loose mb-2">
-          Annonce d’examens :
+          {{ t('translation.examsAnnoncements') }} :
         </span>
       </div>
     </div>
@@ -86,7 +86,7 @@ onMounted(async () => {
     tempSpecialite.value.unshift(
       {
         id: 'Tout',
-        designation: 'Tout'
+        designation: t('translation.all')
       }
     )
     loading.value = false

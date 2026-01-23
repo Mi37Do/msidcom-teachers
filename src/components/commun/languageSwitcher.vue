@@ -20,7 +20,7 @@
               'btn btn-sm pixa-btn flex justify-between btn-ghost w-full font-light capitalize'
             ]">
               <span class="uppercase">{{ language }}</span>
-              <span> {{ language === 'en' ? 'english' : language === 'fr' ? 'français' : 'العربية'
+              <span> {{ language === 'en' ? 'english' : language === 'fr' ? t('translation.french') : t('translation.arabic')
                 }}</span>
 
             </button>
@@ -40,7 +40,9 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { ref, onBeforeMount, watch } from 'vue'
 import languageIcon from '@/assets/icons/languageIcon.vue'
 import { useWidgetStore } from '@/stores/widget'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const enabled = ref(false)
 const useWidget = useWidgetStore()
 const languages = ref(['fr', 'ar'])

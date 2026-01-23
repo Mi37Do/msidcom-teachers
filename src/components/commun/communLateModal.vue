@@ -16,9 +16,9 @@
 
               <exclamation-icon class="w-12 fill-warning" />
 
-              <span class="pixa-title-2">êtes-vous sûr?</span>
+              <span class="pixa-title-2">{{ t('translation.areYouSure') }}</span>
 
-              <span class="text-center">Êtes-vous sûr(e) de vouloir signaler cette élève comme en retard ?</span>
+              <span class="text-center">{{ t('translation.confirmLateStudent') }}</span>
 
               <div class="flex gap-3 justify-end w-full mt-3">
                 <button type="reset" class="btn btn-sm pixa-btn-form btn-ghost w-32" @click="closeModal">
@@ -27,7 +27,7 @@
                 <button type="submit" :disabled="loading" class="btn btn-sm pixa-btn-form btn-warning w-40">
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
-                  <span v-else>signaler retard</span>
+                  <span v-else>{{ t('translation.signalLate') }}</span>
                 </button>
               </div>
             </DialogPanel>
@@ -70,10 +70,10 @@ const useUser = useUserStore()
 const types = ref(
   [
     {
-      id: 'Absence', designation: 'Absence'
+      id: 'Absence', designation: t('translation.absenceType')
     },
     {
-      id: 'Retard', designation: 'Retard'
+      id: 'Retard', designation: t('translation.lateType')
     }
   ]
 )

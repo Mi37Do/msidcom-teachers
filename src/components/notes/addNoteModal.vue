@@ -16,9 +16,9 @@
 
               <exclamation-icon class="w-12 fill-primary" />
 
-              <span class="pixa-title-2">êtes-vous sûr?</span>
+              <span class="pixa-title-2">{{ t('translation.areYouSure') }}</span>
 
-              <span class="text-center">Êtes-vous sûr(e) de vouloir ajouter une note à cet élève ?</span>
+              <span class="text-center">{{ t('translation.confirmAddNote') }}</span>
 
 
               <div class="w-full flex flex-col">
@@ -41,7 +41,7 @@
                 <button type="submit" :disabled="loading" class="btn btn-sm pixa-btn-form btn-primary w-40">
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
-                  <span v-else>ajouter note</span>
+                  <span v-else>{{ t('translation.addNote') }}</span>
                 </button>
               </div>
             </DialogPanel>

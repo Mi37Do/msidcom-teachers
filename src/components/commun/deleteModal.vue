@@ -23,8 +23,8 @@
                   <exclamationIcon class="w-8 h-8 mb-1 fill-red-500" />
                 </div>
 
-                <span class="uppercase text-lg mt-2 font-medium">êtes-vous sure?</span>
-                <span class="mb-6">Vous allez supprimer <span class="font-semibold">{{ useWidget.deleteModal.designation
+                <span class="uppercase text-lg mt-2 font-medium">{{ t('translation.areYouSure') }}</span>
+                <span class="mb-6">{{ t('translation.youWillDelete') }} <span class="font-semibold">{{ useWidget.deleteModal.designation
                     }}</span></span>
 
                 <div class="w-full h-10 grid grid-cols-2 gap-4">

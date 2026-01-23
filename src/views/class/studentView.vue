@@ -22,7 +22,7 @@
                   <div class="w-fit rounded-[16px] flex gap-1 p-1 pixa-border">
                     <router-link :to="{ name: 'main-student-view' }"
                       :class="route.name === 'main-student-view' ? ' btn-primary' : 'btn-ghost'"
-                      class="btn btn-sm pixa-btn-navigation w-48">information générale</router-link>
+                      class="btn btn-sm pixa-btn-navigation w-48">{{ t('translation.generalInfo') }}</router-link>
                     <router-link :to="{ name: 'notes-student-view' }"
                       :class="route.name === 'notes-student-view' ? ' btn-primary' : 'btn-ghost'"
                       class="btn btn-sm pixa-btn-navigation w-20">{{

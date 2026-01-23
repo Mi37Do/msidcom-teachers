@@ -3,7 +3,8 @@
     class="w-full h-screen grid gap-6 bg-gradient-to-tr from-background-3/50 via-background-2/50 to-background-1 from-0% via-75% to-100% relative">
     <img src="@/assets/pics/bluePartLogo.svg" class="w-40 absolute bottom-0 left-0" alt="">
     <img src="@/assets/pics/greenPartLogo.svg" class="w-40 absolute top-0 right-0" alt="">
-    <div :style="{ height: remainingHeight + 'px' }" class="w-full flex flex-col justify-center gap-6 z-10 py-6 px-10">
+    <div :style="{ height: remainingHeight + 'px' }"
+      class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10">
       <div class="w-full h-fit my-auto flex justify-center ">
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
 
@@ -54,6 +55,13 @@
         </form>
       </div>
 
+      <div @click="useWidget.changeLanguage = true" class="h-20 rounded-[15px] p-3 flex justify-center gap-5 w-fit">
+        <span>{{useWidget.languages.find(i => i.id === useWidget.userLanguage).desingation}}</span>
+
+        <div v-html="useWidget.languages.find(i => i.id === useWidget.userLanguage).icon"
+          :class="useWidget.userLanguage === 'ar' ? 'left-0' : ' right-0'" class="w-8  ">
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -41,10 +41,10 @@ v-else
           <div
             :class="`w-full h-[55px] bg-secondary border-b border-border-color grid grid-cols-2 gap-1.5 p-[16px] capitalize font-medium`">
             <div class="my-auto truncate">
-              évalutaion
+              {{ t('translation.evaluation') }}
             </div>
             <div class="my-auto truncate">
-              note
+              {{ t('translation.notes') }}
             </div>
           </div>
 

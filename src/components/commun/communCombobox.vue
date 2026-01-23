@@ -16,7 +16,7 @@
             class="absolute  max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-20">
             <div v-if="filteredList.length === 0 && query !== ''"
               class="relative cursor-default select-none px-4 py-2 text-gray-700">
-              Nothing found.
+              {{ t('translation.nothingFound') }}
             </div>
 
             <ComboboxOption v-for="item in filteredList" as="template" :key="item.id" @click="selectItem(item.id)"
@@ -53,6 +53,9 @@ import {
 } from '@headlessui/vue'
 import checkIcon from '@/assets/icons/checkIcon.vue'
 import angleIcon from '@/assets/icons/angleIcon.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps(['list', 'required', 'selected', 'placehonder', 'top'])
 const emits = defineEmits(['onSelectedItem'])

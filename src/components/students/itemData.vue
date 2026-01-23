@@ -12,7 +12,7 @@
       <span class="">
         {{ format(parse(item.birthday, 'yyyy-MM-dd', new Date()), 'dd-MM-yyyy') }}</span>
 
-      <angle-icon class="w-5 -rotate-90" />
+      <angle-icon :class="useWidget.userLanguage === 'ar' ? '' : 'rotate-90'" class="w-5" />
     </div>
   </router-link>
 </template>

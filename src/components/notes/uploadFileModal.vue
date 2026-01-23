@@ -35,7 +35,7 @@
                   }
                 }" class="w-full h-full absolute inset-0 opacity-0">
                 <upload-cloud class="w-12" />
-                <span class="uppercase">joindre fichier</span>
+                <span class="uppercase">{{ t('translation.attachFile') }}</span>
               </div>
 
 

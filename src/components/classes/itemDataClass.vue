@@ -31,7 +31,7 @@
 
     <button @click="selectClass(item)" class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{
       t('translation.access') }}
-      <angle-icon class="w-5 h-5 -rotate-90" />
+      <angle-icon :class="useWidget.userLanguage === 'ar' ? '' : 'rotate-90'" class="w-5 h-5" />
     </button>
   </div>
 
@@ -43,9 +43,11 @@ import { useI18n } from 'vue-i18n';
 import communProgressBar from '../commun/communProgressBar.vue';
 import angleIcon from '@/assets/icons/angleIcon.vue';
 import { useRouter } from 'vue-router';
+import { useWidgetStore } from '@/stores/widget';
 
 const props = defineProps(['item'])
 const router = useRouter()
+const useWidget = useWidgetStore()
 
 const { t } = useI18n()
 

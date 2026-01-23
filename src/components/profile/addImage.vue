@@ -14,7 +14,7 @@
             <DialogPanel
               class="w-full max-w-sm min-h-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
               <DialogTitle as="h3" class="flex items-center pixa-title-2">
-                Changement la photo
+                {{ t('translation.changePhoto') }}
               </DialogTitle>
 
               <div class="w-full h-px bg-primary mt-3"></div>
@@ -131,7 +131,7 @@ const addItem = async () => {
     })
 
     useWidget.addToast({
-      msg: 'Image ajouter avec succès!',
+      msg: t('translation.imageAddedSuccess'),
       color: 'green'
     })
 

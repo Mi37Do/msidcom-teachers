@@ -1,10 +1,12 @@
 import './assets/main.css'
+import 'flag-icons/css/flag-icons.min.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { createI18n } from 'vue-i18n'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import App from './App.vue'
+
+import i18n from './i18n'
 import router from './router'
 import AR from '@/languages/ar.json'
 import FR from '@/languages/fr.json'
@@ -16,15 +18,6 @@ import VueViewer from 'v-viewer'
 
 axios.defaults.baseURL = import.meta.env.VITE_MSIDCOM_API
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'fr',
-  globalInjection: true,
-  messages: {
-    ar: AR,
-    fr: FR,
-  },
-})
 
 const app = createApp(App)
 app.use(createPinia())

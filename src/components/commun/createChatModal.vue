@@ -14,13 +14,13 @@
             <DialogPanel
               class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
               <DialogTitle as="h3" class="flex items-center pixa-title-2">
-                créer une discussion
+                {{ t('translation.createDiscussion') }}
               </DialogTitle>
 
               <div class="w-full h-px bg-primary mt-2"></div>
 
               <div class="flex-1 flex flex-col ">
-                Voulez-vous vraiment créer une discussion avec :
+                {{ t('translation.confirmCreateDiscussion') }}
                 <span class="font-semibold uppercase">
                   {{ useWidget.addChatPassive.designation }}</span>
               </div>
@@ -35,7 +35,7 @@
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
                   <span v-else>
-                    lancer discussion</span>
+                    {{ t('translation.startDiscussion') }}</span>
                 </button>
               </div>
             </DialogPanel>

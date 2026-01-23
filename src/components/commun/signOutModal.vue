@@ -23,8 +23,8 @@
                   <exclamationIcon class="w-8 h-8 mb-1 fill-red-500" />
                 </div>
 
-                <span class="uppercase text-lg mt-2 font-medium">êtes-vous sure?</span>
-                <span class="mb-6">Voullez vous vraiment vous déconnecter? </span>
+                <span class="uppercase text-lg mt-2 font-medium">{{ t('translation.areYouSure') }}</span>
+                <span class="mb-6">{{ t('translation.confirmSignOut') }}</span>
 
                 <div class="w-full h-10 grid grid-cols-2 gap-4">
                   <button :disabled="loadingDelete" @click="closeModal"

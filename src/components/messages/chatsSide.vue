@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col p-3 border-r border-border-color">
     <div class="w-full pb-4 border-b border-border-color  flex items-center justify-between mt-1 mb-3">
-      <span class="pixa-title-3">Nouvelle Discussion</span>
+      <span class="pixa-title-3">{{ t('translation.newDiscussion') }}</span>
 
       <button @click="useWidget.addChat = true" class="btn btn-sm btn-primary w-10 p-1">
         <plus class="fill-white w-5" />
@@ -48,7 +48,9 @@ import { onMounted, ref } from 'vue';
 import ChatItem from './chatItem.vue';
 import { useWidgetStore } from '@/stores/widget';
 import { useMessagesStore } from '@/stores/messages';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n()
 const props = defineProps(['list', 'usersTypes'])
 const selectedType = ref('Tout')
 const useWidget = useWidgetStore()
@@ -63,7 +65,7 @@ onMounted(() => {
   types.value = [...props.usersTypes]
   types.value.unshift({
     id: 'Tout',
-    designation: 'Tout le monde'
+    designation: t('translation.everyone')
   })
 })
 </script>

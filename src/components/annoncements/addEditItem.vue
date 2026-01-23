@@ -68,7 +68,7 @@
 
                   <div class="form-control w-full">
                     <div class="label">
-                      <span class="label-text capitalize">date limite (optionnel)</span>
+                      <span class="label-text capitalize">{{ t('translation.deadlineOptional') }}</span>
                     </div>
                     <button type="button" @click="showDatePicker = true"
                       class="pixa-input pb-0.5 text-slate-700 w-full flex items-center justify-between">
@@ -79,7 +79,7 @@
 
                   <div class="form-control w-full max-w-60">
                     <div class="label">
-                      <span class="label-text capitalize">piece jointe (optionnel)</span>
+                      <span class="label-text capitalize">{{ t('translation.attachmentOptional') }}</span>
                     </div>
                     <div class="flex-1 flex overflow-hidden flex-col gap-3 items-center">
 
@@ -172,11 +172,11 @@ const itemToAdd = reactive(
 )
 const types = ref([
   {
-    id: 'Annonce', designation: 'Annonce'
+    id: 'Annonce', designation: t('translation.annoncementType')
   }, {
-    id: 'Devoir', designation: 'Devoir'
+    id: 'Devoir', designation: t('translation.homeworkTypeLabel')
   }, {
-    id: 'Autre', designation: 'Autre'
+    id: 'Autre', designation: t('translation.otherType')
   }
 ])
 

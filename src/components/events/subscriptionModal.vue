@@ -14,13 +14,13 @@
             <DialogPanel
               class="w-full max-w-2xl h-[250px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
               <DialogTitle as="h3" class="flex items-center pixa-title-2">
-                Inscription évènement
+                {{ t('translation.eventRegistration') }}
               </DialogTitle>
 
               <div class="w-full h-px bg-primary mt-2"></div>
 
               <div class="flex-1 flex flex-col gap-3 items-center overflow-hidden">
-                <span>Voulez vous vraiment s'inscrire a cet évènement ?</span>
+                <span>{{ t('translation.confirmEventRegistration') }}</span>
 
               </div>
 
@@ -34,7 +34,7 @@
 
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
                   <span v-else>
-                    s'nscrire</span>
+                    {{ t('translation.register') }}</span>
                 </button>
               </div>
             </DialogPanel>

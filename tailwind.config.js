@@ -15,9 +15,19 @@ export default {
         warning: '#F1B434',
         error: '#EF6079',
       },
+      padding: {
+        'safe-top': 'var(--safe-area-top)',
+        'safe-bottom': 'var(--safe-area-bottom)',
+        'safe-left': 'var(--safe-area-left)',
+        'safe-right': 'var(--safe-area-right)',
+      },
+      margin: {
+        'safe-top': 'var(--safe-area-top)',
+        'safe-bottom': 'var(--safe-area-bottom)',
+      },
     },
   },
-  plugins: [require('@headlessui/vue'), require('daisyui')],
+  plugins: [require('@headlessui/vue'), require('daisyui'), require('tailwindcss-rtl')],
   daisyui: {
     themes: [
       {

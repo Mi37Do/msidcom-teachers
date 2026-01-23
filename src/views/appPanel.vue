@@ -1,7 +1,11 @@
 <template>
   <div class="w-full h-screen bg-[#F5F5F5] flex flex-col">
-    <div class="w-full h-28 pt-10  bg-primary-2/30 p-3 flex items-center">
-      <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
+    <div class="w-full  h-fit  bg-primary-2/30 p-3 flex items-center">
+
+      <div class="flex-1">
+        <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
+      </div>
+
 
       <div class="flex gap-3 items-center ml-auto">
         <router-link :to="{ name: 'notifications-panel' }"

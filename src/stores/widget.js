@@ -1,6 +1,6 @@
 import { ref, computed, reactive, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { useI18n } from 'vue-i18n'
+import i18n from '@/i18n'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
@@ -12,7 +12,6 @@ import { Preferences } from '@capacitor/preferences'
 export const useWidgetStore = defineStore('widget', () => {
   const navBar = ref(false)
   const userLanguage = ref('fr')
-  // const { locale } = useI18n()
   const router = useRouter()
   const useSubject = useSubjectStore()
   const useRooms = useRoomStore()
@@ -22,6 +21,20 @@ export const useWidgetStore = defineStore('widget', () => {
     isAuthenticated: false,
     userDetail: null,
   })
+
+
+  const languages = ref([
+    {
+      id : 'fr',
+      desingation : 'Français',
+      icon : '<span class="fi fi-fr"></span>',
+    },{
+      id : 'ar',
+      desingation : 'العربية',
+      icon : '<span class="fi fi-dz"></span>',
+    }
+  ])
+
 
   const rawDays = [
     { id: 'Dimanche', fr: 'Dimanche', ar: 'الأحد' },
@@ -189,9 +202,13 @@ export const useWidgetStore = defineStore('widget', () => {
 
   const setLanguage = (language) => {
     localStorage.setItem('user-language', language)
-    locale.value = language
+    i18n.global.locale.value = language
     userLanguage.value = language
+
+    changeLanguage.value = false
   }
+
+  const adminDiscussion = ref(null)
 
   const getLanguage = () => {
     return localStorage.getItem('user-language')
@@ -223,6 +240,9 @@ export const useWidgetStore = defineStore('widget', () => {
       authUser.userDetail = response.data.User[0]
 
       currentYear.value = response.data.Annee[0]
+
+
+      adminDiscussion.value = response.data.discuss[0].id
 
       manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager_id
 
@@ -337,6 +357,7 @@ export const useWidgetStore = defineStore('widget', () => {
     })
   }
 
+  const changeLanguage = ref(false)
   return {
     navBar,
     userLanguage,
@@ -395,6 +416,6 @@ export const useWidgetStore = defineStore('widget', () => {
     subscriptionModal,
     notifications,
     getNotifications,
-    currentYear,
+    currentYear,adminDiscussion,changeLanguage,languages
   }
 })

@@ -71,10 +71,22 @@
             <span class="text-[18px]  capitalize font-[500]">{{ t('translation.password') }}</span>
             <span>*******************</span>
 
-            <button @click="useWidget.editPassword = true" class="btn btn-sm absolute btn-ghost right-0 ">
+            <button @click="useWidget.editPassword = true"
+              :class="useWidget.userLanguage === 'ar' ? 'left-0' : ' right-0'" class="btn btn-sm absolute btn-ghost  ">
               <edit class="w-5 fill-warning" />
             </button>
           </div>
+
+          <div @click="useWidget.changeLanguage = true"
+            class="h-[84px] rounded-[15px] p-3 flex flex-col justify-center gap-1.5 bg-[#F9F9F9] border border-border-color relative">
+            <span class="text-[18px]  capitalize font-[500]">{{ $t('translation.selectedLanguage') }}</span>
+            <span>{{useWidget.languages.find(i => i.id === useWidget.userLanguage)?.desingation}}</span>
+
+            <div v-html="useWidget.languages.find(i => i.id === useWidget.userLanguage)?.icon"
+              :class="useWidget.userLanguage === 'ar' ? 'left-0' : ' right-0'" class="w-8  absolute">
+            </div>
+          </div>
+
         </div>
 
         <button @click="useWidget.signOutModal = true"

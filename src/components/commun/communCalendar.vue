@@ -127,6 +127,9 @@ import {
   subWeeks,
 } from 'date-fns';
 import { useWidgetStore } from '@/stores/widget';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 import calendar from '@/assets/icons/calendar.vue';
 import AngleIcon from '@/assets/icons/angleIcon.vue';
 import filterIcon from '@/assets/icons/filterIcon.vue';
@@ -153,21 +156,21 @@ const timeTypes = ref(
   [
     {
       id: 'month',
-      designation: 'Mois'
+      designation: t('translation.month')
     }, {
       id: 'week',
-      designation: 'Semaine'
+      designation: t('translation.week')
     }
   ]
 )
 
 const types = ref([
-  { id: 'Tout', designation: 'Tout' },
-  { id: 'Fete', designation: 'Fête' },
-  { id: 'Reunion', designation: 'Reunion' },
-  { id: 'Festival', designation: 'Festival' },
-  { id: 'Seminaire', designation: 'Seminaire' },
-  { id: 'Autre', designation: 'Autre' },
+  { id: 'Tout', designation: t('translation.all') },
+  { id: 'Fete', designation: t('translation.party') },
+  { id: 'Reunion', designation: t('translation.meeting') },
+  { id: 'Festival', designation: t('translation.festival') },
+  { id: 'Seminaire', designation: t('translation.seminar') },
+  { id: 'Autre', designation: t('translation.other') },
 ])
 
 

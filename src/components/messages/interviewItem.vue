@@ -2,7 +2,7 @@
   <div class="h-fit bg-white border border-border-color rounded-md p-3 flex flex-col gap-3">
     <div class="flex items-center justify-between">
       <div class="flex gap-1.5 flex-1 truncate">
-        <span class="text-secondary-2 capitalize">entrevue pour le : </span>
+        <span class="text-secondary-2 capitalize">{{ t('translation.interviewFor') }} : </span>
         <span>{{ item.entrevue_day }}</span>
 
       </div>
@@ -11,7 +11,7 @@
         item.state === 'NEW' ? 'bg-warning' : item.state === 'ACCEPTEE' ? 'bg-primary' : 'bg-error'
       ]" class="flex gap-3 px-2 py-1  items-center text-white rounded-full uppercase text-xs">
         <span class="w-1 h-1 bg-white rounded-full"></span>
-        <span>{{ item.state === 'NEW' ? 'en cours' : item.state }}</span>
+        <span>{{ item.state === 'NEW' ? t('translation.in_progress') : item.state }}</span>
       </div>
       <!--
       <span class="font-medium">{{ item.entrevue_day }}</span>
@@ -19,13 +19,13 @@
     </div>
 
     <div class="flex gap-1.5 flex-1 truncate">
-      <span class="text-secondary-2 capitalize">Tuteur : </span>
+      <span class="text-secondary-2 capitalize">{{ t('translation.tutor') }} : </span>
       <span>{{ item.parent_designations }}</span>
 
     </div>
 
     <div class="flex gap-1.5 flex-1">
-      <span class="text-secondary-2 capitalize">{{ t('translation.hours') }} : </span> <span>{{ item.prof_disponiblites
+      <span class="text-secondary-2 capitalize">{{ t('translation.date') }} : </span> <span>{{ item.prof_disponiblites
       }}</span>
     </div>
 
