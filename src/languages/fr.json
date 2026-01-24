@@ -366,6 +366,8 @@
     "nothingFound": "Rien trouvé.",
     "french": "Français",
     "arabic": "العربية",
-    "notifications": "notifications"
+    "notifications": "notifications",
+    "personalInformations": "Informations personnelles",
+    "responsabilites": "Responsabilités"
   }
 }

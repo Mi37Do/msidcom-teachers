@@ -56,9 +56,9 @@
       </div>
 
       <div @click="useWidget.changeLanguage = true" class="h-20 rounded-[15px] p-3 flex justify-center gap-5 w-fit">
-        <span>{{useWidget.languages.find(i => i.id === useWidget.userLanguage).desingation}}</span>
+        <span>{{useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.desingation}}</span>
 
-        <div v-html="useWidget.languages.find(i => i.id === useWidget.userLanguage).icon"
+        <div v-html="useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.icon"
           :class="useWidget.userLanguage === 'ar' ? 'left-0' : ' right-0'" class="w-8  ">
         </div>
       </div>

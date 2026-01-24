@@ -366,6 +366,8 @@
     "nothingFound": "لم يتم العثور على شيء.",
     "french": "Français",
     "arabic": "العربية",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "personalInformations": "المعلومات الشخصية",
+    "responsabilites": "المسؤوليات"
   }
 }
