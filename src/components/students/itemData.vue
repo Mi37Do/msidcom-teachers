@@ -2,11 +2,11 @@
   <router-link :to="{ name: 'student-view', params: { studentId: item.eleve_id } }"
     class="w-full py-2 border-b border-border-color hover:bg-slate-50 px-3 grid gap-1.5 grid-cols-3 h-14">
     <span class="my-auto truncate flex items-center gap-3">
-      <span class="truncate">
+      <span class="truncate auto-dir">
         {{ item.prenom }} {{ item.nom }}</span>
     </span> <span class="my-auto truncate flex items-center gap-3">
       <span class="">
-        {{ item.sexe }}</span>
+        {{ translatedGender }}</span>
     </span>
     <div class="my-auto truncate flex items-center gap-3">
       <span class="">
@@ -19,9 +19,20 @@
 
 <script setup>
 import angleIcon from '@/assets/icons/angleIcon.vue';
+import { useWidgetStore } from '@/stores/widget';
 import { format, parse } from 'date-fns';
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
 
+const { t } = useI18n()
 const props = defineProps(['item'])
+const useWidget = useWidgetStore()
+
+const translatedGender = computed(() => {
+  if (props.item.sexe === 'Masculin') return t('translation.male')
+  if (props.item.sexe === 'Féminin') return t('translation.female')
+  return props.item.sexe
+})
 
 </script>
 

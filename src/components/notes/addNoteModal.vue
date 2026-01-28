@@ -1,5 +1,6 @@
 <template>
-  <TransitionRoot appear :show="useWidget.addNote.open" as="template">
+  <TransitionRoot appear :dir="useWidget.userLanguage === 'ar' ? 'rtl' : 'ltr'" :show="useWidget.addNote.open"
+    as="template">
     <Dialog as="div" @close="closeModal" class="relative z-10">
       <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
         leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">

@@ -79,10 +79,10 @@ const mask = ref({ input: 'DD-MM-YYYY' });
 const rangeFrom = ref(null)
 const rangeTo = ref(null)
 
-const filters = ref([
-  { id: 'All', designation: 'Tout' },
-  { id: 'Absence', designation: 'Absence' },
-  { id: 'Retard', designation: 'Retard' }
+const filters = computed(() => [
+  { id: 'All', designation: t('translation.all') },
+  { id: 'Absence', designation: t('translation.absenceType') },
+  { id: 'Retard', designation: t('translation.lateType') }
 ]);
 
 const columns = ref([

@@ -4,10 +4,11 @@
       <div class="relative">
         <ListboxButton class="relative w-full commun-dropdown flex items-center gap-[10px]">
           <slot name="prefix"></slot>
-          <span class="block truncate flex-1 text-left">{{list.find(i => i.id === selected) ? list.find(i => i.id ===
+          <span class="block truncate flex-1 text-start">{{list.find(i => i.id === selected) ? list.find(i => i.id ===
             selected).designation : 'N/A'
           }}</span>
-          <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+          <span :class="useWidget.userLanguage === 'ar' ? 'left-0' : 'right-0'"
+            class="pointer-events-none absolute inset-y-0 flex items-center pr-2">
             <angle-icon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </ListboxButton>
@@ -52,9 +53,11 @@ import {
 } from '@headlessui/vue'
 import angleIcon from '@/assets/icons/angleIcon.vue'
 import checkIcon from '@/assets/icons/checkIcon.vue'
+import { useWidgetStore } from '@/stores/widget'
 
 const props = defineProps(['list', 'selected', 'top'])
 const emits = defineEmits(['onSelectedItem'])
+const useWidget = useWidgetStore()
 
 const selected = ref('')
 

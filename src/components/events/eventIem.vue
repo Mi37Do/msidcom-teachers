@@ -42,11 +42,10 @@
               useEvent.focusedEvents = item
               useWidget.subscriptionModal = true
             }" :style="{ background: currentTheme.secondary }"
-            class="btn btn-sm pixa-btn text-white border-0">s'inscrire</button>
+            class="btn btn-sm pixa-btn text-white border-0">{{ t('translation.register') }}</button>
           <span
             v-if="item.sous_inscription && (item.Subscribed_details.subscribed_prof_details.find(i => i.prof_id === useWidget.authUser.userDetail.id))"
-            class="font-semibold uppercase">Déja
-            inscrit</span>
+            class="font-semibold uppercase">{{ t('translation.alreadyRegistered') }}</span>
         </DisclosurePanel>
       </Disclosure>
     </div>

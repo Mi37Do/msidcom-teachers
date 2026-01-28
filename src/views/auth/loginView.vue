@@ -34,7 +34,8 @@
                   class=" pixa-input-login h-[40px] px-3 placeholder:capitalize w-full" />
 
                 <button @click="isPassword = !isPassword" type="button"
-                  class="btn btn-sm btn-square absolute right-1 top-1 btn-ghost">
+                  :class="useWidget.userLanguage === 'ar' ? 'left-1' : ' right-1'"
+                  class="btn btn-sm btn-square absolute top-1 btn-ghost">
                   <eye-slash class="w-5" />
                 </button>
               </div>

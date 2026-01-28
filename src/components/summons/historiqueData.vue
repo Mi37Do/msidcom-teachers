@@ -2,9 +2,12 @@
   <div ref="rootElement" class="w-full py-2 border-b border-border-color hover:bg-slate-50 px-4" :class="[
     `grid grid-cols-2 gap-1.5`]">
     <span class="my-auto truncate flex items-center gap-3">
-      <span class="font-medium truncate flex-1">
-        {{ item.eleve_nom }} {{ item.eleve_prenom
-        }}</span>
+      <div class="w-full">
+        <span class="font-medium truncate flex-1 auto-dir">
+          {{ item.eleve_nom }} {{ item.eleve_prenom
+          }}</span>
+      </div>
+
     </span>
     <span class="my-auto truncate flex items-center gap-3">
       <span class="font-medium truncate flex-1">

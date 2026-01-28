@@ -5,7 +5,7 @@
       <div class=" flex items-center justify-center overflow-hidden">
         <slot name="studentCheckbox" />
       </div>
-      <span class="font-medium truncate">
+      <span class="font-medium truncate auto-dir">
         {{ item.prenom }} {{ item.nom }}</span>
     </span>
 
@@ -17,7 +17,7 @@
             <span
               :class="item.present ? 'bg-[#00778B1A] text-[#00778B] fill-[#00778B]' : 'bg-[#EF60791A] text-[#EF6079] fill-[#EF6079]'"
               class="my-auto px-[12px] py-[6px]  flex w-fit rounded-r-full  justify-between font-medium min-w-20">
-              <span>{{ item.present ? 'Présent' : 'Absent' }}</span>
+              <span>{{ item.present ? t('translation.present') : t('translation.absent') }}</span>
               <angle-icon class="w-5" />
             </span>
           </ListboxButton>
@@ -68,7 +68,7 @@
 <script setup>
 import checkIcon from '@/assets/icons/checkIcon.vue';
 import { format } from 'date-fns';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoomStore } from '@/stores/rooms';
 import angleIcon from '@/assets/icons/angleIcon.vue';
 import noTimeWarning from '@/assets/icons/noTimeWarning.vue';
@@ -84,20 +84,22 @@ import axios from 'axios';
 import { useStudentStore } from '@/stores/students';
 import { useRoute } from 'vue-router';
 import { useWidgetStore } from '@/stores/widget';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n()
 const props = defineProps(['item'])
 const selectedItem = ref(props.item ? props.item.groupe : null)
 const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
 const emits = defineEmits(['loadData'])
 
-const filters = ref([
+const filters = computed(() => [
   {
     id: 'Présent',
-    designation: 'Présent'
+    designation: t('translation.present')
   }, {
     id: 'Absent',
-    designation: 'Absent'
+    designation: t('translation.absent')
   }
 ])
 

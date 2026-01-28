@@ -31,7 +31,7 @@
 
 
         <span class="text-primary-3">
-          {{ useStudent.focusedStudent.sexe }}</span>
+          {{ translatedGender }}</span>
 
 
         <span class="pixa-title-4">
@@ -110,6 +110,7 @@ import { format } from 'date-fns';
 import { useWidgetStore } from '@/stores/widget';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 import createChatModal from '@/components/commun/createChatModal.vue';
 
@@ -118,6 +119,13 @@ const useWidget = useWidgetStore()
 const router = useRouter()
 
 const useStudent = useStudentStore()
+
+const translatedGender = computed(() => {
+  if (!useStudent.focusedStudent) return ''
+  if (useStudent.focusedStudent.sexe === 'Masculin') return t('translation.male')
+  if (useStudent.focusedStudent.sexe === 'Féminin') return t('translation.female')
+  return useStudent.focusedStudent.sexe
+})
 
 console.log(useStudent.focusedStudent);
 

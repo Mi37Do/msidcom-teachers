@@ -10,13 +10,14 @@
         class=" flex  gap-[10px] capitalize">
         <div
           class="w-[32px] h-[32px] bg-gradient-to-br from-primary/40 to-primary/10 rounded-full flex items-center justify-center">
-          <arrow-icon class="w-[24px] h-[24px] -rotate-180 fill-primary" />
+          <arrow-icon :class="useWidget.userLanguage === 'ar' ? '' : '-rotate-180'"
+            class="w-[24px] h-[24px]  fill-primary" />
         </div>
         <!---->
         <span class="pixa-title-2 flex-1 leading-loose">
           {{ t('translation.class') + ' : ' }}
           <span class="text-primary-3">{{ currentClass
-          }}
+            }}
           </span><span v-if="route.meta.section"> / {{ t('translation.' + route.meta.section) }}</span>
         </span>
       </router-link>

@@ -14,7 +14,7 @@
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.students') }}</span>
-      <span class="truncate">{{ item.premier_eleve_info?.first_eleve_nom }} {{
+      <span class="truncate auto-dir">{{ item.premier_eleve_info?.first_eleve_nom }} {{
         item.premier_eleve_info?.first_eleve_prenom }} {{
           item.premier_eleve_info?.
           ['nombre-eleve_dans_la_classe'] > 0 ? `, ${item.premier_eleve_info?.['nombre-eleve_dans_la_classe'] - 1} autres
@@ -25,7 +25,7 @@
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.subject') }}</span>
-      <div class="flex gap-1 flex-wrap truncate"> <span v-for="mat in item.matiere_designation" :key="mat">{{
+      <div class="flex gap-1 flex-wrap truncate auto-dir"> <span v-for="mat in item.matiere_designation" :key="mat">{{
         mat }},</span></div>
     </div>
 

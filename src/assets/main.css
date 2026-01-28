@@ -15,6 +15,12 @@
   src: url('@/assets/fonts/Cairo.ttf');
 }
 
+
+
+.auto-dir {
+  unicode-bidi: plaintext;
+}
+
 @font-face {
   font-family: 'Roboto';
   src: url('@/assets/fonts/Roboto.ttf');

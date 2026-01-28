@@ -17,20 +17,20 @@
           <div class="space-x-1 flex w-full h-full items-center">
             <button @click="navigate('prev')"
               class=" flex items-center justify-center border-2 w-10 h-10 rounded-full fill-white">
-              <AngleIcon class="w-5 rotate-90" />
+              <AngleIcon :class="[useWidget.userLanguage === 'ar' ? '-rotate-90' : 'rotate-90']" class="w-5 " />
             </button>
             <div class="flex-1 flex flex-col">
 
               <h2 class="text-2xl font-semibold text-white capitalize flex-1 text-center">
-                {{ format(currentDate, 'MMMM', { locale: fr }) }}
+                {{ format(currentDate, 'MMMM', { locale: useWidget.userLanguage === 'ar' ? arDZ : fr }) }}
               </h2>
               <h2 class="font-medium text-white capitalize flex-1 text-center">
-                {{ format(currentDate, 'yyyy', { locale: fr }) }}
+                {{ format(currentDate, 'yyyy', { locale: useWidget.userLanguage === 'ar' ? arDZ : fr }) }}
               </h2>
             </div>
             <button @click="navigate('next')"
               class=" flex items-center justify-center border-2 w-10 h-10 rounded-full fill-white">
-              <AngleIcon class="w-5 -rotate-90" />
+              <AngleIcon :class="[useWidget.userLanguage === 'ar' ? 'rotate-90' : '-rotate-90']" class="w-5 " />
             </button>
           </div>
         </div>
@@ -89,7 +89,7 @@
 import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted } from 'vue';
 import subscriptionModal from '@/components/events/subscriptionModal.vue';
-import { fr } from 'date-fns/locale'
+import { arDZ, fr } from 'date-fns/locale'
 import {
   format,
   startOfMonth,
@@ -107,6 +107,7 @@ import {
 import AngleIcon from '@/assets/icons/angleIcon.vue';
 import { useEventStore } from '@/stores/events';
 import EventIem from '@/components/events/eventIem.vue';
+import { useWidgetStore } from '@/stores/widget';
 
 
 const currentDate = ref(new Date())
@@ -114,6 +115,7 @@ const loading = ref(true)
 const useEvent = useEventStore()
 const view = ref('month')
 const { t } = useI18n()
+const useWidget = useWidgetStore()
 const openEvents = ref(false)
 
 const navigate = (direction) => {
