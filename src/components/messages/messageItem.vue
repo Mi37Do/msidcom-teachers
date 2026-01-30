@@ -2,7 +2,7 @@
   <div
     :class="useWidget.authUser.userDetail.id === message.sender_id ? 'ml-auto bg-primary/20' : 'mr-auto bg-[#F5F5F5]'"
     class="max-w-[300px] p-2 rounded-lg h-fit flex flex-col gap-2 items-end">
-    <span v-if="message.message">{{ message.message }}</span>
+    <span v-if="message.message" class="w-full break-all">{{ message.message }}</span>
 
     <div v-if="message.type === 'Piece_jouinte'">
       <div v-if="message.type_piece_jointe === 'image'" class="w-40 h-40 overflow-hidden rounded-md">

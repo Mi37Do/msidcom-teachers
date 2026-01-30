@@ -20,7 +20,6 @@ export const useMessagesStore = defineStore('messages', () => {
         let response = await axios.get(`/api/discussions_user_sql/`)
         chats.value = response.data.Discussions
         filtredChats.value = response.data.Discussions
-        console.log(filtredChats.value)
       }
     } catch (error) {
       console.error(error)

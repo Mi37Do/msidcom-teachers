@@ -3,19 +3,19 @@
     :class="`flex flex-col gap-3 w-full`">
     <div class="my-auto truncate flex items-center gap-3 w-full">
       <span class="flex-1 overflow-hidden flex gap-1">
-        <span class="text-secondary-2">Niveau & Spécialité :</span>
+        <span class="text-secondary-2">{{ t('translation.levelAndSpecialty') }}</span>
         <span class="font-medium">{{ item.specialite_designations }}</span>
       </span>
 
       <div
         v-if="differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) < 24 && differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) > 0"
-        class="w-fit px-2 flex items-center font-medium h-6 bg-error/20 rounded-full text-error">25h</div>
+        class="w-fit px-2 flex items-center font-medium h-6 bg-error/20 rounded-full text-error">24h</div>
     </div>
 
     <div class="flex gap-1.5">
-      <span class="text-secondary-2">Du </span>
+      <span class="text-secondary-2">{{ t('translation.from') }} </span>
       <span class="my-auto truncate font-medium">{{ format(item.date_debut, 'dd-MM-yyyy') }}</span>
-      <span class="text-secondary-2">Au </span>
+      <span class="text-secondary-2">{{ t('translation.to') }} </span>
       <span class="my-auto truncate font-medium">{{ format(item.date_fin, 'dd-MM-yyyy') }}</span>
     </div>
 
@@ -25,11 +25,11 @@
       <div class="flex justify-center">
         <file-alt :class="'fill-primary'" class="w-5" />
       </div>
-      <span>PDF d'examen</span>
+      <span>{{ t('translation.examPdfLabel') }}</span>
     </button>
 
     <div class="flex gap-1.5 font-medium text-gray-500">
-      <span class="">Publier le </span>
+      <span class="">{{ t('translation.publishedOn') }} </span>
       <span class="my-auto truncate ">{{ format(item.created, 'dd-MM-yyyy HH:mm') }}</span>
     </div>
 
@@ -42,8 +42,9 @@ import fileAlt from '@/assets/icons/fileAlt.vue';
 import { differenceInHours, format, parse } from 'date-fns';
 import { ref } from 'vue';
 import { useDownloadFile } from '@/composables/downloadFile';
+import { useI18n } from 'vue-i18n';
 
-
+const { t } = useI18n()
 const { downloadFile } = useDownloadFile()
 
 const props = defineProps(['item'])

@@ -26,6 +26,28 @@
       </div>
     </div>
 
+    <delete-modal @deleteItem="
+      async (id) => {
+        try {
+          let response = await axios.delete(`/api/Notification/${id}/`)
+
+          await useNotif.getNotifications()
+          Object.assign(useWidget.deleteModal, {
+            id: null,
+            designation: null,
+            open: false,
+          })
+        } catch (error) {
+          console.error(error)
+
+          useWidget.addToast({
+            msg: error.message,
+            color: 'red',
+          })
+        }
+      }
+    " />
+
   </div>
 
 </template>
@@ -37,6 +59,8 @@ import { onMounted, ref } from 'vue';
 import { useWidgetStore } from '@/stores/widget';
 import { format } from 'date-fns';
 import { useNotificationBadge } from '@/stores/notifications';
+import deleteModal from '@/components/commun/deleteModal.vue';
+import axios from 'axios';
 
 const { t } = useI18n()
 const loading = ref(true)

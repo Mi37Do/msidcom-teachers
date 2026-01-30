@@ -74,21 +74,6 @@
           </div>
         </div>
 
-        <span class="pixa-title-3 col-span-2 mb-2 mt-2">{{ t('translation.tutorInfo') }}</span>
-        <span class="pixa-title-4">
-          {{ t(`translation.phone`) }}</span>
-
-
-        <span class="text-primary-3">
-          {{ useStudent.focusedStudent.parents_tel || 'N/A' }}</span>
-
-
-        <span class="pixa-title-4">
-          {{ t(`translation.address`) }}</span>
-
-
-        <span class="text-primary-3">
-          {{ useStudent.focusedStudent.parents_address || 'N/A' }}</span>
       </DisclosurePanel>
     </Disclosure>
   </div>

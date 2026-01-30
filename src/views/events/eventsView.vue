@@ -5,7 +5,9 @@
 
   <div v-else class="w-full h-full flex flex-col gap-3 relative">
 
-    <subscription-modal />
+    <subscription-modal @loadData="async () => {
+      await useEvent.getEvents(null, `concernee=Prof`)
+    }" />
 
     <div class="h-14 flex items-center px-6">
       <span class="pixa-title-2">{{ t('translation.events') }}</span>

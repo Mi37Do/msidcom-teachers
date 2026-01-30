@@ -335,7 +335,8 @@
     "completed": "مكتمل",
     "in_progress": "قيد التنفيذ",
     "justified": "مبرر",
-    "unjustified": "غير مبرر",
+    "unjustified": "غير مبرر",    "min_50_char": "50 حرفًا على الأقل",
+
     "absent": "غائب",
     "present": "حاضر",
     "disciplinaryManagement": "الإدارة التأديبية",

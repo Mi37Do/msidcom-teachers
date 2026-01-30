@@ -33,7 +33,8 @@
     </div>
 
     <form @submit.prevent="sendMessage" class="w-full h-fit flex flex-col border-t border-border-color">
-      <span v-if="newMessage.type === 'Piece_jouinte'" class="w-full pt-4 pb-1 px-4 flex items-center">{{ t('translation.attachmentUploading') }}</span>
+      <span v-if="newMessage.type === 'Piece_jouinte'" class="w-full pt-4 pb-1 px-4 flex items-center">{{
+        t('translation.attachmentUploading') }}</span>
 
       <div class="w-full h-16  p-3 flex gap-3 items-center justify-between">
         <div class="btn btn-sm btn-square btn-outline relative">
@@ -52,7 +53,7 @@
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
-        <input type="text" v-model="newMessage.message"  minlength="50" :required="newMessage.type === 'Message'"
+        <input type="text" v-model="newMessage.message" minlength="50" :required="newMessage.type === 'Message'"
           class="pixa-input flex-1">
         <button type="submit" class="btn btn-sm btn-square btn-outline">
           <MessageIcon class="w-5" />
@@ -88,7 +89,7 @@ const route = useRoute()
 const useUsers = useUserStore()
 
 const newMessage = reactive({
-  discuss: route.params.id,
+  discuss: useWidget.adminDiscussion,
   message: null,
   pieces_jointe: null,
   type: 'Message',
@@ -125,10 +126,16 @@ const handleScroll = () => {
 
 // Combined mounted hook
 onMounted(async () => {
+  console.log('adminDiscussion on mount:', useWidget.adminDiscussion);
+
+  if (!useWidget.adminDiscussion) {
+    console.warn('adminDiscussion is null, waiting for it to be set...')
+    return
+  }
 
   useMessages.messages = []
-  await useMessages.getMessages(`discuss=${route.params.id}`)
-  await useMessages.getChats(route.params.id)
+  await useMessages.getMessages(`discuss=${useWidget.adminDiscussion}`)
+  await useMessages.getChats(useWidget.adminDiscussion)
 
 
   // Add scroll event listener
@@ -152,36 +159,40 @@ watch(() => useMessages.messages, () => {
   scrollToBottom()
 }, { deep: true })
 
-watch(() => route.params.id, async () => {
+watch(() => useWidget.adminDiscussion, async (newVal) => {
+  if (!newVal) return
+
   useMessages.messages = []
-  await useMessages.getMessages(`discuss=${route.params.id}`)
-
-
-  newMessage.discuss = route.params.id
+  await useMessages.getMessages(`discuss=${useWidget.adminDiscussion}`)
+  await useMessages.getChats(useWidget.adminDiscussion)
   scrollToBottom()
 })
 
 const initStore = () => {
-  Object.assign(newMessage, {
-    discuss: route.params.id,
-    message: null,
-    pieces_jointe: null,
-    type: 'Message'
-  })
+  newMessage.message = ''
+  newMessage.pieces_jointe = null
+  newMessage.type = 'Message'
 }
 
 const sendMessage = async () => {
   try {
-    if (newMessage.type === 'Message') {
-      delete newMessage.pieces_jointe
+    // Create a copy of the message to send, excluding pieces_jointe if type is 'Message'
+    const messageToSend = { ...newMessage }
+    if (messageToSend.type === 'Message') {
+      delete messageToSend.pieces_jointe
     }
 
-    let response = await axios.post(`/api/messages/`, newMessage)
+    console.log({
+      ...messageToSend,
+      discuss: useWidget.adminDiscussion
+    });
 
+    let response = await axios.post(`/api/messages/`, {
+      ...messageToSend,
+      discuss: useWidget.adminDiscussion
+    })
     initStore()
-    await useMessages.getMessages(`discuss=${route.params.id}`)
-    useMessages.getChats()
-
+    await useMessages.getMessages(`discuss=${useWidget.adminDiscussion}`)
   } catch (error) {
     console.error(error)
   }

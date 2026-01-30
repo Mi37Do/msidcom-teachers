@@ -90,8 +90,10 @@
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
-        <input type="text" v-model="newMessage.message" :required="newMessage.type === 'Message'"
-          class="pixa-input flex-1">
+        <input type="text" v-model="newMessage.message" minlength="50" :placeholder="t('translation.min_50_char')"
+          :required="newMessage.type === 'Message'" @input="() => {
+            if (newMessage.message === '') newMessage.message = null
+          }" class="pixa-input flex-1">
         <button type="submit" class="btn btn-sm btn-square btn-outline">
 
           <span v-if="loading" class="loading loading-spinner loading-sm"></span>
@@ -131,7 +133,7 @@ const useWidget = useWidgetStore()
 const loading = ref(false)
 const loadFile = ref(false)
 const newMessage = reactive({
-  discuss: route.params.id,
+  discuss: useWidget.adminDiscussion,
   message: null,
   pieces_jointe: null,
   type: 'Message',
@@ -205,36 +207,38 @@ watch(() => useMessages.messages, () => {
   scrollToBottom()
 }, { deep: true })
 
-watch(() => route.params.id, async () => {
+watch(() => useWidget.adminDiscussion, async () => {
   useMessages.messages = []
-  await useMessages.getMessages(route.params.id)
+  await useMessages.getMessages(useWidget.adminDiscussion)
 
 
-  newMessage.discuss = route.params.id
+  newMessage.discuss = useWidget.adminDiscussion
   scrollToBottom()
 })
 
 const initStore = () => {
   Object.assign(newMessage, {
-    discuss: route.params.id,
+    discuss: useWidget.adminDiscussion,
     message: null,
-    pieces_jointe: '',
-    type: 'Message'
+    pieces_jointe: null,
+    type: 'Message',
+    sender: useWidget.authUser.userDetail.id,
+    type_piece_jointe: 'image'
   })
 }
 
 const sendMessage = async () => {
   loading.value = true
   try {
-    console.log(newMessage);
-
-    if (newMessage.type === 'Message') {
-      delete newMessage.pieces_jointe
+    // Create a copy of the message to send
+    const messageToSend = { ...newMessage }
+    if (messageToSend.type === 'Message') {
+      delete messageToSend.pieces_jointe
     }
-    let response = await axios.post(`/api/messages/`, newMessage)
+    let response = await axios.post(`/api/messages/`, messageToSend)
     initStore()
-    await useMessages.getMessages(route.params.id)
-    useMessages.getChats()
+    await useMessages.getMessages(useWidget.adminDiscussion)
+    // useMessages.getChats()
 
   } catch (error) {
     console.error(error)
