@@ -43,11 +43,10 @@ import Trash from '@/assets/icons/trash.vue'
 import { useWidgetStore } from '@/stores/widget'
 import { format } from 'date-fns'
 import { useNotificationBadge } from '@/stores/notifications'
-import CheckCircleIcon from '@/assets/icons/checkCircleIcon.vue'
 import axios from 'axios'
 import Schedule from '@/assets/icons/schedule.vue'
-import StopWatch from '@/assets/icons/stopWatch.vue'
 import Comments from '@/assets/icons/comments.vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   item: {
@@ -56,19 +55,41 @@ const props = defineProps({
   }
 })
 const useWidget = useWidgetStore()
-
 const notificationStore = useNotificationBadge()
+const router = useRouter()
+
+const redirectMap = {
+  ABSENCE_RETARD_ELEVE: { name: 'students-classes-view' },
+  STATUE_PRESENCE_ELEVE: { name: 'students-classes-view' },
+  CONVOCATION: { name: 'students-classes-view' },
+  ENTREVUE_DEMANDE: { name: 'chat-view' },
+  ENTREVUE_ACCEPTEE: { name: 'interview-view' },
+  ENTREVUE_REFUSEE: { name: 'interview-view' },
+  ANNONCE: { name: 'annoncements-classes-view' },
+  ANNONCE_PROF: { name: 'annoncements-classes-view' },
+  BULLETIN_DISPONIBLE: { name: 'students-classes-view' },
+  EVENT: { name: 'schedule-view' },
+}
 
 const openNotification = async (item) => {
-  if (item.is_read) return
-  try {
-    await axios.patch(`/api/Notification/${item.id}/`, {
-      is_read: true,
-    })
-    await notificationStore.getNotifications()
-  } catch (error) {
-    console.error(error)
+  if (!item.is_read) {
+    try {
+      await axios.patch(`/api/Notification/${item.id}/`, { is_read: true })
+      await notificationStore.getNotifications()
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  if (item.type === 'ABSENCE_RETARD_PROF') return
+
+  if (item.type === 'MESSAGE' && item.discussion_id) {
+    router.push({ name: 'chat-view', query: { discussion_id: item.discussion_id } })
+    return
+  }
+
+  const route = redirectMap[item.type]
+  if (route) router.push(route)
 }
 </script>
 

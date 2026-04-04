@@ -126,8 +126,11 @@ function closeModal() {
 const signalAbsence = async () => {
   loading.value = true
   try {
-    await axios.patch(`/api/Eleve/${props.student.eleve_id}/`, {
-      present: false
+    await axios.post(`/api/Abs_Retard_Eleve/`, {
+      agent: useWidget.authUser.userDetail.id,
+      date_heure_abs: itemToAdd.date_heure_abs,
+      type: 'Absence',
+      eleve: props.student.eleve_id
     })
     emits('loadData')
     closeModal()

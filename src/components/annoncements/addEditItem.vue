@@ -13,7 +13,7 @@
             enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95">
             <DialogPanel
-              class="w-full max-w-md min-h-[650px] h-[80%] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
+              class="w-full max-w-md min-h-[650px] h-[80%] transform overflow-visible rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-3">
               <DialogTitle as="h3" class="flex items-center pixa-title-2">
 
                 {{ useWidget.addEditAnnoncement.open ? t('translation.create') : '' }} {{ t('translation.une')

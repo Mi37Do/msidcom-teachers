@@ -6,13 +6,13 @@ import { messaging, getToken, onMessage } from '@/firebase'
 import axios from 'axios'
 import { Preferences } from '@capacitor/preferences'
 
-// Track if listeners are already set up (important!)
+// Singleton state — shared across all callers
+const fcmToken = ref(null)
+const notification = ref(null)
+const error = ref(null)
 let listenersInitialized = false
 
 export function useFirebaseMessaging() {
-  const fcmToken = ref(null)
-  const notification = ref(null)
-  const error = ref(null)
   const isNative = Capacitor.isNativePlatform()
 
   // Web FCM implementation
@@ -193,6 +193,7 @@ export function useFirebaseMessaging() {
           },
         },
       )
+      await Preferences.set({ key: 'fcmToken', value: token })
       console.log('✅ Token sent to backend successfully')
     } catch (err) {
       console.error('❌ Error sending token to backend:', err)
