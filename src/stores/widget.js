@@ -188,6 +188,7 @@ export const useWidgetStore = defineStore('widget', () => {
   const addLateProf = ref(false)
   const communCaledarModal = ref(false)
   const addJustify = ref(false)
+  const justifyModal = ref(false)
   const summonDetail = ref(false)
   const addImage = ref(false)
 
@@ -398,6 +399,7 @@ export const useWidgetStore = defineStore('widget', () => {
     addStudentToClass,
     addResponsabilites,
     addJustify,
+    justifyModal,
     addNote,
     focusedAnne,
     addEditContent,

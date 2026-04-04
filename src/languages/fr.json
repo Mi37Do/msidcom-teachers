@@ -70,6 +70,8 @@
     "tests": "tests",
     "homework": "devoirs",
     "comment": "commentaire",
+    "comment_or_file_required": "Un commentaire ou un fichier est requis",
+    "justification_file": "fichier de justification",
     "disponibility": "disponibilité",
     "create": "créer",
     "un": "un",

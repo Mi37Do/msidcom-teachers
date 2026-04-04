@@ -13,6 +13,8 @@
       await loadData()
     }" />
 
+    <view-justify-modal />
+
     <button @click=" useWidget.addLateProf = true"
       class="btn btn-sm pixa-btn border border-warning bg-transparent hover:bg-warning/10 w-14 text-warning hover:border-warning ">
       <no-time-warning class="w-5" />
@@ -56,6 +58,7 @@ import { useWidgetStore } from "@/stores/widget";
 import noTimeWarning from "@/assets/icons/noTimeWarning.vue";
 import addLateModal from "@/components/abscences/addLateModal.vue";
 import addJustifyModal from "@/components/abscences/addJustifyModal.vue";
+import viewJustifyModal from "@/components/abscences/viewJustifyModal.vue";
 
 const { t } = useI18n()
 const query = ref('')

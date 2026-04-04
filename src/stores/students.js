@@ -15,6 +15,7 @@ export const useStudentStore = defineStore('student', () => {
   const filtredAbscences = ref([])
   const filterdParents = ref([])
   const focusedSummon = ref(null)
+  const focusedAbscence = ref(null)
 
   const getParents = async () => {
     try {
@@ -85,5 +86,6 @@ export const useStudentStore = defineStore('student', () => {
     filtredAbscences,
     filterdParents,
     focusedSummon,
+    focusedAbscence,
   }
 })

@@ -21,15 +21,21 @@
               <span class="text-center">{{ t('translation.confirmLateStudent') }}</span>
 
               <div class="flex gap-3 justify-end w-full mt-3">
-                <button type="reset" class="btn btn-sm pixa-btn-form btn-ghost w-32" @click="closeModal">
-                  {{ t('translation.cancel') }}
-                </button>
-                <button type="submit" :disabled="loading" class="btn btn-sm pixa-btn-form btn-warning w-40">
 
+                <button type="button" :disabled="loading" class="btn btn-sm pixa-btn-form btn-error flex-1"
+                  @click="signalAbsence">
                   <span v-if="loading" class="loading loading-spinner loading-sm"></span>
-                  <span v-else>{{ t('translation.signalLate') }}</span>
+                  <span v-else class="truncate">{{ t('translation.signalAbsence') }}</span>
+                </button>
+                <button type="submit" :disabled="loading" class="btn btn-sm pixa-btn-form btn-warning flex-1">
+                  <span v-if="loading" class="loading loading-spinner loading-sm"></span>
+                  <span v-else class="truncate">{{ t('translation.signalLate') }}</span>
                 </button>
               </div>
+
+              <button type="reset" class="btn btn-sm pixa-btn-form btn-ghost w-32" @click="closeModal">
+                {{ t('translation.cancel') }}
+              </button>
             </DialogPanel>
           </TransitionChild>
         </form>
@@ -116,6 +122,24 @@ function closeModal() {
 }
 
 
+
+const signalAbsence = async () => {
+  loading.value = true
+  try {
+    await axios.patch(`/api/Eleve/${props.student.eleve_id}/`, {
+      present: false
+    })
+    emits('loadData')
+    closeModal()
+  } catch (error) {
+    console.error(error)
+    useWidget.addToast({
+      msg: error.message,
+      color: 'red'
+    })
+  }
+  loading.value = false
+}
 
 const addItem = async () => {
   console.log(new Date());

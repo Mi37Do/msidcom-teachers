@@ -11,47 +11,11 @@
 
 
     <div class="w-full flex items-center justify-between">
-      <Listbox v-model="selectedItem">
-        <div class="relative">
-          <ListboxButton class="relative w-full flex items-center gap-[10px]">
-            <span
-              :class="item.present ? 'bg-[#00778B1A] text-[#00778B] fill-[#00778B]' : 'bg-[#EF60791A] text-[#EF6079] fill-[#EF6079]'"
-              class="my-auto px-[12px] py-[6px]  flex w-fit rounded-r-full  justify-between font-medium min-w-20">
-              <span>{{ item.present ? t('translation.present') : t('translation.absent') }}</span>
-              <angle-icon class="w-5" />
-            </span>
-          </ListboxButton>
-
-          <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100"
-            leave-to-class="opacity-0">
-            <ListboxOptions
-              class="absolute z-10 max-h-32 mt-1 w-32 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-              <ListboxOption v-slot="{ active, selected }" v-for="i in filters" :key="i.id" :value="i.designation"
-                as="template" @click="async () => {
-                  selectedItem = i.id
-                  let response = await axios.patch(`/api/Eleve/${item.eleve_id}/`, {
-                    present: selectedItem === 'Présent' ? true : false
-                  })
-                  emits('loadData')
-                }">
-                <li :class="[
-                  active ? 'bg-primary/20 text-primary fill-primary' : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-10 pr-4',
-                ]">
-                  <span :class="[
-                    selected ? 'font-medium' : 'font-normal',
-                    'block truncate',
-                  ]">{{ i.designation }}</span>
-
-                  <span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <checkIcon class="h-5 w-5" aria-hidden="true" />
-                  </span>
-                </li>
-              </ListboxOption>
-            </ListboxOptions>
-          </transition>
-        </div>
-      </Listbox>
+      <span
+        :class="item.present ? 'bg-[#00778B1A] text-[#00778B] fill-[#00778B]' : 'bg-[#EF60791A] text-[#EF6079] fill-[#EF6079]'"
+        class="my-auto px-[12px] py-[6px]  flex w-fit rounded-r-full  justify-between font-medium min-w-20">
+        <span>{{ item.present ? t('translation.present') : t('translation.absent') }}</span>
+      </span>
 
       <button @click="() => {
         useStudent.focusedStudent = item

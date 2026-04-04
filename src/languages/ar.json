@@ -70,6 +70,8 @@
     "tests": "الاختبارات",
     "homework": "الفروض",
     "comment": "تعليق",
+    "comment_or_file_required": "يجب إدخال تعليق أو رفع ملف",
+    "justification_file": "ملف التبرير",
     "disponibility": "التوفر",
     "create": "إنشاء",
     "un": "أحد",

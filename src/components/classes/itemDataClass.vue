@@ -6,7 +6,7 @@
       </div>
       <span class="truncate flex-1 text-lg font-medium capitalize">{{ t('translation.classe') }}: {{
         item.specialite_designation
-        }} - {{ item ? item.class_num : 'N/A' }}</span>
+      }} - {{ t('translation.room') }} {{ item ? item.class_num : 'N/A' }}</span>
 
       <slot name="options" />
     </div>

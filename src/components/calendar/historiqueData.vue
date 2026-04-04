@@ -15,7 +15,7 @@
 
 
     <div class="my-auto flex items-center justify-center gap-3">
-      <button v-if="!item.justification" @click="
+      <button v-if="!item.justification && !item.commentaire" @click="
         () => {
           useStudent.focusedAbscence = item
           useWidget.addJustify = true
@@ -26,7 +26,8 @@
 
       <button v-else @click="
         () => {
-          saveFile(item.justification)
+          useStudent.focusedAbscence = item
+          useWidget.justifyModal = true
         }
       " class="btn btn-square btn-ghost">
         <file-alt class="fill-primary w-5" />
@@ -41,22 +42,10 @@ import addCircle from '@/assets/icons/addCircle.vue';
 import { useStudentStore } from '@/stores/students';
 import fileAlt from '@/assets/icons/fileAlt.vue';
 import { useWidgetStore } from '@/stores/widget';
-import elipsisH from '@/assets/icons/elipsisH.vue';
-import { ref } from 'vue';
 import { format } from 'date-fns';
-import { useDownloadFile } from '@/composables/downloadFile';
-
 const props = defineProps(['item'])
 const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
-
-const { downloadFile } = useDownloadFile()
-
-// Trigger from UI
-const saveFile = (base64String) => {
-  let uniqueName = `justification_${props.item.type}_${useWidget.authUser.userDetail.first_name}_${useWidget.authUser.userDetail.last_name}_${format(props.item.date_heure_abs, 'dd_MM_yyyy')}`
-  downloadFile(uniqueName, base64String)
-}
 
 </script>
 
