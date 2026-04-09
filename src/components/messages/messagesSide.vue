@@ -53,7 +53,7 @@
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
-        <input type="text" v-model="newMessage.message" minlength="50" :required="newMessage.type === 'Message'"
+        <input type="text" v-model="newMessage.message" minlength="20" :required="newMessage.type === 'Message'"
           class="pixa-input flex-1">
         <button type="submit" class="btn btn-sm btn-square btn-outline">
           <MessageIcon class="w-5" />

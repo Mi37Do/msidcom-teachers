@@ -25,7 +25,7 @@ export function useFirebaseMessaging() {
 
         const token = await getToken(messaging, {
           vapidKey:
-            'BPSsnEOZO3WW9VzujPJEKRL4cKkZZw2D-a-8g1MNwuxsgQUTb6bRzSb5GEkotCIDckJyH8Lh54GjtazSTLlM4Go',
+            'BNIgwV9x3pc0RuPO3fFm04tP7VIyDpzHHCUWuGtgsu0bvNExWoFCg3EMjI3Thnb0O_QPiG60OD2y5-hNMc4OPYw',
         })
 
         if (token) {

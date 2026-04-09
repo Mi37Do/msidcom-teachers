@@ -31,29 +31,12 @@
   src: url('@/assets/fonts/coco.ttf');
 }
 
+* {
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  width: 0px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #cfd9f6;
-  border-color: white;
-  border-width: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
+  display: none;
 }
 
 .btn-disabled {

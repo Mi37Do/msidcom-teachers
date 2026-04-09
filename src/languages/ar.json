@@ -337,7 +337,7 @@
     "completed": "مكتمل",
     "in_progress": "قيد التنفيذ",
     "justified": "مبرر",
-    "unjustified": "غير مبرر",    "min_50_char": "50 حرفًا على الأقل",
+    "unjustified": "غير مبرر",    "min_20_char": "20 حرفًا على الأقل",
 
     "absent": "غائب",
     "present": "حاضر",

@@ -62,9 +62,6 @@ import {
 } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
-import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
-
-const { fcmToken } = useFirebaseMessaging();
 
 const props = defineProps(['item', 'token'])
 const useWidget = useWidgetStore()
@@ -80,8 +77,10 @@ const closeModal = () => {
 const deleteItem = async () => {
   loadingDelete.value = true
   try {
-    if (fcmToken.value) {
-      await axios.post('/api/device/unregister/', { token: fcmToken.value })
+    const { value: fcmToken } = await Preferences.get({ key: 'fcmToken' })
+    if (fcmToken) {
+      await axios.post('/api/device/unregister/', { token: fcmToken })
+      await Preferences.remove({ key: 'fcmToken' })
     }
     await Preferences.remove({ key: 'authToken-prof' });
     await axios.post('/api/Logout')

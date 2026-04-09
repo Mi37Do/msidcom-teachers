@@ -90,7 +90,7 @@
           }" class="absolute inset-0 opacity-0">
           <paper-clip class="w-5" />
         </div>
-        <input type="text" v-model="newMessage.message" minlength="50" :placeholder="t('translation.min_50_char')"
+        <input type="text" v-model="newMessage.message" minlength="20" :placeholder="t('translation.min_20_char')"
           :required="newMessage.type === 'Message'" @input="() => {
             if (newMessage.message === '') newMessage.message = null
           }" class="pixa-input flex-1">

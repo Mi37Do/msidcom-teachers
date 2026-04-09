@@ -212,7 +212,7 @@ export const useWidgetStore = defineStore('widget', () => {
   const adminDiscussion = ref(null)
 
   const getLanguage = () => {
-    return localStorage.getItem('user-language')
+    return localStorage.getItem('user-language') || 'fr'
   }
 
   const notifications = ref([])

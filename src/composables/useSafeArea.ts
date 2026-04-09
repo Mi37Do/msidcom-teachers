@@ -1,9 +1,9 @@
 import { onMounted, onUnmounted } from 'vue'
-import { SafeArea } from '@capacitor-community/safe-area'
+import { SafeArea } from 'capacitor-plugin-safe-area'
 
 export function useSafeArea() {
   const setVars = async () => {
-    const insets = await SafeArea.getSafeAreaInsets()
+    const { insets } = await SafeArea.getSafeAreaInsets()
 
     document.documentElement.style.setProperty('--safe-area-top', `${insets.top}px`)
     document.documentElement.style.setProperty('--safe-area-bottom', `${insets.bottom}px`)

@@ -339,7 +339,7 @@
     "justified": "Justifié",
     "unjustified": "Non justifié",
     "absent": "Absent",
-     "min_50_char": "50 charactéres minimum",
+     "min_20_char": "20 charactéres minimum",
     "present": "Présent",
     "disciplinaryManagement": "gestion disciplinaire",
     "bulletinAndNotes": "bulletin et notes",

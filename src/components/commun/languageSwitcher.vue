@@ -17,7 +17,8 @@
           <div class="px-1 py-1">
             <MenuItem @click="useWidget.setLanguage(language)" v-for="language in languages" :key="language">
             <button :class="[
-              'btn btn-sm pixa-btn flex justify-between btn-ghost w-full font-light capitalize'
+              'btn btn-sm pixa-btn flex justify-between btn-ghost w-full font-light capitalize',
+              language === useWidget.userLanguage ? 'bg-primary/10 text-primary' : ''
             ]">
               <span class="uppercase">{{ language }}</span>
               <span> {{ language === 'en' ? 'english' : language === 'fr' ? t('translation.french') : t('translation.arabic')

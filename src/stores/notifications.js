@@ -5,72 +5,69 @@ import { Capacitor } from '@capacitor/core'
 import { defineStore } from 'pinia'
 
 export const useNotificationBadge = defineStore('notifications', () => {
-  // Used by polling — full list for badge/sidebar/push
   const notifications = ref([])
-
-  // Used by the notifications view — paginated list
   const notificationsList = ref([])
   const currentPage = ref(1)
-  const totalPages = ref(1)
+  const hasNextPage = ref(true)
   const loadingMore = ref(false)
 
-  const unreadCount = computed(() => notifications.value.filter((n) => !n.is_read).length)
+  // Computed: Count of unread notifications
+  const unreadCount = computed(() => {
+    return notifications.value.filter((n) => !n.is_read).length
+  })
 
-  // Called on login and by polling every 5s
-  const fetchInitial = async () => {
-    try {
-      const response = await axios.get('/api/Notifications_sql')
-      const newNotifications = response.data.Notifications
+  const STUDENTS_TYPES = ['ABSENCE_RETARD_ELEVE', 'STATUE_PRESENCE_ELEVE', 'CONVOCATION', 'ANNONCE', 'BULLETIN_DISPONIBLE']
+  const EVENTS_TYPES = ['ABSENCE_RETARD_PROF', 'ANNONCE_PROF', 'EVENT']
+  const MESSAGES_TYPES = ['ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE', 'MESSAGE']
 
-      // Trigger local push for newly unread items
-      const prevIds = new Set(notifications.value.map((n) => n.id))
-      const newUnread = newNotifications.filter((n) => !n.is_read && !prevIds.has(n.id))
-      for (const n of newUnread) {
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification(n.title || 'Notification', { body: n.message || '' })
-        }
-      }
+  const studentsUnreadCount = computed(() =>
+    notifications.value.filter((n) => !n.is_read && STUDENTS_TYPES.includes(n.type)).length
+  )
+  const eventsUnreadCount = computed(() =>
+    notifications.value.filter((n) => !n.is_read && EVENTS_TYPES.includes(n.type)).length
+  )
+  const messagesUnreadCount = computed(() =>
+    notifications.value.filter((n) => !n.is_read && MESSAGES_TYPES.includes(n.type)).length
+  )
 
-      notifications.value = newNotifications
-      await updateBadgeCount(newNotifications.filter((n) => !n.is_read).length)
-    } catch (error) {
-      console.error('Error fetching notifications:', error)
-    }
-  }
-
-  // Called from notifications view on mount and page change
+  // Get notifications from API
   const getNotifications = async (page = 1) => {
     try {
-      const response = await axios.get(`/api/Notifications_sql_paginations/?page=${page}`)
-      console.log('paginated response:', response.data)
-      const data = response.data
-      // Support both {Notifications: [...]} and {results: [...]} and direct array
-      notificationsList.value = data.Notifications ?? data.results ?? (Array.isArray(data) ? data : [])
-      currentPage.value = data.current_page ?? data.page ?? page
-      totalPages.value = data.total_pages ?? data.num_pages ?? 1
+      const response = await axios.get('/api/Notifications_sql_paginations/', { params: { page } })
+      const newNotifications = response.data.Notifications ?? response.data.results ?? []
+
+      if (page === 1) {
+        notifications.value = newNotifications
+        notificationsList.value = newNotifications
+      } else {
+        notifications.value = [...notifications.value, ...newNotifications]
+        notificationsList.value = [...notificationsList.value, ...newNotifications]
+      }
+
+      currentPage.value = page
+      hasNextPage.value = !!response.data.next
+
+      // Update badge count on native platforms (only on first page load)
+      if (page === 1) {
+        const newUnreadCount = notifications.value.filter((n) => !n.is_read).length
+        await updateBadgeCount(newUnreadCount)
+      }
+
+      return newNotifications
     } catch (error) {
-      console.error('Error fetching paginated notifications:', error)
+      console.error('Error fetching notifications:', error)
+      return []
     }
   }
 
-  // Called on scroll — appends next page to notificationsList
   const loadNextPage = async () => {
-    if (loadingMore.value || currentPage.value >= totalPages.value) return
+    if (!hasNextPage.value || loadingMore.value) return
     loadingMore.value = true
-    try {
-      const next = currentPage.value + 1
-      const response = await axios.get(`/api/Notifications_sql_paginations/?page=${next}`)
-      const data = response.data
-      const items = data.Notifications ?? data.results ?? (Array.isArray(data) ? data : [])
-      notificationsList.value = [...notificationsList.value, ...items]
-      currentPage.value = data.current_page ?? data.page ?? next
-      totalPages.value = data.total_pages ?? data.num_pages ?? totalPages.value
-    } catch (error) {
-      console.error('Error loading next page:', error)
-    }
+    await getNotifications(currentPage.value + 1)
     loadingMore.value = false
   }
 
+  // Update app badge count (native only)
   const updateBadgeCount = async (count) => {
     try {
       if (Capacitor.isNativePlatform()) {
@@ -85,21 +82,30 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
+  // Clear badge
   const clearBadge = async () => {
-    await updateBadgeCount(0)
+    try {
+      await updateBadgeCount(0)
+    } catch (error) {
+      console.error('Error clearing badge:', error)
+    }
   }
 
+  // Mark notifications as read and update badge
   const markAsRead = async (notificationIds) => {
     try {
       await Promise.all(
         notificationIds.map((id) => axios.patch(`/api/Notification/${id}/`, { is_read: true })),
       )
+
       notifications.value = notifications.value.map((n) =>
         notificationIds.includes(n.id) ? { ...n, is_read: true } : n,
       )
+
       notificationsList.value = notificationsList.value.map((n) =>
         notificationIds.includes(n.id) ? { ...n, is_read: true } : n,
       )
+
       await updateBadgeCount(unreadCount.value)
     } catch (error) {
       console.error('Error marking as read:', error)
@@ -107,24 +113,29 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
+  // Mark all as read
   const markAllAsRead = async () => {
     const unreadIds = notifications.value.filter((n) => !n.is_read).map((n) => n.id)
-    if (unreadIds.length > 0) await markAsRead(unreadIds)
+    if (unreadIds.length > 0) {
+      await markAsRead(unreadIds)
+    }
   }
 
-  // Called on login
+  // Initialize - fetch notifications
   const initialize = async () => {
-    await fetchInitial()
+    await getNotifications()
   }
 
   return {
     notifications,
     notificationsList,
-    currentPage,
-    totalPages,
-    loadingMore,
     unreadCount,
-    fetchInitial,
+    studentsUnreadCount,
+    eventsUnreadCount,
+    messagesUnreadCount,
+    currentPage,
+    hasNextPage,
+    loadingMore,
     getNotifications,
     loadNextPage,
     updateBadgeCount,

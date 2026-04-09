@@ -1,48 +1,56 @@
 <template>
-  <div class="w-full h-screen bg-[#F5F5F5] flex flex-col">
-    <div class="w-full  h-fit  bg-primary-2/30 p-3 flex items-center">
+  <div class="w-full h-screen bg-[#F5F5F5] flex flex-col ">
+    <div class="flex h-fit  pt-safe-top bg-[#e9f3c7]">
+      <div class="w-full  h-fit p-3 flex items-center">
 
-      <div class="flex-1">
-        <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
-      </div>
+        <div class="flex-1">
+          <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
+        </div>
 
 
-      <div class="flex gap-3 items-center ml-auto">
-        <router-link :to="{ name: 'notifications-panel' }"
-          class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
-          <span class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
-            useNotif.unreadCount }}</span>
-          <BellIcon class="w-[30px] h-[30px]" />
-        </router-link>
-        <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
-          <router-link :to="{ name: 'profile-panel' }" class="w-11 h-11 absolute z-10"></router-link>
-          <img v-if="useWidget.authUser.
-            userDetail.image" :src="useWidget.authUser.
-              userDetail.image" class="w-full h-full object-cover rounded-full" alt="">
+        <div class="flex gap-3 items-center ml-auto">
+          <router-link :to="{ name: 'notifications-panel' }"
+            class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
+            <span
+              class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
+                useNotif.unreadCount }}</span>
+            <BellIcon class="w-[30px] h-[30px]" />
+          </router-link>
+          <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
+            <router-link :to="{ name: 'profile-panel' }" class="w-11 h-11 absolute z-10"></router-link>
+            <img v-if="useWidget.authUser.
+              userDetail.image" :src="useWidget.authUser.
+                userDetail.image" class="w-full h-full object-cover rounded-full" alt="">
 
-          <span v-else class="text-white text-lg font-semibold mb-0.5">{{ useWidget.authUser.
-            userDetail.first_name[0] }}{{ useWidget.authUser.
-              userDetail.last_name[0] }}</span>
+            <span v-else class="text-white text-lg font-semibold mb-0.5">{{ useWidget.authUser.
+              userDetail.first_name[0] }}{{ useWidget.authUser.
+                userDetail.last_name[0] }}</span>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="flex-1 overflow-hidden">
       <router-view></router-view>
     </div>
-    <nav class="w-full h-16 bg-white border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
-      <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost">
-        <ruler class="w-5" />
-      </router-link>
-      <router-link :to="{ name: 'calendar-panel' }" class="btn m-auto w-full btn-ghost">
-        <calendar class="w-5" />
-      </router-link>
-      <router-link :to="{ name: 'events-panel' }" class="btn m-auto w-full btn-ghost">
-        <schedule class="w-5" />
-      </router-link>
-      <router-link :to="{ name: 'messages-panel' }" class="btn m-auto w-full btn-ghost">
-        <comments class="w-5" />
-      </router-link>
-    </nav>
+
+    <div class="flex h-fit bg-white   pb-safe-bottom">
+
+      <nav class="w-full h-fit border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
+        <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost">
+          <ruler class="w-5" />
+        </router-link>
+        <router-link :to="{ name: 'calendar-panel' }" class="btn m-auto w-full btn-ghost">
+          <calendar class="w-5" />
+        </router-link>
+        <router-link :to="{ name: 'events-panel' }" class="btn m-auto w-full btn-ghost">
+          <schedule class="w-5" />
+        </router-link>
+        <router-link :to="{ name: 'messages-panel' }" class="btn m-auto w-full btn-ghost">
+          <comments class="w-5" />
+        </router-link>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -56,9 +64,10 @@ import { useWidgetStore } from '@/stores/widget';
 import BellIcon from '@/assets/icons/bellIcon.vue';
 import { useNotificationBadge } from '@/stores/notifications';
 import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
-import { Capacitor } from '@capacitor/core';
+import { useSafeArea } from '@/composables/useSafeArea';
 import { useRouter } from 'vue-router';
 
+useSafeArea();
 const { fcmToken, notification, error, initializeFCM } = useFirebaseMessaging();
 const useWidget = useWidgetStore();
 const useNotif = useNotificationBadge();
@@ -71,17 +80,7 @@ onMounted(async () => {
   await useNotif.initialize();
 
   // Initialize FCM Push Notifications
-  if (Capacitor.isNativePlatform()) {
-    console.log('Native platform detected, initializing FCM...');
-    await initializeFCM();
-  } else {
-    // Web - check permission first
-    if (Notification.permission === 'granted') {
-      await initializeFCM();
-    } else {
-      console.log('Web notification permission not granted yet');
-    }
-  }
+  await initializeFCM();
 });
 
 // Watch for new push notifications

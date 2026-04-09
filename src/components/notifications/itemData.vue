@@ -11,11 +11,11 @@
       </div>
     </div>
 
-    <div class="flex-1 flex flex-col gap-3 items-start relative">
+    <div class="flex-1 min-w-0 flex flex-col gap-3 items-start relative">
       <div class="w-full flex gap-4 items-center text-start">
         <span class="font-medium text-[1.05rem] flex-1 capitalize">{{ item.title }}</span>
 
-        <div class="flex gap-1.5">
+        <div class="flex gap-1.5 shrink-0">
 
           <button type="button" @click.stop="
             () => {
@@ -33,7 +33,7 @@
 
       <span>{{ format(item.created, 'dd/MM/yyyy') }}</span>
 
-      <span class="text-start">{{ item.message }}</span>
+      <span class="text-start break-words max-w-full">{{ item.message }}</span>
     </div>
   </button>
 </template>
