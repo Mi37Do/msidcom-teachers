@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npx cap sync)",
       "Bash(npx cap:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

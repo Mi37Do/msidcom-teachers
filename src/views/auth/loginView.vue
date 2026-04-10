@@ -9,7 +9,7 @@
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
 
           <img src="@/assets/pics/logoSquare.svg" class="w-28" alt="">
-          <div class="flex items-center pixa-title my-2"> msidcom - enseignant </div>
+          <div class="flex items-center pixa-title my-2"> {{ t('translation.appTitle') }}</div>
           <div class="flex items-center pixa-title-2"> {{ t('translation.connexion') }} </div>
           <div class="h-px w-full bg-slate-600"></div>
 

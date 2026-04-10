@@ -8,6 +8,11 @@ const config: CapacitorConfig = {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
+    StatusBar: {
+      style: 'DARK',
+      backgroundColor: '#49c5b1',
+      overlaysWebView: false,
+    },
   },
 }
 

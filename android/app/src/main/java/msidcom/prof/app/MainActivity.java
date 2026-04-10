@@ -3,13 +3,23 @@ package msidcom.prof.app;
 import android.os.Bundle;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Build;
+import android.view.View;
+import android.view.Window;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Hardcode status bar: #e9f3c7 background with dark icons
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.setStatusBarColor(Color.parseColor("#49c5b1"));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         // Create notification channel for Android 8.0+
         createNotificationChannel();

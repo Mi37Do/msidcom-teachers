@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen bg-[#F5F5F5] flex flex-col ">
+  <div class="w-full h-screen flex flex-col ">
     <div class="flex h-fit  pt-safe-top bg-[#e9f3c7]">
       <div class="w-full  h-fit p-3 flex items-center">
 
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-hidden  bg-[#F5F5F5]">
       <router-view></router-view>
     </div>
 
