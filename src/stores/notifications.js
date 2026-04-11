@@ -121,7 +121,19 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
-  // Initialize - fetch notifications
+  // Initialize badge only - uses non-paginated endpoint for app launch
+  const initializeBadge = async () => {
+    try {
+      const response = await axios.get('/api/Notifications_sql')
+      notifications.value = response.data.Notifications ?? []
+      const newUnreadCount = notifications.value.filter((n) => !n.is_read).length
+      await updateBadgeCount(newUnreadCount)
+    } catch (error) {
+      console.error('Error fetching notifications badge:', error)
+    }
+  }
+
+  // Initialize - fetch notifications (paginated)
   const initialize = async () => {
     await getNotifications()
   }
@@ -136,6 +148,7 @@ export const useNotificationBadge = defineStore('notifications', () => {
     currentPage,
     hasNextPage,
     loadingMore,
+    initializeBadge,
     getNotifications,
     loadNextPage,
     updateBadgeCount,

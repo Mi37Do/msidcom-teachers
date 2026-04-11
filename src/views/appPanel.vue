@@ -76,8 +76,8 @@ const router = useRouter();
 onMounted(async () => {
   console.log('App mounted, initializing...');
 
-  // Initialize notification store (fetch initial count from API)
-  await useNotif.initialize();
+  // Initialize notification badge using non-paginated endpoint
+  await useNotif.initializeBadge();
 
   // Initialize FCM Push Notifications
   await initializeFCM();
@@ -88,8 +88,8 @@ watch(notification, async (newNotification) => {
   if (newNotification) {
     console.log('New push notification received:', newNotification);
 
-    // Refresh notification count from API
-    await useNotif.getNotifications();
+    // Refresh notification badge count using non-paginated endpoint
+    await useNotif.initializeBadge();
 
     // Handle navigation if notification contains action data
     if (newNotification.data) {

@@ -1,4 +1,5 @@
 import type { CapacitorConfig } from '@capacitor/cli'
+import { SystemBarsStyle } from '@capacitor-community/safe-area'
 
 const config: CapacitorConfig = {
   appId: 'msidcom.prof.app',
@@ -8,10 +9,9 @@ const config: CapacitorConfig = {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
-    StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#49c5b1',
-      overlaysWebView: false,
+    SafeArea: {
+      statusBarStyle: SystemBarsStyle.Light,
+      navigationBarStyle: SystemBarsStyle.Light,
     },
   },
 }

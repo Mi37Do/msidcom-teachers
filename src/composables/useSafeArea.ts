@@ -1,22 +1,4 @@
-import { onMounted, onUnmounted } from 'vue'
-import { SafeArea } from 'capacitor-plugin-safe-area'
-
-export function useSafeArea() {
-  const setVars = async () => {
-    const { insets } = await SafeArea.getSafeAreaInsets()
-
-    document.documentElement.style.setProperty('--safe-area-top', `${insets.top}px`)
-    document.documentElement.style.setProperty('--safe-area-bottom', `${insets.bottom}px`)
-    document.documentElement.style.setProperty('--safe-area-left', `${insets.left}px`)
-    document.documentElement.style.setProperty('--safe-area-right', `${insets.right}px`)
-  }
-
-  onMounted(() => {
-    setVars()
-    SafeArea.addListener('safeAreaChanged', setVars)
-  })
-
-  onUnmounted(() => {
-    SafeArea.removeAllListeners()
-  })
-}
+// @capacitor-community/safe-area v7 works automatically as a polyfill.
+// Safe area insets are available via env(safe-area-inset-*) CSS variables,
+// which are mapped to --safe-area-* custom properties in main.css.
+export function useSafeArea() {}
