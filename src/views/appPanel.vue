@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen flex flex-col ">
-    <div class="flex h-fit  pt-safe-top bg-[#e9f3c7]">
+    <div class="flex h-fit pt-safe-top bg-[#e9f3c7]">
       <div class="w-full  h-fit p-3 flex items-center">
 
         <div class="flex-1">
@@ -66,6 +66,7 @@ import { useNotificationBadge } from '@/stores/notifications';
 import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 import { useSafeArea } from '@/composables/useSafeArea';
 import { useRouter } from 'vue-router';
+import { Capacitor } from '@capacitor/core';
 
 useSafeArea();
 const { fcmToken, notification, error, initializeFCM } = useFirebaseMessaging();
@@ -76,11 +77,15 @@ const router = useRouter();
 onMounted(async () => {
   console.log('App mounted, initializing...');
 
-  // Initialize notification badge using non-paginated endpoint
-  await useNotif.initializeBadge();
+  await useNotif.initialize();
 
-  // Initialize FCM Push Notifications
-  await initializeFCM();
+  if (Capacitor.isNativePlatform()) {
+    await initializeFCM();
+  } else {
+    if (Notification.permission === 'granted') {
+      await initializeFCM();
+    }
+  }
 });
 
 // Watch for new push notifications
