@@ -18,9 +18,13 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { onMounted } from 'vue';
+import { useNotificationBadge } from '@/stores/notifications';
 
 const { t } = useI18n()
 const route = useRoute()
+const useNotif = useNotificationBadge()
+onMounted(() => useNotif.markTypesRead(['ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE', 'MESSAGE']))
 </script>
 
 

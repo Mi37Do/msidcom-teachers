@@ -113,11 +113,17 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
-  // Mark all as read
-  const markAllAsRead = async () => {
-    const unreadIds = notifications.value.filter((n) => !n.is_read).map((n) => n.id)
-    if (unreadIds.length > 0) {
-      await markAsRead(unreadIds)
+  // Mark all notifications of given types as read via bulk endpoint
+  const markTypesRead = async (types) => {
+    try {
+      await Promise.all(
+        types.map((type) =>
+          axios.post('/api/Update_notification_state/', { notification_state: type })
+        )
+      )
+      await initialize()
+    } catch (error) {
+      console.error('Error marking notifications as read:', error)
     }
   }
 
@@ -133,9 +139,9 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
-  // Initialize - fetch notifications (paginated)
+  // Initialize - fetch badge counts from non-paginated endpoint
   const initialize = async () => {
-    await getNotifications()
+    await initializeBadge()
   }
 
   return {
@@ -154,7 +160,7 @@ export const useNotificationBadge = defineStore('notifications', () => {
     updateBadgeCount,
     clearBadge,
     markAsRead,
-    markAllAsRead,
+    markTypesRead,
     initialize,
   }
 })

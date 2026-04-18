@@ -56,7 +56,8 @@
 <script setup>
 import communNoData from "@/components/commun/communNoData.vue";
 import { useMessagesStore } from "@/stores/messages";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 import { useUserStore } from "@/stores/users";
 import addChatModal from "@/components/messages/addChatModal.vue";
 import chatItem from '@/components/messages/chatItem.vue'
@@ -84,26 +85,23 @@ const usersTypes = ref(
     }
   ]
 )
-
-let intervalId = null
+const { notification } = useFirebaseMessaging()
 
 onMounted(async () => {
   try {
-    // await useMessages.getInterviews()
     await useMessages.getChats()
     await useStudent.getParents()
     useMessages.filtredChats = useMessages.chats
-    intervalId = setInterval(async () => {
-      await useMessages.getChats()
-    }, 5000)
-    console.log(useMessages.filtredChats);
-
-
     loading.value = false
   } catch (error) {
     console.error(error)
   }
+})
 
+watch(notification, async (newNotif) => {
+  if (newNotif?.data?.type === 'MESSAGE') {
+    await useMessages.getChats()
+  }
 })
 
 const filtredChats = computed(() => {
@@ -121,12 +119,6 @@ const filtredChats = computed(() => {
   })
 })
 
-onBeforeUnmount(() => {
-  if (intervalId) {
-    clearInterval(intervalId)
-    intervalId = null
-  }
-})
 </script>
 
 <style lang="scss" scoped></style>

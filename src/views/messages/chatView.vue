@@ -121,6 +121,7 @@ import { useWidgetStore } from '@/stores/widget';
 import fileAlt from '@/assets/icons/fileAlt.vue';
 import arrowIcon from '@/assets/icons/arrowIcon.vue';
 import times from '@/assets/icons/times.vue';
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const { t } = useI18n()
 const chatContainer = ref(null)
@@ -140,7 +141,7 @@ const newMessage = reactive({
   sender: useWidget.authUser.userDetail.id,
   type_piece_jointe: 'image'
 })
-let intervalId = null
+const { notification } = useFirebaseMessaging()
 
 // Track if we should auto-scroll (false if user manually scrolls up)
 const shouldAutoScroll = ref(true)
@@ -179,10 +180,6 @@ onMounted(async () => {
   useMessages.messages = []
   await useMessages.getChats(useWidget.adminDiscussion)
   console.log(useMessages.focusedChat);
-
-  intervalId = setInterval(async () => {
-    await useMessages.getMessages(useWidget.adminDiscussion)
-  }, 5000)
 
   await useMessages.getMessages(useWidget.adminDiscussion)
 
@@ -250,10 +247,9 @@ function isBase64Image(base64) {
   return base64.startsWith("data:image/")
 }
 
-onBeforeUnmount(() => {
-  if (intervalId) {
-    clearInterval(intervalId)
-    intervalId = null
+watch(notification, async (newNotif) => {
+  if (newNotif?.data?.type === 'MESSAGE' && newNotif.data.discussion == useWidget.adminDiscussion) {
+    await useMessages.getMessages(useWidget.adminDiscussion)
   }
 })
 </script>

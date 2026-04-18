@@ -77,12 +77,14 @@ import MessageIcon from '@/assets/icons/messageIcon.vue';
 import { useFileToBase64 } from '@/composables/useFileToBase64';
 import { useWidgetStore } from '@/stores/widget';
 import { useI18n } from 'vue-i18n';
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const { t } = useI18n();
 
 const chatContainer = ref(null)
 const useMessages = useMessagesStore()
 const useWidget = useWidgetStore()
+const { notification } = useFirebaseMessaging()
 
 const { convertToBase64 } = useFileToBase64()
 const route = useRoute()
@@ -166,6 +168,12 @@ watch(() => useWidget.adminDiscussion, async (newVal) => {
   await useMessages.getMessages(`discuss=${useWidget.adminDiscussion}`)
   await useMessages.getChats(useWidget.adminDiscussion)
   scrollToBottom()
+})
+
+watch(notification, async (newNotif) => {
+  if (newNotif?.data?.type === 'MESSAGE' && newNotif.data.discussion == useWidget.adminDiscussion) {
+    await useMessages.getMessages(`discuss=${useWidget.adminDiscussion}`)
+  }
 })
 
 const initStore = () => {

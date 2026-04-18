@@ -59,32 +59,34 @@ const notificationStore = useNotificationBadge()
 const router = useRouter()
 
 const redirectMap = {
-  ABSENCE_RETARD_ELEVE: { name: 'students-classes-view' },
-  STATUE_PRESENCE_ELEVE: { name: 'students-classes-view' },
-  CONVOCATION: { name: 'students-classes-view' },
+  ABSENCE_RETARD_ELEVE: { name: 'list-classes-view' },
+  STATUE_PRESENCE_ELEVE: { name: 'list-classes-view' },
+  CONVOCATION: { name: 'list-classes-view' },
+  BULLETIN_DISPONIBLE: { name: 'list-classes-view' },
+  ANNONCE: { name: 'exams-annoncements-view' },
+  ANNONCE_PROF: { name: 'exams-annoncements-view' },
+  EVENT: { name: 'schedule-view' },
+  ABSENCE_RETARD_PROF: { name: 'abscences-view' },
   ENTREVUE_DEMANDE: { name: 'chat-view' },
   ENTREVUE_ACCEPTEE: { name: 'interview-view' },
   ENTREVUE_REFUSEE: { name: 'interview-view' },
-  ANNONCE: { name: 'annoncements-classes-view' },
-  ANNONCE_PROF: { name: 'annoncements-classes-view' },
-  BULLETIN_DISPONIBLE: { name: 'students-classes-view' },
-  EVENT: { name: 'schedule-view' },
 }
 
 const openNotification = async (item) => {
   if (!item.is_read) {
     try {
-      await axios.patch(`/api/Notification/${item.id}/`, { is_read: true })
-      await notificationStore.getNotifications()
+      await axios.post('/api/Update_notification_state/', { notification_state: item.type })
+      await notificationStore.initialize()
     } catch (error) {
       console.error(error)
     }
   }
 
-  if (item.type === 'ABSENCE_RETARD_PROF') return
-
-  if (item.type === 'MESSAGE' && item.discussion_id) {
-    router.push({ name: 'chat-view', query: { discussion_id: item.discussion_id } })
+  if (item.type === 'MESSAGE') {
+    router.push(item.discussion_id
+      ? { name: 'chat-view', query: { discussion_id: item.discussion_id } }
+      : { name: 'chats-panel' }
+    )
     return
   }
 

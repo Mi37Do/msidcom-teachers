@@ -25,9 +25,13 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { onMounted } from 'vue';
+import { useNotificationBadge } from '@/stores/notifications';
 
 const { t } = useI18n()
 const route = useRoute()
+const useNotif = useNotificationBadge()
+onMounted(() => useNotif.markTypesRead(['ABSENCE_RETARD_PROF', 'ANNONCE_PROF', 'EVENT']))
 </script>
 
 <style lang="scss" scoped></style>

@@ -69,7 +69,14 @@ const onScroll = async (e) => {
   }
 }
 
+const ALL_TYPES = [
+  'ABSENCE_RETARD_ELEVE', 'STATUE_PRESENCE_ELEVE', 'CONVOCATION', 'ANNONCE', 'BULLETIN_DISPONIBLE',
+  'ABSENCE_RETARD_PROF', 'ANNONCE_PROF', 'EVENT',
+  'ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE', 'MESSAGE',
+]
+
 onMounted(async () => {
+  await useNotif.markTypesRead(ALL_TYPES)
   await useNotif.getNotifications()
   loading.value = false
 })

@@ -79,12 +79,14 @@ import { Capacitor } from '@capacitor/core'
 import { Keyboard } from '@capacitor/keyboard'
 import { Preferences } from '@capacitor/preferences';
 import { App } from '@capacitor/app';
+import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const keyboardHeight = ref(0)
 const remainingHeight = ref(window.innerHeight)
 const { t } = useI18n()
 const router = useRouter()
 const useWidget = useWidgetStore()
+const { initializeFCM } = useFirebaseMessaging()
 const isPassword = ref(true)
 const loadingLogin = ref(true)
 const user = reactive(
@@ -135,6 +137,11 @@ const login = async () => {
 
     // Update store with user data
     // await useWidget.initData();
+
+    // Initialize FCM now that token is saved and auth header is set
+    if (Capacitor.isNativePlatform() || Notification.permission !== 'denied') {
+      await initializeFCM()
+    }
 
     // Navigate to app panel
     router.push({ name: 'app-panel' });
