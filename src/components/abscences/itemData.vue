@@ -11,42 +11,10 @@
 
 
     <div class="w-full flex items-center justify-between">
-      <Listbox v-model="selectedItem">
-        <div class="relative">
-          <ListboxButton class="relative w-full flex items-center gap-[10px]">
-           
-          </ListboxButton>
-
-          <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100"
-            leave-to-class="opacity-0">
-            <ListboxOptions
-              class="absolute z-10 max-h-32 mt-1 w-32 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-              <ListboxOption v-slot="{ active, selected }" v-for="i in filters" :key="i.id" :value="i.designation"
-                as="template" @click="async () => {
-                  selectedItem = i.id
-                  let response = await axios.patch(`/api/Eleve/${item.eleve_id}/`, {
-                    present: selectedItem === 'Présent' ? true : false
-                  })
-                  emits('loadData')
-                }">
-                <li :class="[
-                  active ? 'bg-primary/20 text-primary fill-primary' : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-10 pr-4',
-                ]">
-                  <span :class="[
-                    selected ? 'font-medium' : 'font-normal',
-                    'block truncate',
-                  ]">{{ i.designation }}</span>
-
-                  <span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <checkIcon class="h-5 w-5" aria-hidden="true" />
-                  </span>
-                </li>
-              </ListboxOption>
-            </ListboxOptions>
-          </transition>
-        </div>
-      </Listbox>
+      <span
+        :class="item.present ? 'text-emerald-500 bg-emerald-100 border-emerald-500' : 'border-red-500 text-red-500 bg-red-100 '"
+        class="border  rounded-full py-1 px-2.5 h-fit uppercase  my-auto w-fit flex items-center gap-2 text-xs">{{
+          item.present ? t('translation.present') : t('translation.absent') }}</span>
 
       <button @click="() => {
         useStudent.focusedStudent = item

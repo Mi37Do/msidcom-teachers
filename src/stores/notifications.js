@@ -113,7 +113,7 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
-  // Mark all notifications of given types as read via bulk endpoint
+  // Mark given types as read (one call per type) — used by panel views
   const markTypesRead = async (types) => {
     try {
       await Promise.all(
@@ -124,6 +124,22 @@ export const useNotificationBadge = defineStore('notifications', () => {
       await initialize()
     } catch (error) {
       console.error('Error marking notifications as read:', error)
+    }
+  }
+
+  // Mark all unread types in one bulk call — used by notificationsView only
+  const markAllUnreadTypes = async () => {
+    const unreadTypes = [...new Set(
+      notifications.value.filter((n) => !n.is_read).map((n) => n.type)
+    )]
+    if (!unreadTypes.length) return
+    try {
+      await axios.post('/api/Update_notification_state_multiple_state/', {
+        notification_states: unreadTypes,
+      })
+      await initialize()
+    } catch (error) {
+      console.error('Error marking all unread types as read:', error)
     }
   }
 
@@ -161,6 +177,7 @@ export const useNotificationBadge = defineStore('notifications', () => {
     clearBadge,
     markAsRead,
     markTypesRead,
+    markAllUnreadTypes,
     initialize,
   }
 })

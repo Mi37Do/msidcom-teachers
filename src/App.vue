@@ -2,10 +2,17 @@
 import { onMounted } from 'vue'
 import CommunLanguagesSwitcherModal from './components/commun/communLanguagesSwitcherModal.vue';
 import { useWidgetStore } from './stores/widget'
+import { Capacitor } from '@capacitor/core'
+import { SafeArea, SystemBarsStyle } from '@capacitor-community/safe-area'
+
 const useWidget = useWidgetStore()
 
-onMounted(() => {
+onMounted(async () => {
   useWidget.userLanguage = useWidget.getLanguage()
+
+  if (Capacitor.isNativePlatform()) {
+    await SafeArea.setSystemBarsStyle({ style: SystemBarsStyle.Light })
+  }
 })
 </script>
 

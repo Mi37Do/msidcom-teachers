@@ -4,14 +4,14 @@
     <img src="@/assets/pics/bluePartLogo.svg" class="w-40 absolute bottom-0 left-0" alt="">
     <img src="@/assets/pics/greenPartLogo.svg" class="w-40 absolute top-0 right-0" alt="">
     <div :style="{ height: remainingHeight + 'px' }"
-      class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10">
+      class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10 transition-all duration-300">
       <div class="w-full h-fit my-auto flex justify-center ">
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
 
-          <img src="@/assets/pics/logoSquare.svg" class="w-28" alt="">
-          <div class="flex items-center pixa-title my-2"> {{ t('translation.appTitle') }}</div>
-          <div class="flex items-center pixa-title-2"> {{ t('translation.connexion') }} </div>
-          <div class="h-px w-full bg-slate-600"></div>
+          <img src="@/assets/pics/logoSquare.svg" :class="keyboardOpen ? 'w-14' : 'w-28'" class="transition-all duration-300" alt="">
+          <div :class="keyboardOpen ? 'hidden' : 'flex'" class="items-center pixa-title my-2"> {{ t('translation.appTitle') }}</div>
+          <div :class="keyboardOpen ? 'hidden' : 'flex'" class="items-center pixa-title-2"> {{ t('translation.connexion') }} </div>
+          <div :class="keyboardOpen ? 'hidden' : 'block'" class="h-px w-full bg-slate-600"></div>
 
           <div class="w-full flex flex-col gap-3">
             <label class="form-control w-full">
@@ -71,7 +71,7 @@
 import { useWidgetStore } from '@/stores/widget';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 import eyeSlash from '@/assets/icons/eyeSlash.vue';
 import { useRouter } from 'vue-router';
@@ -83,6 +83,7 @@ import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const keyboardHeight = ref(0)
 const remainingHeight = ref(window.innerHeight)
+const keyboardOpen = ref(false)
 const { t } = useI18n()
 const router = useRouter()
 const useWidget = useWidgetStore()
@@ -101,9 +102,23 @@ const errorMessage = reactive(
 )
 
 
+onMounted(async () => {
+  if (Capacitor.getPlatform() !== 'web') {
+    await Keyboard.addListener('keyboardWillShow', (info) => {
+      keyboardHeight.value = info.keyboardHeight
+      remainingHeight.value = window.innerHeight - info.keyboardHeight
+      keyboardOpen.value = true
+    })
+    await Keyboard.addListener('keyboardWillHide', () => {
+      keyboardHeight.value = 0
+      remainingHeight.value = window.innerHeight
+      keyboardOpen.value = false
+    })
+  }
+})
+
 onBeforeUnmount(async () => {
   if (Capacitor.getPlatform() !== 'web') {
-    // Remove all listeners
     await Keyboard.removeAllListeners();
     await App.removeAllListeners();
   }
