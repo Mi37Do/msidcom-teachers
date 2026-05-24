@@ -5,6 +5,7 @@ const config: CapacitorConfig = {
   appId: 'msidcom.prof.app',
   appName: 'msidcom-prof.app',
   webDir: 'dist',
+  backgroundColor: '#b2e9f6',
   plugins: {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
@@ -12,6 +13,10 @@ const config: CapacitorConfig = {
     SafeArea: {
       statusBarStyle: SystemBarsStyle.Light,
       navigationBarStyle: SystemBarsStyle.Light,
+    },
+    Keyboard: {
+      resize: 'none' as any,
+      resizeOnFullScreen: true,
     },
   },
 }

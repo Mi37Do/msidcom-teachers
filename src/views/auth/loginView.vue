@@ -1,10 +1,11 @@
 <template>
   <div
     class="w-full h-screen grid gap-6 bg-gradient-to-tr from-background-3/50 via-background-2/50 to-background-1 from-0% via-75% to-100% relative">
+
     <img src="@/assets/pics/bluePartLogo.svg" class="w-40 absolute bottom-0 left-0" alt="">
     <img src="@/assets/pics/greenPartLogo.svg" class="w-40 absolute top-0 right-0" alt="">
 
-    <div :style="{ height: remainingHeight + 'px' }"
+    <div :style="{ paddingBottom: keyboardHeight + 'px' }"
       class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10 transition-all duration-300">
       <div class="w-full h-fit my-auto flex justify-center">
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
@@ -42,7 +43,7 @@
                 </span>
               </div>
               <input type="text" required v-model="user.username" :placeholder="t('translation.connexion') + ' ....'"
-                class="pixa-input-login px-3 placeholder:capitalize" />
+                class="pixa-input-login px-3 placeholder:capitalize" @focus="onInputFocus" @blur="onInputBlur" />
             </label>
 
             <label class="form-control w-full">
@@ -54,7 +55,8 @@
               <div class="relative w-full">
                 <input :type="isPassword ? 'password' : 'text'" required v-model="user.password"
                   :placeholder="t('translation.password') + ' ....'"
-                  class="pixa-input-login h-[40px] px-3 placeholder:capitalize w-full" />
+                  class="pixa-input-login h-[40px] px-3 placeholder:capitalize w-full" @focus="onInputFocus"
+                  @blur="onInputBlur" />
                 <button @click="isPassword = !isPassword" type="button"
                   :class="useWidget.userLanguage === 'ar' ? 'left-1' : 'right-1'"
                   class="btn btn-sm btn-square absolute top-1 btn-ghost">
@@ -106,7 +108,6 @@ import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging'
 
 // ── Keyboard state ───────────────────────────────────────────────────────────
 const keyboardHeight = ref(0)
-const remainingHeight = ref(window.innerHeight)
 const keyboardOpen = ref(false)
 
 // Logo smoothly shrinks to 45% when keyboard is open
@@ -114,6 +115,25 @@ const logoScale = computed(() => keyboardOpen.value ? 0.45 : 1)
 
 // Non-essential chrome (title, divider, language switcher) disappears
 const hideAuxContent = computed(() => keyboardOpen.value)
+
+// Driven by focus/blur — reliable on all platforms
+let blurTimer = null
+const onInputFocus = () => {
+  if (blurTimer) { clearTimeout(blurTimer); blurTimer = null }
+  keyboardOpen.value = true
+  // Fallback: read viewport height after keyboard animation settles (~350ms)
+  setTimeout(() => {
+    if (!keyboardHeight.value) {
+      keyboardHeight.value = window.innerHeight - (window.visualViewport?.height ?? window.innerHeight)
+    }
+  }, 350)
+}
+const onInputBlur = () => {
+  blurTimer = setTimeout(() => {
+    keyboardOpen.value = false
+    keyboardHeight.value = 0
+  }, 100)
+}
 
 // ── Store / composables ──────────────────────────────────────────────────────
 const { t } = useI18n()
@@ -130,15 +150,13 @@ const errorMessage = reactive({ show: false, message: '' })
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
 onMounted(async () => {
   if (Capacitor.getPlatform() !== 'web') {
+    // Prevent WebView from resizing — gradient stays full-screen, no white gap behind keyboard
+    await Keyboard.setResizeMode({ mode: 'none' })
     await Keyboard.addListener('keyboardWillShow', (info) => {
       keyboardHeight.value = info.keyboardHeight
-      remainingHeight.value = window.innerHeight - info.keyboardHeight
-      keyboardOpen.value = true
     })
     await Keyboard.addListener('keyboardWillHide', () => {
       keyboardHeight.value = 0
-      remainingHeight.value = window.innerHeight
-      keyboardOpen.value = false
     })
   }
 })

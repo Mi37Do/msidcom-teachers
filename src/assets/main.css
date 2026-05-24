@@ -11,6 +11,7 @@
   --safe-area-right: env(safe-area-inset-right);
 }
 
+
 @font-face {
   font-family: 'inter';
   src: url('@/assets/fonts/Inter.ttf');
@@ -274,6 +275,7 @@ input[type='number'] {
   border-width: 1px;
   border-color: #3cb09d;
   box-shadow: 0 25px 50px -12px rgba(41, 98, 255, 0.1);
+  outline: none;
 }
 
 .pixa-input-icon:focus {

@@ -33,7 +33,11 @@
       "Bash(xargs -I{} sh -c 'if grep -q \"VERSION_17\" \"$1\" && ! grep -q \"jvmToolchain\" \"$1\"; then echo \"$1\"; fi' -- {})",
       "Bash(xargs -I{} grep -l \"VERSION_17\" {})",
       "Bash(xargs -I{} sh -c '! grep -q \"jvmToolchain\" \"$1\" && echo \"$1\"' -- {})",
-      "Bash(C:/Users/mido3/AppData/Local/Android/Sdk/platform-tools/adb.exe devices:*)"
+      "Bash(C:/Users/mido3/AppData/Local/Android/Sdk/platform-tools/adb.exe devices:*)",
+      "Bash(python3 -c \"import sys; content=sys.stdin.read\\(\\); idx=content.find\\('onFocus'\\); print\\(content[max\\(0,idx-200\\):idx+500]\\)\")",
+      "Bash(python3 -c \"import sys; content=sys.stdin.read\\(\\); idx=content.find\\('paddingBottom'\\); print\\(content[max\\(0,idx-300\\):idx+300]\\)\")",
+      "Bash(python3 -c \"import sys; content=sys.stdin.read\\(\\); idx=content.find\\('setResizeMode'\\); print\\(content[max\\(0,idx-500\\):idx+500]\\)\")",
+      "Bash(python3 -c \"import sys; content=sys.stdin.read\\(\\); idx=content.find\\('kb-collapse'\\); print\\(content[max\\(0,idx-100\\):idx+600]\\)\")"
     ]
   }
 }
