@@ -27,7 +27,7 @@
           type_fr: tab === 'avrege' ? 'moyenne' : tab === 'attendance' ? 'assiduite' : (tab === 'test' || tab === 'test_1') ? 'test_1' : tab === 'test_2' ? 'test_2' : (tab === 'homework' || tab === 'homework_1') ? 'devoir_1' : tab === 'homework_2' ? 'devoir_2' : 'examens',
           open: true,
           note: selectedNotes ? selectedNotes : tempNotes,
-          student: item.id
+          student: item.eleve_id
         })
       }"
         class="btn btn-sm btn-square fill-warning hover:border-warning  border border-warning bg-transparent hover:bg-warning/10">
@@ -44,6 +44,9 @@ import { useWidgetStore } from '@/stores/widget';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps(['item', 'tab', 'selectedNotes', 'specialite', "trimester"])
+
+console.log(props.item);
+
 
 const currentTabValue = computed(() => {
   if (!props.selectedNotes) return null
