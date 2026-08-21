@@ -11,9 +11,9 @@
         <div class="flex gap-3 items-center ml-auto">
           <router-link :to="{ name: 'notifications-panel' }"
             class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
-            <span
-              class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white">{{
-                useNotif.unreadCount }}</span>
+            <span v-if="useNotif.unreadCount > 0"
+              class="w-[1.125rem] h-[1.125rem] bg-red-500 absolute top-1 right-1.5 rounded-full text-xs text-white flex items-center justify-center">{{
+                useNotif.unreadCount > 99 ? '99+' : useNotif.unreadCount }}</span>
             <BellIcon class="w-[30px] h-[30px]" />
           </router-link>
           <div class="w-12 h-12 bg-secondary-2 rounded-full p-0.5 relative flex items-center justify-center">
@@ -37,17 +37,23 @@
     <div class="flex h-fit bg-white   pb-safe-bottom">
 
       <nav class="w-full h-fit border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
-        <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost">
+        <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost relative">
           <ruler class="w-5" />
+          <span v-if="useNotif.studentsUnreadCount > 0" class="nav-badge">{{
+            useNotif.studentsUnreadCount > 99 ? '99+' : useNotif.studentsUnreadCount }}</span>
         </router-link>
         <router-link :to="{ name: 'calendar-panel' }" class="btn m-auto w-full btn-ghost">
           <calendar class="w-5" />
         </router-link>
-        <router-link :to="{ name: 'events-panel' }" class="btn m-auto w-full btn-ghost">
+        <router-link :to="{ name: 'events-panel' }" class="btn m-auto w-full btn-ghost relative">
           <schedule class="w-5" />
+          <span v-if="useNotif.eventsUnreadCount > 0" class="nav-badge">{{
+            useNotif.eventsUnreadCount > 99 ? '99+' : useNotif.eventsUnreadCount }}</span>
         </router-link>
-        <router-link :to="{ name: 'messages-panel' }" class="btn m-auto w-full btn-ghost">
+        <router-link :to="{ name: 'messages-panel' }" class="btn m-auto w-full btn-ghost relative">
           <comments class="w-5" />
+          <span v-if="useNotif.messagesUnreadCount > 0" class="nav-badge">{{
+            useNotif.messagesUnreadCount > 99 ? '99+' : useNotif.messagesUnreadCount }}</span>
         </router-link>
       </nav>
     </div>
@@ -122,6 +128,23 @@ watch(error, (newError) => {
 
 
 <style lang="scss" scoped>
+.nav-badge {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  border-radius: 9999px;
+  background-color: #ef4444;
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 nav {
   a {
     color: #313638;

@@ -59,9 +59,7 @@ const route = useRoute()
 
 onMounted(async () => {
   try {
-    await useEvent.getAnnoncements()
-    console.log(useEvent.filtredAnnoncements);
-
+    await useEvent.getAnnoncements(null, `classe_id=${route.params.id}`)
     loading.value = false
   } catch (error) {
     console.error(error)

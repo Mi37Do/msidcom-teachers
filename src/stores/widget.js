@@ -32,6 +32,10 @@ export const useWidgetStore = defineStore('widget', () => {
       id : 'ar',
       desingation : 'العربية',
       icon : '<span class="fi fi-dz"></span>',
+    },{
+      id : 'en',
+      desingation : 'English',
+      icon : '<span class="fi fi-gb"></span>',
     }
   ])
 
@@ -197,6 +201,7 @@ export const useWidgetStore = defineStore('widget', () => {
   const toggleLanguage = () => {
     const activeLanguage = localStorage.getItem('user-language')
     if (activeLanguage === 'ar') setLanguage('ar')
+    else if (activeLanguage === 'en') setLanguage('en')
     else if (activeLanguage === 'fr') setLanguage('fr')
     else setLanguage('fr')
   }

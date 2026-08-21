@@ -214,7 +214,7 @@ const addItem = async () => {
       response = await axios.put(`/api/Annonce_prof/${useRoom.focusedRoom.id}/`, itemToAdd)
     }
 
-    await useEvent.getAnnoncements()
+    await useEvent.getAnnoncements(null, props.classe ? `classe_id=${props.classe}` : null)
     closeModal()
 
   } catch (error) {
