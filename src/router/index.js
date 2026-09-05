@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import classesRoutes from './classes'
 import { useWidgetStore } from '@/stores/widget'
+import { useNotificationBadge } from '@/stores/notifications'
 import eventsRoutes from './events'
 import timeTableRoutes from './calendar'
 import chatsRoutes from './chats'
@@ -92,6 +93,17 @@ router.beforeEach(async (to, from, next) => {
       color: 'red',
     })
   }
+})
+
+// Mark the destination section's notifications as read once the navigation is
+// done. Skipped on the very first navigation (page load / refresh) so a reload
+// never fires these calls; the store also skips the request entirely when the
+// section has nothing unread.
+router.afterEach((to, from) => {
+  if (!from.name) return
+  const types = to.matched.flatMap((r) => r.meta?.notificationTypes ?? [])
+  if (!types.length) return
+  useNotificationBadge().markTypesRead(types)
 })
 
 export default router

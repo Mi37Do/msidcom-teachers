@@ -31,10 +31,7 @@
                 <div v-else-if="showTimePicker" class="h-full w-full flex flex-col gap-1.5">
                   <CommunTimePicker v-model="hoursTime" @hideTimePicker="(time) => {
                     hoursTime.hours = time.hours
-                    tempHours = time.hours
                     hoursTime.minutes = time.minutes
-                    tempMinutes = time.minutes
-                    console.log(hoursTime);
                     showTimePicker = false
                   }" />
                 </div>
@@ -185,12 +182,14 @@ const tempFileName = ref('')
 
 const roundToNearest = (val, step) => Math.round(val / step) * step;
 
-const tempHours = ref('')
-const tempMinutes = ref('')
-const hoursTime = reactive({
+// Default time shown when the modal opens; the picker writes straight into it
+const defaultTime = () => ({
   hours: 7,
-  minutes: roundToNearest(format(new Date(), 'mm'), 5)
+  // rounding 56-59 up would give 60, which is not a valid minute
+  minutes: Math.min(roundToNearest(Number(format(new Date(), 'mm')), 5), 55)
 });
+
+const hoursTime = reactive(defaultTime());
 
 
 function closeModal() {
@@ -202,6 +201,7 @@ function closeModal() {
     justification: ''
   });
   tempDate.value = new Date()
+  Object.assign(hoursTime, defaultTime())
   tempFileName.value = ''
   loading.value = false;
 }
@@ -218,12 +218,10 @@ const addItem = async () => {
   loading.value = true;
 
   try {
-    // Combine date and time
-    console.log(hoursTime);
-
+    // Combine date and time. hoursTime always holds a valid time, whether or
+    // not the user opened the time picker.
     const dateWithTime = new Date(tempDate.value);
-    dateWithTime.setHours(parseInt(tempHours.value));
-    dateWithTime.setMinutes(parseInt(tempMinutes.value));
+    dateWithTime.setHours(Number(hoursTime.hours), Number(hoursTime.minutes), 0, 0);
 
     /***/
     const response = await axios.post(`/api/Abs_Retard_Prof/`, {

@@ -8,6 +8,9 @@ const chatsRoutes = [
       {
         path: '/chat',
         name: 'chat-view',
+        meta: {
+          notificationTypes: ['MESSAGE'],
+        },
         component: () => import('@/views/messages/chatView.vue'),
       },
     ],
@@ -15,6 +18,9 @@ const chatsRoutes = [
   {
     path: '/interview',
     name: 'interview-view',
+    meta: {
+      notificationTypes: ['ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE'],
+    },
     component: () => import('@/views/messages/interviewView.vue'),
   },
 ]

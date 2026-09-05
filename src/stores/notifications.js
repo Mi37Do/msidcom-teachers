@@ -16,19 +16,32 @@ export const useNotificationBadge = defineStore('notifications', () => {
     return notifications.value.filter((n) => !n.is_read).length
   })
 
-  const STUDENTS_TYPES = ['ABSENCE_RETARD_ELEVE', 'STATUE_PRESENCE_ELEVE', 'CONVOCATION', 'ANNONCE', 'BULLETIN_DISPONIBLE']
-  const EVENTS_TYPES = ['ABSENCE_RETARD_PROF', 'ANNONCE_PROF', 'EVENT']
+  // Types grouped by the section that actually displays them
+  const STUDENTS_TYPES = ['ABSENCE_RETARD_ELEVE', 'STATUE_PRESENCE_ELEVE', 'CONVOCATION', 'BULLETIN_DISPONIBLE']
+  // Absences/lates of the teacher are shown in the calendar section
+  const CALENDAR_TYPES = ['ABSENCE_RETARD_PROF']
+  // Announcements (school and teacher) live under the events section
+  const EVENTS_TYPES = ['EVENT', 'ANNONCE', 'ANNONCE_PROF']
   const MESSAGES_TYPES = ['ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE', 'MESSAGE']
 
-  const studentsUnreadCount = computed(() =>
-    notifications.value.filter((n) => !n.is_read && STUDENTS_TYPES.includes(n.type)).length
-  )
-  const eventsUnreadCount = computed(() =>
-    notifications.value.filter((n) => !n.is_read && EVENTS_TYPES.includes(n.type)).length
-  )
-  const messagesUnreadCount = computed(() =>
-    notifications.value.filter((n) => !n.is_read && MESSAGES_TYPES.includes(n.type)).length
-  )
+  // Unread count for an arbitrary set of types (used by the tab badges)
+  const unreadCountFor = (types) =>
+    notifications.value.filter((n) => !n.is_read && types.includes(n.type)).length
+
+  const studentsUnreadCount = computed(() => unreadCountFor(STUDENTS_TYPES))
+  const calendarUnreadCount = computed(() => unreadCountFor(CALENDAR_TYPES))
+  const eventsUnreadCount = computed(() => unreadCountFor(EVENTS_TYPES))
+  const messagesUnreadCount = computed(() => unreadCountFor(MESSAGES_TYPES))
+
+  // Last push received while the app was in the foreground. Views watch it
+  // (see useLiveNotificationRefresh) to refetch their own data instead of
+  // forcing the user to navigate away and back.
+  const lastPush = ref(null)
+
+  const pushReceived = (data) => {
+    if (!data?.type) return
+    lastPush.value = { ...data, receivedAt: Date.now() }
+  }
 
   // Get notifications from API
   const getNotifications = async (page = 1) => {
@@ -113,15 +126,26 @@ export const useNotificationBadge = defineStore('notifications', () => {
     }
   }
 
-  // Mark given types as read (one call per type) — used by panel views
+  // Locally flag notifications of the given types as read + refresh badge
+  const applyTypesRead = async (types) => {
+    const mark = (n) => (types.includes(n.type) ? { ...n, is_read: true } : n)
+    notifications.value = notifications.value.map(mark)
+    notificationsList.value = notificationsList.value.map(mark)
+    await updateBadgeCount(unreadCount.value)
+  }
+
+  // Mark given types as read — one bulk call, and only for types that are
+  // actually unread (no request at all when there is nothing to mark)
   const markTypesRead = async (types) => {
+    const unreadTypes = [...new Set(
+      notifications.value.filter((n) => !n.is_read && types.includes(n.type)).map((n) => n.type)
+    )]
+    if (!unreadTypes.length) return
     try {
-      await Promise.all(
-        types.map((type) =>
-          axios.post('/api/Update_notification_state/', { notification_state: type })
-        )
-      )
-      await initialize()
+      await axios.post('/api/Update_notification_state_multiple_state/', {
+        notification_states: unreadTypes,
+      })
+      await applyTypesRead(unreadTypes)
     } catch (error) {
       console.error('Error marking notifications as read:', error)
     }
@@ -137,7 +161,7 @@ export const useNotificationBadge = defineStore('notifications', () => {
       await axios.post('/api/Update_notification_state_multiple_state/', {
         notification_states: unreadTypes,
       })
-      await initialize()
+      await applyTypesRead(unreadTypes)
     } catch (error) {
       console.error('Error marking all unread types as read:', error)
     }
@@ -165,8 +189,12 @@ export const useNotificationBadge = defineStore('notifications', () => {
     notificationsList,
     unreadCount,
     studentsUnreadCount,
+    calendarUnreadCount,
     eventsUnreadCount,
     messagesUnreadCount,
+    unreadCountFor,
+    lastPush,
+    pushReceived,
     currentPage,
     hasNextPage,
     loadingMore,

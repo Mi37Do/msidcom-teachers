@@ -5,12 +5,16 @@ import { PushNotifications } from '@capacitor/push-notifications'
 import { messaging, getToken, onMessage } from '@/firebase'
 import axios from 'axios'
 import { Preferences } from '@capacitor/preferences'
+import router from '@/router'
 
 // Singleton state — shared across all callers
 const fcmToken = ref(null)
 const notification = ref(null)
 const error = ref(null)
 let listenersInitialized = false
+// Token last pushed to the backend in this app session — avoids re-registering
+// the same device on every reload
+let registeredToken = null
 
 export function useFirebaseMessaging() {
   const isNative = Capacitor.isNativePlatform()
@@ -92,29 +96,39 @@ export function useFirebaseMessaging() {
     console.log('✅ Native listeners initialized')
   }
 
-  // Handle notification navigation
+  // Where each notification type sends the user. Kept in sync with the
+  // in-app notifications list (components/notifications/itemData.vue).
+  const NOTIFICATION_ROUTES = {
+    ABSENCE_RETARD_ELEVE: { name: 'list-classes-view' },
+    STATUE_PRESENCE_ELEVE: { name: 'list-classes-view' },
+    CONVOCATION: { name: 'list-classes-view' },
+    BULLETIN_DISPONIBLE: { name: 'list-classes-view' },
+    ANNONCE: { name: 'exams-annoncements-view' },
+    ANNONCE_PROF: { name: 'exams-annoncements-view' },
+    EVENT: { name: 'schedule-view' },
+    ABSENCE_RETARD_PROF: { name: 'abscences-view' },
+    ENTREVUE_DEMANDE: { name: 'interview-view' },
+    ENTREVUE_ACCEPTEE: { name: 'interview-view' },
+    ENTREVUE_REFUSEE: { name: 'interview-view' },
+  }
+
+  // Handle notification navigation - only ever called on an explicit click
   const handleNotificationNavigation = (data) => {
     if (!data) return
 
-    const { type, entrevue_id, discussion_id, annonce_id } = data
+    const { type, discussion_id } = data
 
-    // You can use router here or emit an event
-    // For now, we'll just log and let the component handle it
-    console.log('Navigate based on:', { type, entrevue_id, discussion_id, annonce_id })
+    if (type === 'MESSAGE') {
+      router.push(
+        discussion_id
+          ? { name: 'chat-view', query: { discussion_id } }
+          : { name: 'chats-panel' },
+      )
+      return
+    }
 
-    // If you want to navigate directly, import router:
-    // import router from '@/router'
-    // switch (type) {
-    //   case 'ENTREVUE_DEMANDE':
-    //     if (entrevue_id) router.push(`/entrevues/${entrevue_id}`)
-    //     break
-    //   case 'DISCUSSION':
-    //     if (discussion_id) router.push(`/discussions/${discussion_id}`)
-    //     break
-    //   case 'ANNONCE':
-    //     if (annonce_id) router.push(`/annonces/${annonce_id}`)
-    //     break
-    // }
+    const route = NOTIFICATION_ROUTES[type]
+    if (route) router.push(route)
   }
 
   // Native (Capacitor) implementation
@@ -157,10 +171,23 @@ export function useFirebaseMessaging() {
         showNotification(payload.notification)
       }
 
-      // Handle navigation for web
-      if (payload.data) {
-        handleNotificationNavigation(payload.data)
-      }
+      // No navigation here on purpose: the app is in the foreground and the user
+      // has not clicked anything. Redirection only happens on an explicit click
+      // (notification tap or the in-app notifications list).
+    })
+  }
+
+  // Listen for clicks on notifications shown by the service worker
+  // (app backgrounded/closed on web) - see public/firebase-messaging-sw.js
+  const listenForServiceWorkerMessages = () => {
+    if (!('serviceWorker' in navigator)) return
+
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type !== 'notification-click') return
+
+      console.log('Notification clicked (service worker):', event.data)
+      notification.value = { data: event.data.data }
+      handleNotificationNavigation(event.data.data)
     })
   }
 
@@ -176,8 +203,16 @@ export function useFirebaseMessaging() {
     }
   }
 
-  // Send token to Django backend
+  // Send token to Django backend — only when it is actually new to the backend
   const sendTokenToBackend = async (token) => {
+    if (registeredToken === token) return
+    const { value: storedToken } = await Preferences.get({ key: 'fcmToken' })
+    if (storedToken === token) {
+      registeredToken = token
+      console.log('Device already registered with this token, skipping')
+      return
+    }
+
     const { value } = await Preferences.get({ key: 'authToken-prof' })
     try {
       await axios.post(
@@ -194,13 +229,15 @@ export function useFirebaseMessaging() {
         },
       )
       await Preferences.set({ key: 'fcmToken', value: token })
+      registeredToken = token
       console.log('✅ Token sent to backend successfully')
     } catch (err) {
       console.error('❌ Error sending token to backend:', err)
     }
   }
 
-  // Initialize FCM based on platform
+  // Full FCM setup: asks for permission, registers the device and posts the
+  // token to the backend. Call this ONCE, right after a successful login.
   const initializeFCM = async () => {
     console.log('Initializing FCM...', { isNative, platform: Capacitor.getPlatform() })
 
@@ -212,6 +249,29 @@ export function useFirebaseMessaging() {
       // Web browser
       await requestWebPermission()
       listenForWebMessages()
+      listenForServiceWorkerMessages()
+    }
+  }
+
+  // App start-up path for an already logged-in user: attach the message
+  // listeners so incoming pushes are handled, but never prompt for permission
+  // and never re-register a device whose token has not changed.
+  const attachMessagingListeners = async () => {
+    if (isNative) {
+      setupNativeListeners()
+      const permStatus = await PushNotifications.checkPermissions()
+      if (permStatus.receive !== 'granted') return
+      // Re-registering is what surfaces a rotated token; the backend call in
+      // the `registration` listener is skipped when the token is unchanged.
+      await PushNotifications.register()
+    } else {
+      if (Notification.permission !== 'granted') return
+      if (listenersInitialized) return
+      listenersInitialized = true
+      listenForWebMessages()
+      listenForServiceWorkerMessages()
+      const { value } = await Preferences.get({ key: 'fcmToken' })
+      if (value) fcmToken.value = value
     }
   }
 
@@ -238,6 +298,8 @@ export function useFirebaseMessaging() {
     error,
     isNative,
     initializeFCM,
+    attachMessagingListeners,
+    handleNotificationNavigation,
     requestPermission: isNative ? requestNativePermission : requestWebPermission,
     getDeliveredNotifications,
     removeAllNotifications,

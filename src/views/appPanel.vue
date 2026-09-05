@@ -42,8 +42,10 @@
           <span v-if="useNotif.studentsUnreadCount > 0" class="nav-badge">{{
             useNotif.studentsUnreadCount > 99 ? '99+' : useNotif.studentsUnreadCount }}</span>
         </router-link>
-        <router-link :to="{ name: 'calendar-panel' }" class="btn m-auto w-full btn-ghost">
+        <router-link :to="{ name: 'calendar-panel' }" class="btn m-auto w-full btn-ghost relative">
           <calendar class="w-5" />
+          <span v-if="useNotif.calendarUnreadCount > 0" class="nav-badge">{{
+            useNotif.calendarUnreadCount > 99 ? '99+' : useNotif.calendarUnreadCount }}</span>
         </router-link>
         <router-link :to="{ name: 'events-panel' }" class="btn m-auto w-full btn-ghost relative">
           <schedule class="w-5" />
@@ -72,10 +74,9 @@ import { useNotificationBadge } from '@/stores/notifications';
 import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 import { useSafeArea } from '@/composables/useSafeArea';
 import { useRouter } from 'vue-router';
-import { Capacitor } from '@capacitor/core';
 
 useSafeArea();
-const { fcmToken, notification, error, initializeFCM } = useFirebaseMessaging();
+const { fcmToken, notification, error, attachMessagingListeners } = useFirebaseMessaging();
 const useWidget = useWidgetStore();
 const useNotif = useNotificationBadge();
 const router = useRouter();
@@ -85,13 +86,10 @@ onMounted(async () => {
 
   await useNotif.initialize();
 
-  if (Capacitor.isNativePlatform()) {
-    await initializeFCM();
-  } else {
-    if (Notification.permission === 'granted') {
-      await initializeFCM();
-    }
-  }
+  // Registration happens once, right after login. Here we only re-attach the
+  // push listeners for an already registered device — no permission prompt and
+  // no /device/register/ call unless the FCM token actually rotated.
+  await attachMessagingListeners();
 });
 
 // Watch for new push notifications
@@ -101,6 +99,9 @@ watch(notification, async (newNotification) => {
 
     // Refresh notification badge count using non-paginated endpoint
     await useNotif.initializeBadge();
+
+    // Let the view the user is currently on refetch its own data
+    useNotif.pushReceived(newNotification.data);
 
     // Handle navigation if notification contains action data
     if (newNotification.data) {

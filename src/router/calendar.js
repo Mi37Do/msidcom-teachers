@@ -7,6 +7,9 @@ const timeTableRoutes = [
   {
     path: 'abscences',
     name: 'abscences-view',
+    meta: {
+      notificationTypes: ['ABSENCE_RETARD_PROF'],
+    },
     component: () => import('@/views/calendar/abscencesView.vue'),
   },
 ]

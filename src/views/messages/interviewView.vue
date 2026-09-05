@@ -17,6 +17,7 @@ import { useMessagesStore } from "@/stores/messages";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/users";
 import interviewItem from "@/components/messages/interviewItem.vue";
+import { useLiveNotificationRefresh } from '@/composables/useLiveNotificationRefresh';
 import { useWidgetStore } from "@/stores/widget";
 import { useStudentStore } from "@/stores/students";
 
@@ -52,6 +53,12 @@ onMounted(async () => {
   }
 
 })
+
+// Refetch in place when a push of one of these types arrives
+useLiveNotificationRefresh(['ENTREVUE_DEMANDE', 'ENTREVUE_ACCEPTEE', 'ENTREVUE_REFUSEE'], async () => {
+  await useMessages.getInterviews(`prof=${useWidget.authUser.userDetail.id}`)
+})
+
 </script>
 
 <style lang="scss" scoped></style>

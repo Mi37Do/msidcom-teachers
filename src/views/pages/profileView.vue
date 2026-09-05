@@ -114,12 +114,11 @@ import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 
 const useWidget = useWidgetStore()
 const useSubject = useSubjectStore()
-const { fcmToken, initializeFCM } = useFirebaseMessaging();
+const { fcmToken } = useFirebaseMessaging();
 const { t } = useI18n()
 const loading = ref(true)
 
-onMounted(async () => {
-  await initializeFCM()
+onMounted(() => {
   loading.value = false
 })
 

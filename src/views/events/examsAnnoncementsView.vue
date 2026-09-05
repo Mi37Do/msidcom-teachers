@@ -56,6 +56,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import itemData from "@/components/exams/itemData.vue";
 import communNoData from "@/components/commun/communNoData.vue";
+import { useLiveNotificationRefresh } from '@/composables/useLiveNotificationRefresh';
 import communDropdown from "@/components/commun/communDropdown.vue";
 import filterIcon from "@/assets/icons/filterIcon.vue";
 
@@ -101,6 +102,12 @@ onBeforeUnmount(() => {
   tempClasses.value = []
 
 })
+
+// Refetch in place when a push of one of these types arrives
+useLiveNotificationRefresh(['ANNONCE', 'ANNONCE_PROF'], async () => {
+  await useRoom.getExams()
+})
+
 </script>
 
 <style lang="scss" scoped></style>

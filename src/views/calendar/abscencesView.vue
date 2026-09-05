@@ -53,6 +53,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from "vue-router";
 import { useStudentStore } from "@/stores/students";
 import HistoriqueData from "@/components/calendar/historiqueData.vue";
+import { useLiveNotificationRefresh } from '@/composables/useLiveNotificationRefresh';
 import axios from "axios";
 import { useWidgetStore } from "@/stores/widget";
 import noTimeWarning from "@/assets/icons/noTimeWarning.vue";
@@ -102,6 +103,12 @@ const loadData = async () => {
     console.error(error)
   }
 }
+
+
+// Refetch in place when a push of one of these types arrives
+useLiveNotificationRefresh(['ABSENCE_RETARD_PROF'], async () => {
+  await loadData()
+})
 
 </script>
 

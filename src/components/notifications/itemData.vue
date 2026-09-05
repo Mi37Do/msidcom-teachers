@@ -43,7 +43,6 @@ import Trash from '@/assets/icons/trash.vue'
 import { useWidgetStore } from '@/stores/widget'
 import { format } from 'date-fns'
 import { useNotificationBadge } from '@/stores/notifications'
-import axios from 'axios'
 import Schedule from '@/assets/icons/schedule.vue'
 import Comments from '@/assets/icons/comments.vue'
 import { useRouter } from 'vue-router'
@@ -67,20 +66,15 @@ const redirectMap = {
   ANNONCE_PROF: { name: 'exams-annoncements-view' },
   EVENT: { name: 'schedule-view' },
   ABSENCE_RETARD_PROF: { name: 'abscences-view' },
-  ENTREVUE_DEMANDE: { name: 'chat-view' },
+  // An interview request belongs to the interviews tab, not the chat
+  ENTREVUE_DEMANDE: { name: 'interview-view' },
   ENTREVUE_ACCEPTEE: { name: 'interview-view' },
   ENTREVUE_REFUSEE: { name: 'interview-view' },
 }
 
 const openNotification = async (item) => {
-  if (!item.is_read) {
-    try {
-      await axios.post('/api/Update_notification_state/', { notification_state: item.type })
-      await notificationStore.initialize()
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // Single bulk call, no refetch — a no-op when the type is already read
+  await notificationStore.markTypesRead([item.type])
 
   if (item.type === 'MESSAGE') {
     router.push(item.discussion_id

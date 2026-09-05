@@ -89,8 +89,9 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import subscriptionModal from '@/components/events/subscriptionModal.vue';
+import { useLiveNotificationRefresh } from '@/composables/useLiveNotificationRefresh';
 import { arDZ, fr } from 'date-fns/locale'
 import {
   format,
@@ -146,14 +147,30 @@ const getEventsForDate = (date, events) => {
 };
 
 
-onMounted(async () => {
+// Month currently displayed by the calendar, 1 (January) to 12 (December)
+const monthFilter = computed(() => currentDate.value.getMonth() + 1)
+
+const loadData = async () => {
   try {
-    await useEvent.getEvents(null, `concernee=Prof`)
-    loading.value = false
+    await useEvent.getEvents(null, `concernee=Prof&month=${monthFilter.value}`)
   } catch (error) {
     console.error(error)
   }
+}
+
+onMounted(async () => {
+  await loadData()
+  loading.value = false
 })
+
+// Refetch whenever the user navigates to another month
+watch(monthFilter, () => {
+  loadData()
+})
+
+// Refetch in place when a push of one of these types arrives
+useLiveNotificationRefresh(['EVENT'], loadData)
+
 </script>
 
 <style lang="scss" scoped></style>

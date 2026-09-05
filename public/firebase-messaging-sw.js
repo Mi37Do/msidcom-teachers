@@ -21,7 +21,33 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon || '/firebase-logo.png',
+    data: payload.data || {},
   }
 
   self.registration.showNotification(notificationTitle, notificationOptions)
+})
+
+// Handle the user tapping a notification shown while the app was closed/backgrounded
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+
+  const data = event.notification.data || {}
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // App is already open in a tab/window: focus it and hand off the data
+      for (const client of clientList) {
+        if ('focus' in client) {
+          client.postMessage({ type: 'notification-click', data })
+          return client.focus()
+        }
+      }
+
+      // App is closed: open it with the notification data encoded in the URL
+      if (clients.openWindow) {
+        const params = new URLSearchParams(data).toString()
+        return clients.openWindow(`/?notification=1&${params}`)
+      }
+    }),
+  )
 })
