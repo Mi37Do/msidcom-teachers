@@ -1,3 +1,6 @@
+import daisyui from 'daisyui'
+import rtl from 'tailwindcss-rtl'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -27,7 +30,7 @@ export default {
       },
     },
   },
-  plugins: [require('@headlessui/vue'), require('daisyui'), require('tailwindcss-rtl')],
+  plugins: [daisyui, rtl],
   daisyui: {
     themes: [
       {
