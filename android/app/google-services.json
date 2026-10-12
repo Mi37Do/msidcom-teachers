@@ -7,6 +7,44 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:182888477835:android:150b64ff9e1709de71108e",
+        "android_client_info": {
+          "package_name": "com.xpertify.msidcom.prof"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM5ScJjLSqYbGGmimQ1fNev1a1b_P2kac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182888477835:android:c5ea2074703c0dfb71108e",
+        "android_client_info": {
+          "package_name": "msidcom.parent.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM5ScJjLSqYbGGmimQ1fNev1a1b_P2kac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:182888477835:android:b7e50ff46659fc0c71108e",
         "android_client_info": {
           "package_name": "msidcom.prof.app"
