@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 import { SystemBarsStyle } from '@capacitor-community/safe-area'
 
 const config: CapacitorConfig = {
-  appId: 'msidcom.prof.app',
+  appId: 'msidcom.teacher.app',
   appName: 'msidcom-prof.app',
   webDir: 'dist',
   backgroundColor: '#b2e9f6',

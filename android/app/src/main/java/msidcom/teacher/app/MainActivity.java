@@ -1,4 +1,4 @@
-package msidcom.prof.app;
+package msidcom.teacher.app;
 
 import android.os.Bundle;
 import android.app.NotificationChannel;

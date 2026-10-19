@@ -3,6 +3,6 @@
     <string name="app_name">MSIDCOM Enseignant</string>
 
     <string name="title_activity_main">MSIDCOM Enseignant</string>
-    <string name="package_name">msidcom.prof.app</string>
-    <string name="custom_url_scheme">msidcom.prof.app</string>
+    <string name="package_name">msidcom.teacher.app</string>
+    <string name="custom_url_scheme">msidcom.teacher.app</string>
 </resources>
