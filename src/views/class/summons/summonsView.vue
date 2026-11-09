@@ -8,7 +8,7 @@
     <div class="relative flex items-center gap-3 w-full">
       <search class="w-5 h-5 absolute left-3 fill-slate-600" />
       <input type="text" v-model="query" @input="() => {
-        useStudent.filterdStudents = useStudent.students.filter(i => i.prenom.toLowerCase().includes(query.toLowerCase()) || i.nom.toLowerCase().includes(query.toLowerCase()))
+        useStudent.filterdStudents = useStudent.students.filter(i => (i.prenom ?? '').toLowerCase().includes(query.toLowerCase()) || (i.nom ?? '').toLowerCase().includes(query.toLowerCase()))
 
       }" :placeholder="t('translation.search')" class="pixa-input-icon w-full pr-4 pl-10">
     </div>
@@ -27,7 +27,7 @@
       </template>
 
       <template #table_items>
-        <item-data v-for="item in useStudent.filterdStudents" :key="item.id" :item="item" />
+        <item-data v-for="item in useStudent.filterdStudents" :key="item.eleve_id" :item="item" />
       </template>
     </commun-table>
   </div>

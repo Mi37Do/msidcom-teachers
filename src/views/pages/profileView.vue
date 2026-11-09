@@ -24,9 +24,9 @@
           <div class="flex-1 flex flex-col">
             <span class="pixa-title-2 mt-2 truncate">{{ useWidget.authUser.userDetail.first_name }} {{
               useWidget.authUser.userDetail.last_name }}</span>
-            <span> Professeur en: <span v-for="(item, index) in useWidget.authUser.userDetail.matieres
-              .matiere" :key="item" class="text-primary-3 capitalize font-medium">{{ item.designation
-              }} ,</span></span>
+            <span> {{ t('translation.teachesSubjects') }} <span v-for="(item, index) in matieresProf"
+              :key="item.id ?? index" class="text-primary-3 capitalize font-medium">{{ item.designation
+              }}{{ index < matieresProf.length - 1 ? ', ' : '' }}</span></span>
           </div>
 
         </div>
@@ -104,7 +104,7 @@ import { useWidgetStore } from '@/stores/widget';
 import edit from '@/assets/icons/edit.vue';
 import plus from '@/assets/icons/plus.vue';
 import { useI18n } from 'vue-i18n';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useSubjectStore } from '@/stores/subjects';
 import addImage from "@/components/profile/addImage.vue";
 import signOut from '@/assets/icons/signOut.vue';
@@ -117,6 +117,8 @@ const useSubject = useSubjectStore()
 const { fcmToken } = useFirebaseMessaging();
 const { t } = useI18n()
 const loading = ref(true)
+// Matières de l'enseignant (liste vide si le profil n'en a pas)
+const matieresProf = computed(() => useWidget.authUser.userDetail?.matieres?.matiere ?? [])
 
 onMounted(() => {
   loading.value = false

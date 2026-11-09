@@ -128,7 +128,8 @@ const signalAbsence = async () => {
   try {
     await axios.post(`/api/Abs_Retard_Eleve/`, {
       agent: useWidget.authUser.userDetail.id,
-      date_heure_abs: itemToAdd.date_heure_abs,
+      // Heure du signalement (avant : l'heure d'ouverture de l'écran)
+      date_heure_abs: new Date(),
       type: 'Absence',
       eleve: props.student.eleve_id
     })
@@ -150,10 +151,11 @@ const addItem = async () => {
   /***/
   loading.value = true
   try {
-    let response = await axios.post(`/api/Abs_Retard_Eleve/`, {
+    await axios.post(`/api/Abs_Retard_Eleve/`, {
       agent: useWidget.authUser.userDetail.id,
-      date_heure_abs: itemToAdd.date_heure_abs,
-      type: itemToAdd.type,
+      date_heure_abs: new Date(),
+      // Toujours un retard : après le premier signalement, ce bouton enregistrait une absence
+      type: 'Retard',
       eleve: props.student.eleve_id
     })
     emits('loadData')

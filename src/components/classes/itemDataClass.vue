@@ -6,7 +6,7 @@
       </div>
       <span class="truncate flex-1 text-lg font-medium capitalize">{{ t('translation.classe') }}: {{
         item.specialite_designation
-      }} - {{ t('translation.room') }} {{ item ? item.class_num : 'N/A' }}</span>
+      }} - {{ item?.class_num ?? 'N/A' }}</span>
 
       <slot name="options" />
     </div>
@@ -14,19 +14,18 @@
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.students') }}</span>
+      <!-- « Nom Prénom, 24 autres élèves » (texte traduit ; plus de « , 0 autres » pour un élève seul) -->
       <span class="truncate auto-dir">{{ item.premier_eleve_info?.first_eleve_nom }} {{
-        item.premier_eleve_info?.first_eleve_prenom }} {{
-          item.premier_eleve_info?.
-          ['nombre-eleve_dans_la_classe'] > 0 ? `, ${item.premier_eleve_info?.['nombre-eleve_dans_la_classe'] - 1} autres
-        éléves`
-            : ''
-        }} {{ item.premier_eleve_info?.nombre_eleve_dans_la_classe }}</span>
+        item.premier_eleve_info?.first_eleve_prenom }}{{
+          item.premier_eleve_info?.['nombre-eleve_dans_la_classe'] > 1
+            ? `, ${item.premier_eleve_info['nombre-eleve_dans_la_classe'] - 1} ${t('translation.otherStudents')}`
+            : '' }}</span>
     </div>
 
     <div class="w-full grid grid-cols-2 gap-3 px-3">
       <span class="capitlize font-semibold">{{ t('translation.subject') }}</span>
-      <div class="flex gap-1 flex-wrap truncate auto-dir"> <span v-for="mat in item.matiere_designation" :key="mat">{{
-        mat }},</span></div>
+      <div class="flex gap-1 flex-wrap truncate auto-dir"> <span v-for="(mat, index) in item.matiere_designation" :key="mat">{{
+        mat }}{{ index < item.matiere_designation.length - 1 ? ',' : '' }}</span></div>
     </div>
 
     <button @click="selectClass(item)" class="btn btn-sm pixa-btn w-fit pixa-btn-nofloat">{{

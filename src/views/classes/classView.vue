@@ -50,9 +50,16 @@ const currentClass = ref('')
 onMounted(async () => {
   try {
     currentClass.value = localStorage.getItem('current_class')
-    loading.value = false
+    // Page ouverte sans passer par la liste des classes : on retrouve le nom de la classe
+    if (!currentClass.value) {
+      if (!useRoom.classes?.length) await useRoom.getClasses()
+      const classe = useRoom.classes?.find((c) => c.classe_id === route.params.id)
+      if (classe) currentClass.value = `${classe.specialite_designation ?? 'N/A'} - ${classe.class_num}`
+    }
   } catch (error) {
     console.error(error)
+  } finally {
+    loading.value = false
   }
 })
 

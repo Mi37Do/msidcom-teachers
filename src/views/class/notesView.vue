@@ -16,7 +16,8 @@
 
           <commun-dropdown :list="tempSpecialite" :selected="selectedSpecialite" @on-selected-item="async (id) => {
             selectedSpecialite = id
-            specialiteFilter = tempSpecialite.find(i => i.id === id).specialite
+            // Les onglets dépendent de la matière (nombre de tests et de devoirs)
+            if (!tabs.includes(selectedTab)) selectedTab = 'avrege'
             await loadNotes(selectedSpecialite)
           }"></commun-dropdown>
 
@@ -39,8 +40,8 @@
                     t('translation.trimester')
                   }} 2</button>
                 <button @click="async () => {
-                  await loadNotes(selectedSpecialite)
                   trimester = 3
+                  await loadNotes(selectedSpecialite)
                 }" :class="trimester === 3 ? ' btn-primary' : 'btn-ghost'"
                   class="btn btn-sm pixa-btn-navigation w-full">{{
                     t('translation.trimester')
@@ -70,8 +71,8 @@
                       <div class="relative w-full flex items-center">
                         <search class="w-5 h-5 absolute left-3 fill-slate-600" />
                         <input type="text" v-model="query" @input="() => {
-                          useStudent.filterdStudents = useStudent.students.filter(i => i.prenom.toLowerCase().includes(query.toLowerCase()) || i.nom.toLowerCase().includes(query.toLowerCase()))
-
+                          const q = query.toLowerCase()
+                          useStudent.filterdStudents = useStudent.students.filter(i => (i.prenom ?? '').toLowerCase().includes(q) || (i.nom ?? '').toLowerCase().includes(q))
                         }" :placeholder="t('translation.search')" class="pixa-input-icon w-full pr-4 pl-10">
                       </div>
                     </div>
@@ -123,7 +124,7 @@
 <script setup>
 import { useWidgetStore } from "@/stores/widget"
 import itemData from '@/components/notes/itemData.vue'
-import { onMounted, ref, } from "vue"
+import { computed, onMounted, ref } from "vue"
 import communTable from "@/components/commun/communTable.vue"
 import communNoData from "@/components/commun/communNoData.vue"
 import { useI18n } from "vue-i18n"
@@ -148,118 +149,88 @@ const loadingData = ref(false)
 const useRoom = useRoomStore()
 const useSubject = useSubjectStore()
 const useStudent = useStudentStore()
-const tabs = ref(['avrege', 'attendance'])
 const selectedTab = ref('avrege')
-
 const tempSpecialite = ref([])
 const selectedSpecialite = ref(null)
-const specialiteFilter = ref(null)
 
-const matierSpecialites = ref([])
+// Onglets de la matière choisie : avant, ils étaient calculés une seule fois pour toute la page,
+// et une matière avec deux tests (ou deux devoirs) n'avait pas tous ses onglets
+const tabs = computed(() => {
+  const matiere = tempSpecialite.value.find((i) => i.id === selectedSpecialite.value)
+  const nbrTest = matiere?.nbr_test ?? 1
+  const nbrDevoir = matiere?.nbr_devoir ?? 1
+  return [
+    'avrege',
+    'attendance',
+    ...Array.from({ length: nbrTest }, (_, i) => (nbrTest === 1 ? 'test' : `test_${i + 1}`)),
+    ...Array.from({ length: nbrDevoir }, (_, i) => (nbrDevoir === 1 ? 'homework' : `homework_${i + 1}`)),
+    'exam',
+  ]
+})
 
 onMounted(async () => {
   try {
-    // Fetch matieres for the class
+    // Matières que le prof enseigne dans cette classe (emploi du temps)
     const response = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
       class_id: route.params.id
     })
+    const matieresDeLaClasse = new Set((response.data.Matiere ?? []).map((m) => m.matiere_id))
+    const matieresDuProf = new Set(
+      (useWidget.authUser.userDetail?.matieres?.matiere ?? []).map((m) => m.id),
+    )
 
-    const matieres = response.data.Matiere
-    const specialite = localStorage.getItem('specialite')
-    const userMatieres = useWidget.authUser.userDetail.matieres.matiere
-
-    // Fetch all matiere specialites in parallel
-    const promises = userMatieres.map(async (matiere) => {
-      await useSubject.getMatiereSpecialite(
-        null,
-        `matiere=${matiere.id}&specialite=${specialite}`
-      )
-
-      // Filter items that match matieres
-      return useSubject.matiereSpecialite.filter(spec =>
-        matieres.some(m => m.matiere_id === spec.matiere)
-      )
-    })
-
-    const results = await Promise.all(promises)
-    matierSpecialites.value = results.flat()
-
-    console.log(useSubject.matiereSpecialite)
-
-    // Map to tempSpecialite
-    tempSpecialite.value = matierSpecialites.value.map(item => ({
-      id: item.id,
-      designation: item.matiere_designations,
-      specialite: item.specialite,
-      nbr_test: item.nbr_test,
-      nbr_devoir: item.nbr_devoir
-    }))
-
-    // Set default values with safety check
-    if (tempSpecialite.value.length > 0) {
-      selectedSpecialite.value = tempSpecialite.value[0].id
-      specialiteFilter.value = tempSpecialite.value[0].specialite
+    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu
+    let specialite = localStorage.getItem('specialite')
+    if (!specialite || specialite === 'null' || specialite === 'undefined') {
+      await useRoom.getClasses(route.params.id)
+      specialite = useRoom.focusedClass?.specialite
     }
 
-    await loadData()
-    loading.value = false
+    // Une seule requête pour le niveau (avant : une requête par matière en parallèle, qui
+    // écrivaient toutes dans le même store et donnaient une liste fausse)
+    const responseSpec = specialite
+      ? await axios.get('/api/Matiere_spec/', { params: { specialite } })
+      : { data: [] }
+    tempSpecialite.value = responseSpec.data
+      .filter((spec) => matieresDeLaClasse.has(spec.matiere) && matieresDuProf.has(spec.matiere))
+      .map((item) => ({
+        id: item.id,
+        designation: item.matiere_designations,
+        specialite: item.specialite,
+        nbr_test: item.nbr_test,
+        nbr_devoir: item.nbr_devoir
+      }))
+
+    selectedSpecialite.value = tempSpecialite.value[0]?.id ?? null
+
+    await useStudent.getStudents(null, route.params.id)
+    if (selectedSpecialite.value) {
+      await loadNotes(selectedSpecialite.value)
+    }
   } catch (error) {
     console.error(error)
     useWidget.addToast({
       msg: error.message,
       color: 'red'
     })
+  } finally {
+    loading.value = false
   }
 })
 
-const loadData = async () => {
-  try {
-    await useStudent.getStudents(null, route.params.id)
-    console.log(useStudent.filterdStudents.length)
-
-    await loadNotes(selectedSpecialite.value)
-
-    const specialite = localStorage.getItem('specialite')
-    const currentSpecialite = useSubject.matiereSpecialite.find(
-      i => i.specialite === specialite
-    )
-
-    if (!currentSpecialite) {
-      throw new Error('Specialite not found')
-    }
-
-    // Add test tabs
-    const nbrTest = currentSpecialite.nbr_test
-    for (let index = 0; index < nbrTest; index++) {
-      tabs.value.push(nbrTest === 1 ? 'test' : `test_${index + 1}`)
-    }
-
-    // Add homework tabs
-    const nbrDevoir = currentSpecialite.nbr_devoir
-    for (let index = 0; index < nbrDevoir; index++) {
-      tabs.value.push(nbrDevoir === 1 ? 'homework' : `homework_${index + 1}`)
-    }
-
-    tabs.value.push('exam')
-
-  } catch (error) {
-    console.error(error)
-    useWidget.addToast({
-      msg: error.message,
-      color: 'red'
-    })
-  }
-}
-
 const loadNotes = async (id) => {
+  if (!id) return
   try {
     loadingData.value = true
     const trimesterMap = { 1: 'First', 2: 'Second', 3: 'Third' }
-    const filter = `${id}&Trimestre=${trimesterMap[trimester.value]}`
+    // Année en cours seulement : un redoublant retrouvait sinon ses notes de l'an passé
+    const annee = useWidget.currentYear?.id ? `&anne=${useWidget.currentYear.id}` : ''
+    const filter = `${id}&Trimestre=${trimesterMap[trimester.value]}${annee}`
     await useSubject.getNotes(filter)
-    loadingData.value = false
   } catch (error) {
     console.error(error)
+  } finally {
+    loadingData.value = false
   }
 }
 

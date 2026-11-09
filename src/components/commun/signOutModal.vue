@@ -82,14 +82,15 @@ const deleteItem = async () => {
       await axios.post('/api/device/unregister/', { token: fcmToken })
       await Preferences.remove({ key: 'fcmToken' })
     }
-    await Preferences.remove({ key: 'authToken-prof' });
     await axios.post('/api/Logout')
-    closeModal()
-    router.push({ name: 'login-view' })
   } catch (error) {
+    // Sans réseau, la déconnexion se fait quand même sur l'appareil
     console.error(error)
   } finally {
+    await useWidget.clearSession()
     loadingDelete.value = false
+    closeModal()
+    router.push({ name: 'login-view' })
   }
 }
 

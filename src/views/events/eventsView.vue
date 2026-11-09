@@ -77,7 +77,11 @@
         <div class="w-full h-full bg-white z-10 overflow-hidden">
           <div class="w-full h-full overflow-auto">
             <div class="h-fit flex flex-col gap-2 pb-3">
-              <EventIem v-for="event in useEvent.filtredEvents" :key="event.id" :item="event"
+              <commun-periodes v-model="periode" :nombre-a-venir="separees.aVenir.length"
+                :nombre-anciens="separees.anciens.length" libelle-anciens="anciens" />
+              <span v-if="affichees.length === 0" class="text-center text-slate-500 py-4">{{
+                t('translation.noDataAvailable') }}</span>
+              <EventIem v-for="event in affichees" :key="event.id" :item="event"
                 @openEvents="openEvents = true" :open="openEvents" />
             </div>
           </div>
@@ -90,6 +94,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted, watch } from 'vue';
+import communPeriodes from '@/components/commun/communPeriodes.vue';
+import { usePeriodes } from '@/composables/usePeriodes';
 import subscriptionModal from '@/components/events/subscriptionModal.vue';
 import { useLiveNotificationRefresh } from '@/composables/useLiveNotificationRefresh';
 import { arDZ, fr } from 'date-fns/locale'
@@ -116,6 +122,9 @@ import { useWidgetStore } from '@/stores/widget';
 const currentDate = ref(new Date())
 const loading = ref(true)
 const useEvent = useEventStore()
+// Liste sous le calendrier : à venir (mois en cours et suivants) / anciens (avant)
+const { periode, separees, affichees } = usePeriodes(computed(() => useEvent.filtredEvents),
+  (e) => e.date_event, { trierAVenir: true })
 const view = ref('month')
 const { t } = useI18n()
 const useWidget = useWidgetStore()

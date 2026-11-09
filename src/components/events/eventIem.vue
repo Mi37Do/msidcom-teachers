@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ background: currentTheme.primary }" class="w-full  rounded-xl overflow-hidden flex ">
+  <div :style="{ background: currentTheme.primary }" class="carte-pastel w-full  rounded-xl overflow-hidden flex ">
     <div class="w-3 h-full relative flex-none">
       <div :style="{ background: currentTheme.secondary }" class="w-full h-96  absolute inset-0"></div>
     </div>
@@ -15,7 +15,7 @@
               }} </span>
 
             <div class="w-full flex gap-3 font-medium">
-              <span>le {{ item.date_event }} {{ t('translation.from') }} {{ item.from_time ?
+              <span>{{ t('translation.onDate') }} {{ item.date_event ? format(parse(item.date_event, 'yyyy-MM-dd', new Date()), 'dd-MM-yyyy') : t('translation.notApplicable') }} {{ t('translation.from') }} {{ item.from_time ?
                 format(parse(item.from_time, 'HH:mm:ss', new Date()), 'HH:mm') : 'N/A' }}
                 {{
                   t('translation.to') }} {{

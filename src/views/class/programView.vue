@@ -114,15 +114,16 @@ onMounted(async () => {
     })
 
 
-    selectedSpecialite.value = tempSpecialite.value[0].id
+    selectedSpecialite.value = tempSpecialite.value[0]?.id ?? null
     // specialiteFilter.value = tempSpecialite.value[0].subject
 
     console.log(specialiteFilter.value);
 
     await loadData(route.params.id)
-    loading.value = false
   } catch (error) {
     console.error(error)
+  } finally {
+    loading.value = false
   }
 })
 
@@ -136,13 +137,11 @@ const loadData = async (id) => {
     })
     console.log(response.data);
 
-    programs.value = response.data.taux_avancement_class
-
-    if (programs.value.length > 0) {
-      loadingData.value = false
-    }
+    programs.value = response.data.taux_avancement_class ?? []
   } catch (error) {
     console.error(error)
+  } finally {
+    loadingData.value = false
   }
 }
 

@@ -20,6 +20,8 @@
           <!----> <item-data-class v-for="classe in useRoom.classes" :key="classe.classe_id" :item="classe" />
 
         </div>
+        <!-- Prof sans classe dans l'emploi du temps : message au lieu d'un écran vide -->
+        <commun-no-data v-else />
       </div>
     </div>
 
@@ -31,6 +33,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import itemDataClass from '@/components/classes/itemDataClass.vue';
+import communNoData from '@/components/commun/communNoData.vue';
 import { useRoomStore } from '@/stores/rooms';
 import { useSubjectStore } from '@/stores/subjects';
 

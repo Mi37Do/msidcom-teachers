@@ -3,12 +3,13 @@
     <div :style="{ color: currentTheme.secondary, background: currentTheme.primary }"
       class="flex-1 h-full  rounded-[10px] p-4 border border-border-color flex flex-col items-center overflow-hidden gap-2">
       <span class="font-semibold truncate">
-        {{ item.matiere_designation }} - {{ item.type_cour }}</span>
+        {{ item.matiere_designation }} - {{ typeCours(item.type_cour) }}</span>
       <span class="capitalize">{{ t('translation.room') }} - {{
-        item.salle_designation }}</span>
+        item.salle_designation ?? 'N/A' }}</span>
+      <!-- Numéro de classe (avant : la salle était affichée à sa place) -->
       <span class="capitalize">{{ t('translation.classe') }} {{
-        item.class_specialite }} - {{
-          item.salle_designation }}</span>
+        item.class_specialite ?? 'N/A' }} - {{
+          item.class_num ?? 'N/A' }}</span>
 
       <span class="capitalize flex gap-2 items-center">
         <clock :style="{ fill: currentTheme.secondary }" class="w-5" /> {{ item.from_time ? format(parse(item.from_time,
@@ -59,6 +60,10 @@ const themes = [
 ]
 
 const { t } = useI18n()
+
+// Codes du serveur (TP, TD, COUR, AUTRE) traduits ; une valeur inconnue ou vide reste lisible
+const TYPES_COURS = ['TP', 'TD', 'COUR', 'AUTRE']
+const typeCours = (code) => (TYPES_COURS.includes(code) ? t(`translation.course_type_${code}`) : code || '')
 
 function getRandomTheme() {
   const index = Math.floor(Math.random() * themes.length)

@@ -85,6 +85,17 @@ input::-webkit-inner-spin-button {
   outline-color: #e2e8f0;
 }
 
+/* Cartes au fond pastel (événements) : texte foncé, aussi en mode nuit */
+.carte-pastel {
+  color: #313638;
+}
+
+/* Pages et images de l'aperçu des pièces jointes : fond blanc, aussi en mode nuit
+   (une image transparente ou un texte noir resterait illisible sur fond sombre) */
+.fond-document {
+  background-color: #ffffff;
+}
+
 .text-tag {
   font-size: 0.6rem;
 }

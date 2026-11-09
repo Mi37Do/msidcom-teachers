@@ -36,11 +36,10 @@
             </button>
             </MenuItem>
             <MenuItem v-if="file">
-            <button @click="downloadPdf(file)
-              "
+            <button @click="ouvrirApercu(file, 'bulletin')"
               :class="['btn btn-sm h-[30px] btn-ghost flex justify-start gap-2 w-full items-center capitalize pixa-menu-btn']">
               <download-file class="w-5 h-5" />
-              {{ $t('translation.download') }} {{ $t('translation.file') }}
+              {{ $t('translation.apercu') }} / {{ $t('translation.download') }}
             </button>
             </MenuItem>
           </div>
@@ -62,6 +61,7 @@ import { useWidgetStore } from '@/stores/widget';
 import axios from 'axios';
 import downloadFile from '@/assets/icons/downloadFile.vue';
 import { useSubjectStore } from '@/stores/subjects';
+import { useApercuFichier } from '@/composables/useApercuFichier';
 
 const props = defineProps(['item', 'rootElement', 'editing', 'file', 'bulletin']);
 const emits = defineEmits(['startEditing'])
@@ -70,6 +70,8 @@ const { t } = useI18n()
 const useUser = useUserStore()
 const useWidget = useWidgetStore()
 const useSubject = useSubjectStore()
+// Aperçu du fichier, avec un bouton pour le télécharger dans son format d'origine
+const { ouvrirApercu } = useApercuFichier()
 
 const toggleDropdown = () => {
   if (props.rootElement) {
@@ -85,14 +87,6 @@ const toggleDropdown = () => {
   }
 };
 
-const downloadPdf = (file) => {
-  const link = document.createElement('a')
-  link.href = file
-  link.download = 'file.pdf'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}
 </script>
 
 <style lang="scss" scoped></style>

@@ -25,19 +25,19 @@ import fileEdit from '@/assets/icons/fileEdit.vue';
 import { useI18n } from 'vue-i18n';
 import checkFilePrimary from '@/assets/icons/checkFilePrimary.vue';
 import checkFile from '@/assets/icons/checkFile.vue';
-import { useDownloadFile } from '@/composables/downloadFile';
+import { useApercuFichier } from '@/composables/useApercuFichier';
 import { useStudentStore } from '@/stores/students';
 
 const props = defineProps(['item'])
 const useStudent = useStudentStore()
 const { t } = useI18n()
 
-const { downloadFile } = useDownloadFile()
+const { ouvrirApercu } = useApercuFichier()
 
-// Trigger from UI
+// Aperçu du justificatif, avec un bouton pour le télécharger dans son format d'origine
 const saveFile = (base64String) => {
   let uniqueName = `${props.item.type}_${useStudent.focusedStudent.nom}_${useStudent.focusedStudent.prenom}_${format(props.item.date_heure_abs, 'dd_MM_yyyy')}`
-  downloadFile(uniqueName, base64String)
+  ouvrirApercu(base64String, uniqueName)
 }
 
 </script>

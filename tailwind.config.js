@@ -43,6 +43,21 @@ export default {
           'primary-2': '#CEEE5E',
         },
       },
+      {
+        // Mode nuit (Profil > Apparence, ou bouton de la page de connexion) ; le reste des
+        // couleurs est dans src/assets/nuit.css
+        nuit: {
+          primary: '#49c5b1',
+          secondary: '#273449',
+          accent: '#37cdbe',
+          neutral: '#cbd5e1',
+          'base-100': '#1e293b',
+          'base-200': '#172033',
+          'base-300': '#0f172a',
+          'base-content': '#e2e8f0',
+          'color-scheme': 'dark',
+        },
+      },
     ],
   },
 }

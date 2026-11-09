@@ -21,7 +21,7 @@
         class="w-full h-full overflow-y-auto py-3 px-6">
         <div class="h-fit flex flex-col gap-1.5">
           <calendar-item
-            v-for="item in useRoom.filtredContent.filter(i => i.cours_days === selectedDay).sort((a, b) => { return a.from_time.localeCompare(b.from_time) })"
+            v-for="item in useRoom.filtredContent.filter(i => i.cours_days === selectedDay).sort((a, b) => (a.from_time ?? '').localeCompare(b.from_time ?? ''))"
             :item="item" :key="item.id" />
         </div>
       </div>

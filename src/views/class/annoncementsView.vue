@@ -20,12 +20,14 @@
           <span>{{ t('translation.create') }} {{ t('translation.annoncement') }}</span>
         </button>
       </div>
-      <commun-no-data v-if="useEvent.filtredAnnoncements.length <= 0" />
+      <commun-periodes v-model="periode" :nombre-a-venir="separees.aVenir.length"
+        :nombre-anciens="separees.anciens.length" />
+      <commun-no-data v-if="affichees.length <= 0" />
       <div v-else class="w-full flex-1 flex items-center overflow-hidden">
         <div class="flex-1 h-full overflow-hidden">
           <div class="w-full h-full overflow-auto hidden-scrollbar">
             <div class="h-fit flex flex-col gap-3 pb-3">
-              <itemData v-for="item in useEvent.filtredAnnoncements" :key="item.id" :item="item" />
+              <itemData v-for="item in affichees" :key="item.id" :item="item" />
             </div>
           </div>
         </div>
@@ -38,7 +40,9 @@
 
 <script setup>
 import plus from '@/assets/icons/plus.vue';
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import communPeriodes from '@/components/commun/communPeriodes.vue';
+import { usePeriodes } from '@/composables/usePeriodes';
 import { useI18n } from 'vue-i18n';
 import { useEventStore } from '@/stores/events';
 import { useWidgetStore } from '@/stores/widget';
@@ -52,6 +56,9 @@ import { useRoute } from 'vue-router';
 const { t } = useI18n()
 const loading = ref(true)
 const useEvent = useEventStore()
+// À venir : date limite (sinon publication) depuis le 1er du mois en cours ; anciennes : avant
+const { periode, separees, affichees } = usePeriodes(computed(() => useEvent.filtredAnnoncements),
+  (a) => a.date_limite || a.created)
 const useWidget = useWidgetStore()
 const useSubject = useSubjectStore()
 const useRoom = useRoomStore()

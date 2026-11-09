@@ -29,7 +29,7 @@
                   }" />
                 </div>
                 <div v-else-if="showTimePicker" class="h-full w-full flex flex-col gap-1.5">
-                  <CommunTimePicker v-model="hoursTime" @hideTimePicker="(time) => {
+                  <CommunTimePicker :model-value="hoursTime" @update:model-value="(time) => Object.assign(hoursTime, time)" @hideTimePicker="(time) => {
                     hoursTime.hours = time.hours
                     hoursTime.minutes = time.minutes
                     showTimePicker = false

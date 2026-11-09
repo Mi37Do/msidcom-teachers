@@ -1,18 +1,17 @@
 <script setup>
 import { onMounted } from 'vue'
 import CommunLanguagesSwitcherModal from './components/commun/communLanguagesSwitcherModal.vue';
+import CommunApercuFichier from './components/commun/communApercuFichier.vue';
 import { useWidgetStore } from './stores/widget'
-import { Capacitor } from '@capacitor/core'
-import { SafeArea, SystemBarsStyle } from '@capacitor-community/safe-area'
+import { styliserBarresSysteme } from './composables/useTheme'
 
 const useWidget = useWidgetStore()
 
 onMounted(async () => {
   useWidget.userLanguage = useWidget.getLanguage()
 
-  if (Capacitor.isNativePlatform()) {
-    await SafeArea.setSystemBarsStyle({ style: SystemBarsStyle.Light })
-  }
+  // Barre d'état du téléphone selon le mode jour / nuit
+  await styliserBarresSysteme()
 })
 </script>
 
@@ -22,5 +21,7 @@ onMounted(async () => {
 
     <CommunLanguagesSwitcherModal />
     <RouterView />
+    <!-- Aperçu des pièces jointes, ouvert depuis n'importe quel écran -->
+    <CommunApercuFichier />
   </div>
 </template>

@@ -10,7 +10,7 @@
     </span>
     <div class="my-auto truncate flex items-center gap-3">
       <span class="">
-        {{ format(parse(item.birthday, 'yyyy-MM-dd', new Date()), 'dd-MM-yyyy') }}</span>
+        {{ dateNaissance }}</span>
 
       <angle-icon :class="useWidget.userLanguage === 'ar' ? '' : 'rotate-90'" class="w-5" />
     </div>
@@ -20,7 +20,7 @@
 <script setup>
 import angleIcon from '@/assets/icons/angleIcon.vue';
 import { useWidgetStore } from '@/stores/widget';
-import { format, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
@@ -28,10 +28,18 @@ const { t } = useI18n()
 const props = defineProps(['item'])
 const useWidget = useWidgetStore()
 
+// Le serveur enregistre « Feminin » sans accent
 const translatedGender = computed(() => {
   if (props.item.sexe === 'Masculin') return t('translation.male')
-  if (props.item.sexe === 'Féminin') return t('translation.female')
-  return props.item.sexe
+  if (props.item.sexe === 'Feminin' || props.item.sexe === 'Féminin') return t('translation.female')
+  return props.item.sexe || t('translation.notApplicable')
+})
+
+// Date de naissance facultative : sans elle, parse() plantait toute la liste
+const dateNaissance = computed(() => {
+  if (!props.item.birthday) return t('translation.notApplicable')
+  const date = parse(props.item.birthday, 'yyyy-MM-dd', new Date())
+  return isValid(date) ? format(date, 'dd-MM-yyyy') : t('translation.notApplicable')
 })
 
 </script>

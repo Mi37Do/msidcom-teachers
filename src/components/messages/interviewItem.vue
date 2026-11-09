@@ -11,7 +11,7 @@
         item.state === 'NEW' ? 'bg-warning' : item.state === 'ACCEPTEE' ? 'bg-primary' : 'bg-error'
       ]" class="flex gap-3 px-2 py-1  items-center text-white rounded-full uppercase text-xs">
         <span class="w-1 h-1 bg-white rounded-full"></span>
-        <span>{{ item.state === 'NEW' ? t('translation.in_progress') : item.state }}</span>
+        <span>{{ item.state === 'NEW' ? t('translation.in_progress') : t(`translation.interview_state_${item.state === 'ACCEPTEE' ? 'ACCEPTEE' : 'REFUSEE'}`) }}</span>
       </div>
       <!--
       <span class="font-medium">{{ item.entrevue_day }}</span>

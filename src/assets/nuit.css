@@ -1,0 +1,402 @@
+/* ---------------------------------------------------------------------------
+   Mode nuit (Profil > Apparence, ou bouton de la page de connexion ; choix
+   mémorisé sur l'appareil).
+
+   Les écrans utilisent des couleurs claires écrites directement (bg-white,
+   text-slate-600, styles pixa-…) : elles sont remplacées ici quand <html> porte
+   data-theme="nuit". Le thème daisyUI « nuit » (tailwind.config.js) couvre les
+   composants daisyUI ; la barre d'état du téléphone suit dans useTheme.js.
+--------------------------------------------------------------------------- */
+[data-theme='nuit'] {
+  --nuit-fond: #0f172a;
+  --nuit-surface: #1e293b;
+  --nuit-surface-2: #273449;
+  --nuit-survol: #2c3b55;
+  --nuit-bordure: #334155;
+  --nuit-bordure-forte: #475569;
+  --nuit-texte: #e2e8f0;
+  --nuit-texte-doux: #94a3b8;
+  --nuit-texte-faible: #7c8aa0;
+  --nuit-titre: #f1f5f9;
+  --nuit-entete: #18233a;
+  color-scheme: dark;
+}
+
+/* Fenêtres et aperçus placés directement dans <body> : mêmes couleurs que l'application.
+   fill : icônes dessinées sans couleur (noires par défaut), en clair */
+[data-theme='nuit'] body {
+  background-color: var(--nuit-fond);
+  color: var(--nuit-texte);
+  fill: var(--nuit-texte);
+}
+
+[data-theme='nuit'] #app {
+  color: var(--nuit-texte);
+}
+
+/* ------------------------------- Surfaces ------------------------------- */
+/* Fond des écrans (gris clair) */
+[data-theme='nuit'] .bg-\[\#F5F5F5\] {
+  background-color: var(--nuit-fond);
+}
+
+/* Cartes, listes, barre du bas, fenêtres */
+[data-theme='nuit'] .bg-white,
+[data-theme='nuit'] .bg-\[\#F9F9F9\],
+[data-theme='nuit'] .pixa-card,
+[data-theme='nuit'] .commun-dropdown,
+[data-theme='nuit'] .commun-dropdown-small,
+[data-theme='nuit'] .btn-outline-primary {
+  background-color: var(--nuit-surface);
+}
+
+/* En-tête (vert clair le jour) */
+[data-theme='nuit'] .bg-primary-2\/30,
+[data-theme='nuit'] .bg-\[\#e9f3c7\] {
+  background-color: var(--nuit-entete);
+}
+
+[data-theme='nuit'] .bg-slate-50,
+[data-theme='nuit'] .bg-gray-50 {
+  background-color: var(--nuit-surface-2);
+}
+
+[data-theme='nuit'] .bg-slate-100,
+[data-theme='nuit'] .bg-gray-100 {
+  background-color: #2b3a52;
+}
+
+[data-theme='nuit'] .bg-slate-200,
+[data-theme='nuit'] .bg-gray-200 {
+  background-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .bg-border-color {
+  background-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .hover\:bg-slate-50:hover,
+[data-theme='nuit'] .hover\:bg-gray-50:hover {
+  background-color: var(--nuit-survol);
+}
+
+[data-theme='nuit'] .hover\:bg-gray-200:hover {
+  background-color: #3b4a63;
+}
+
+[data-theme='nuit'] .bg-white\/30 {
+  background-color: rgb(30 41 59 / 0.3);
+}
+
+[data-theme='nuit'] .bg-blue-50 {
+  background-color: rgb(59 130 246 / 0.14);
+}
+
+[data-theme='nuit'] .bg-emerald-100 {
+  background-color: rgb(16 185 129 / 0.16);
+}
+
+[data-theme='nuit'] .bg-red-100 {
+  background-color: rgb(239 68 68 / 0.16);
+}
+
+[data-theme='nuit'] .bg-amber-100 {
+  background-color: rgb(245 158 11 / 0.16);
+}
+
+/* Pastilles vert clair : texte sombre pour rester lisible */
+[data-theme='nuit'] .bg-primary-2 {
+  color: #1e293b;
+}
+
+[data-theme='nuit'] .bg-glass-effect,
+[data-theme='nuit'] .bg-glass-effect-sm {
+  background: rgb(30 41 59 / 0.4);
+  border-color: rgb(148 163 184 / 0.25);
+}
+
+[data-theme='nuit'] .option-false {
+  background: var(--nuit-bordure);
+  fill: #cbd5e1;
+  color: #cbd5e1;
+}
+
+[data-theme='nuit'] .option-false:hover {
+  background-color: var(--nuit-bordure-forte);
+}
+
+/* ------------------------------- Bordures ------------------------------- */
+/* Traits sans couleur précise (border-b seul…) : gris très clair par défaut, trop visibles la nuit.
+   :where() garde ce réglage le plus faible : une classe de couleur de bordure l'emporte toujours */
+:where([data-theme='nuit']) *,
+:where([data-theme='nuit']) ::before,
+:where([data-theme='nuit']) ::after {
+  border-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .border-border-color,
+[data-theme='nuit'] .border-slate-200,
+[data-theme='nuit'] .border-slate-300,
+[data-theme='nuit'] .border-gray-200,
+[data-theme='nuit'] .pixa-border,
+[data-theme='nuit'] .commun-dropdown,
+[data-theme='nuit'] .commun-dropdown-small {
+  border-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .commun-dropdown:hover,
+[data-theme='nuit'] .commun-dropdown-small:hover {
+  border-color: #49c5b1;
+}
+
+[data-theme='nuit'] .border-border-color-full {
+  border-color: var(--nuit-bordure-forte);
+}
+
+[data-theme='nuit'] .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .ring-black\/5,
+[data-theme='nuit'] .ring-gray-900\/5 {
+  --tw-ring-color: rgb(148 163 184 / 0.18);
+}
+
+/* -------------------------------- Textes -------------------------------- */
+[data-theme='nuit'] .text-gray-900,
+[data-theme='nuit'] .text-gray-800,
+[data-theme='nuit'] .text-gray-700,
+[data-theme='nuit'] .text-slate-900,
+[data-theme='nuit'] .text-slate-800,
+[data-theme='nuit'] .text-slate-700,
+[data-theme='nuit'] .text-\[\#313638\] {
+  color: var(--nuit-texte);
+}
+
+[data-theme='nuit'] .text-slate-600,
+[data-theme='nuit'] .text-gray-600,
+[data-theme='nuit'] .text-slate-500,
+[data-theme='nuit'] .text-gray-500,
+[data-theme='nuit'] .text-\[\#475569\],
+[data-theme='nuit'] .text-\[\#31363880\] {
+  color: var(--nuit-texte-doux);
+}
+
+[data-theme='nuit'] .text-slate-400,
+[data-theme='nuit'] .text-gray-400 {
+  color: var(--nuit-texte-faible);
+}
+
+/* Jours hors du mois dans les calendriers : estompés, comme le jour */
+[data-theme='nuit'] .text-slate-300 {
+  color: #536379;
+}
+
+[data-theme='nuit'] .pixa-title,
+[data-theme='nuit'] .pixa-title-2,
+[data-theme='nuit'] .pixa-title-3,
+[data-theme='nuit'] .detail-title {
+  color: var(--nuit-titre);
+}
+
+[data-theme='nuit'] .pixa-title-4,
+[data-theme='nuit'] .label-text {
+  color: var(--nuit-texte-doux);
+}
+
+/* Couleurs de marque ou d'alerte trop sombres sur fond sombre : version plus claire */
+[data-theme='nuit'] .text-secondary-2,
+[data-theme='nuit'] .text-\[\#00778B\] {
+  color: #3cc3d6;
+}
+
+[data-theme='nuit'] .fill-secondary-2,
+[data-theme='nuit'] .fill-\[\#00778B\] {
+  fill: #3cc3d6;
+}
+
+[data-theme='nuit'] .border-secondary-2 {
+  border-color: #3cc3d6;
+}
+
+[data-theme='nuit'] .text-primary-3 {
+  color: #a08bf7;
+}
+
+[data-theme='nuit'] .fill-primary-3 {
+  fill: #a08bf7;
+}
+
+[data-theme='nuit'] .text-red-500,
+[data-theme='nuit'] .text-red-700 {
+  color: #f87171;
+}
+
+[data-theme='nuit'] .fill-red-500 {
+  fill: #f87171;
+}
+
+[data-theme='nuit'] .text-amber-600 {
+  color: #f59e0b;
+}
+
+[data-theme='nuit'] .fill-amber-600 {
+  fill: #f59e0b;
+}
+
+/* -------------------------------- Icônes -------------------------------- */
+[data-theme='nuit'] .fill-slate-700,
+[data-theme='nuit'] .fill-slate-600 {
+  fill: #cbd5e1;
+}
+
+[data-theme='nuit'] .fill-slate-500,
+[data-theme='nuit'] .fill-slate-400,
+[data-theme='nuit'] .fill-gray-400,
+[data-theme='nuit'] .fill-border-color-full {
+  fill: var(--nuit-texte-doux);
+}
+
+[data-theme='nuit'] .fill-border-color {
+  fill: rgb(148 163 184 / 0.4);
+}
+
+/* Icônes en image noire (barre du bas, cloche, recherche…) : éclaircies */
+[data-theme='nuit'] .icone-sombre {
+  filter: invert(0.88);
+}
+
+[data-theme='nuit'] .icone-grise {
+  filter: brightness(1.7);
+}
+
+/* ------------------------------- Boutons -------------------------------- */
+[data-theme='nuit'] .btn-ghost {
+  fill: var(--nuit-texte);
+  color: var(--nuit-texte);
+}
+
+[data-theme='nuit'] .btn-ghost:hover {
+  background-color: var(--nuit-survol);
+}
+
+[data-theme='nuit'] .btn-outline {
+  border-color: var(--nuit-texte-doux);
+  color: var(--nuit-texte);
+  fill: var(--nuit-texte);
+}
+
+[data-theme='nuit'] .btn-outline:hover {
+  border-color: var(--nuit-texte);
+  color: var(--nuit-titre);
+  fill: var(--nuit-titre);
+  background-color: var(--nuit-bordure);
+}
+
+[data-theme='nuit'] .pixa-btn-float {
+  background-color: var(--nuit-surface);
+  border-color: var(--nuit-bordure);
+  color: #cbd5e1;
+  fill: #cbd5e1;
+}
+
+[data-theme='nuit'] .pixa-btn-float:hover {
+  background-color: var(--nuit-surface-2);
+  border-color: #64748b;
+  color: var(--nuit-titre);
+  fill: var(--nuit-titre);
+}
+
+[data-theme='nuit'] .pixa-btn-nofloat,
+[data-theme='nuit'] .pixa-btn-nofloat:hover,
+[data-theme='nuit'] .pixa-btn-nofloat-red,
+[data-theme='nuit'] .pixa-btn-nofloat-red:hover {
+  background-color: var(--nuit-surface);
+}
+
+[data-theme='nuit'] .pixa-btn-nofloat:disabled {
+  background-color: var(--nuit-surface);
+  border-color: var(--nuit-bordure-forte);
+  color: var(--nuit-texte-faible);
+  fill: var(--nuit-texte-faible);
+}
+
+[data-theme='nuit'] .pixa-btn-nofloat-red {
+  border-color: rgb(248 113 113 / 0.45);
+}
+
+/* Bouton gris foncé (connexion…) : visible sur le fond sombre */
+[data-theme='nuit'] .btn-primary-2 {
+  background: var(--nuit-bordure-forte);
+}
+
+[data-theme='nuit'] .btn-primary-2:hover {
+  background: #566479;
+}
+
+[data-theme='nuit'] .pixa-menu-btn-delete:hover,
+[data-theme='nuit'] .red-btn-ghost:hover {
+  background-color: rgb(239 68 68 / 0.15);
+}
+
+/* -------------------------------- Champs -------------------------------- */
+[data-theme='nuit'] .pixa-input,
+[data-theme='nuit'] .pixa-input-icon,
+[data-theme='nuit'] .pixa-input-login,
+[data-theme='nuit'] .pixa-input-float,
+[data-theme='nuit'] .pixa-textarea,
+[data-theme='nuit'] .input,
+[data-theme='nuit'] .select,
+[data-theme='nuit'] .textarea {
+  background-color: var(--nuit-fond);
+  border-color: var(--nuit-bordure);
+  color: var(--nuit-texte);
+}
+
+[data-theme='nuit'] .pixa-input:focus,
+[data-theme='nuit'] .pixa-input-icon:focus,
+[data-theme='nuit'] .pixa-input-login:focus,
+[data-theme='nuit'] .pixa-textarea:focus {
+  border-color: #3cb09d;
+}
+
+[data-theme='nuit'] input:not([type='checkbox']):not([type='radio']):not([type='range']),
+[data-theme='nuit'] textarea,
+[data-theme='nuit'] select {
+  color: var(--nuit-texte);
+}
+
+[data-theme='nuit'] ::placeholder {
+  color: #64748b;
+}
+
+/* ---------------------- Styles propres à un composant ---------------------- */
+/* Onglets et barre du bas : texte foncé écrit dans les pages (l'onglet actif garde ses couleurs) */
+[data-theme='nuit'] nav a:not(.router-link-active):not(.router-link-exact-active) {
+  color: var(--nuit-texte);
+  fill: var(--nuit-texte);
+}
+
+/* Onglet actif de la barre du bas (vert clair) : icône foncée, comme le jour */
+[data-theme='nuit'] nav a.router-link-active .icone-sombre {
+  filter: none;
+}
+
+/* Cartes au fond pastel (événements) : texte et icônes foncés, comme le jour */
+[data-theme='nuit'] .carte-pastel {
+  color: #313638;
+  fill: #313638;
+}
+
+[data-theme='nuit'] .carte-pastel .text-gray-500 {
+  color: #4b5563;
+}
+
+[data-theme='nuit'] .carte-pastel .icone-sombre {
+  filter: none;
+}
+
+/* --------------------------- Page de connexion --------------------------- */
+[data-theme='nuit'] .page-connexion {
+  background-image: linear-gradient(to top right, #0e3340 0%, #172033 70%, #12463f 100%);
+}

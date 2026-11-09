@@ -10,10 +10,8 @@
     <div class="relative flex items-center gap-3 w-full">
       <search class="w-5 h-5 absolute left-3 fill-slate-600" />
       <input type="text" v-model="query" @input="() => {
-        filtredHistorique = historique.filter(i => i.eleve_designations.eleve_designations_prenom
-          .toLowerCase().includes(query.toLowerCase()) || i.eleve_designations.
-            eleve_designations_nom
-            .toLowerCase().includes(query.toLowerCase()))
+        filtredHistorique = historique.filter(i => (i.eleve_prenom ?? '').toLowerCase().includes(query.toLowerCase())
+          || (i.eleve_nom ?? '').toLowerCase().includes(query.toLowerCase()))
 
       }" :placeholder="t('translation.search')" class="pixa-input-icon w-full pr-4 pl-10">
     </div>

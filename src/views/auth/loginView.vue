@@ -1,12 +1,11 @@
 <template>
   <div
-    class="w-full h-screen grid gap-6 bg-gradient-to-tr from-background-3/50 via-background-2/50 to-background-1 from-0% via-75% to-100% relative">
+    class="page-connexion w-full min-h-screen grid gap-6 bg-gradient-to-tr from-background-3/50 via-background-2/50 to-background-1 from-0% via-75% to-100% relative">
 
     <img src="@/assets/pics/bluePartLogo.svg" class="w-40 absolute bottom-0 left-0" alt="">
     <img src="@/assets/pics/greenPartLogo.svg" class="w-40 absolute top-0 right-0" alt="">
 
-    <div :style="{ paddingBottom: keyboardHeight + 'px' }"
-      class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10 transition-all duration-300">
+    <div class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10 transition-all duration-300">
       <div class="w-full h-fit my-auto flex justify-center">
         <form @submit.prevent="login" class="w-full h-full flex flex-col gap-3 items-center">
 
@@ -42,7 +41,7 @@
                   {{ t('translation.username') }} <span class="text-red-500">*</span>
                 </span>
               </div>
-              <input type="text" required v-model="user.username" :placeholder="t('translation.connexion') + ' ....'"
+              <input type="text" required v-model="user.username" :placeholder="t('translation.username') + ' ....'"
                 class="pixa-input-login px-3 placeholder:capitalize" @focus="onInputFocus" @blur="onInputBlur" />
             </label>
 
@@ -81,11 +80,15 @@
 
       <!-- ── Language switcher – also collapses when keyboard opens ──── -->
       <Transition name="kb-collapse">
-        <div v-if="!hideAuxContent" @click="useWidget.changeLanguage = true"
-          class="h-20 rounded-[15px] p-3 flex justify-center gap-5 w-fit">
-          <span>{{useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.desingation}}</span>
-          <div v-html="useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.icon"
-            :class="useWidget.userLanguage === 'ar' ? 'left-0' : 'right-0'" class="w-8" />
+        <div v-if="!hideAuxContent" class="flex items-start gap-1">
+          <div @click="useWidget.changeLanguage = true"
+            class="h-20 rounded-[15px] p-3 flex justify-center gap-5 w-fit">
+            <span>{{useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.desingation}}</span>
+            <div v-html="useWidget.languages?.find(i => i.id === useWidget.userLanguage)?.icon"
+              :class="useWidget.userLanguage === 'ar' ? 'left-0' : 'right-0'" class="w-8" />
+          </div>
+          <!-- Mode jour / mode nuit, aussi avant la connexion -->
+          <commun-theme-toggle class="btn-ghost w-12 h-12 rounded-[15px]" />
         </div>
       </Transition>
     </div>
@@ -99,16 +102,17 @@ import Cookies from 'js-cookie'
 import { onBeforeUnmount, onMounted, reactive, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import eyeSlash from '@/assets/icons/eyeSlash.vue'
+import communThemeToggle from '@/components/commun/communThemeToggle.vue'
 import { useRouter } from 'vue-router'
 import { Capacitor } from '@capacitor/core'
 import { Keyboard } from '@capacitor/keyboard'
 import { Preferences } from '@capacitor/preferences'
-import { App } from '@capacitor/app'
 import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging'
 
 // ── Keyboard state ───────────────────────────────────────────────────────────
-const keyboardHeight = ref(0)
 const keyboardOpen = ref(false)
+const platform = Capacitor.getPlatform()
+const isNative = platform !== 'web'
 
 // Logo smoothly shrinks to 45% when keyboard is open
 const logoScale = computed(() => keyboardOpen.value ? 0.45 : 1)
@@ -116,22 +120,19 @@ const logoScale = computed(() => keyboardOpen.value ? 0.45 : 1)
 // Non-essential chrome (title, divider, language switcher) disappears
 const hideAuxContent = computed(() => keyboardOpen.value)
 
-// Driven by focus/blur — reliable on all platforms
+// On iOS the Keyboard plugin events drive keyboardOpen (they also fire for the
+// system dismiss gesture, which focus/blur never reports). Focus/blur is the
+// web fallback.
 let blurTimer = null
 const onInputFocus = () => {
+  if (isNative) return
   if (blurTimer) { clearTimeout(blurTimer); blurTimer = null }
   keyboardOpen.value = true
-  // Fallback: read viewport height after keyboard animation settles (~350ms)
-  setTimeout(() => {
-    if (!keyboardHeight.value) {
-      keyboardHeight.value = window.innerHeight - (window.visualViewport?.height ?? window.innerHeight)
-    }
-  }, 350)
 }
 const onInputBlur = () => {
+  if (isNative) return
   blurTimer = setTimeout(() => {
     keyboardOpen.value = false
-    keyboardHeight.value = 0
   }, 100)
 }
 
@@ -141,6 +142,26 @@ const router = useRouter()
 const useWidget = useWidgetStore()
 const { initializeFCM } = useFirebaseMessaging()
 
+// Le serveur répond en anglais : on affiche un message traduit selon le cas
+const resolveErrorMessage = (error) => {
+  const status = error.response?.status
+  if (!error.response) {
+    return t(navigator.onLine === false || error.code === 'ERR_NETWORK'
+      ? 'translation.loginOffline'
+      : 'translation.loginFailed')
+  }
+  if (status === 400) return t('translation.loginMissingFields')
+  if (status === 401) return t('translation.loginInvalid')
+  if (status === 403) {
+    return t(error.response.data?.error === 'User account is inactive.'
+      ? 'translation.loginInactive'
+      : 'translation.loginWrongApp')
+  }
+  if (status === 429) return t('translation.loginTooManyAttempts')
+  if (status >= 500) return t('translation.loginServerError')
+  return t('translation.loginFailed')
+}
+
 // ── Local state ──────────────────────────────────────────────────────────────
 const isPassword = ref(true)
 const loading = ref(false)
@@ -149,57 +170,81 @@ const errorMessage = reactive({ show: false, message: '' })
 
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
 onMounted(async () => {
-  if (Capacitor.getPlatform() !== 'web') {
-    // Prevent WebView from resizing — gradient stays full-screen, no white gap behind keyboard
-    await Keyboard.setResizeMode({ mode: 'none' })
-    await Keyboard.addListener('keyboardWillShow', (info) => {
-      keyboardHeight.value = info.keyboardHeight
-    })
-    await Keyboard.addListener('keyboardWillHide', () => {
-      keyboardHeight.value = 0
-    })
+  if (isNative) {
+    try {
+      // setResizeMode n'existe que sur iOS : sur Android l'appel échouait et les écouteurs
+      // du clavier n'étaient jamais posés. 'body' garde les champs au-dessus du clavier sur
+      // iPhone comme sur iPad ; Android redimensionne la vue tout seul.
+      if (platform === 'ios') {
+        await Keyboard.setResizeMode({ mode: 'body' })
+      }
+      await Keyboard.addListener('keyboardWillShow', () => { keyboardOpen.value = true })
+      await Keyboard.addListener('keyboardWillHide', () => { keyboardOpen.value = false })
+    } catch (error) {
+      console.error('Keyboard setup failed:', error)
+    }
   }
 })
 
 onBeforeUnmount(async () => {
-  if (Capacitor.getPlatform() !== 'web') {
-    await Keyboard.removeAllListeners()
-    await App.removeAllListeners()
+  if (blurTimer) { clearTimeout(blurTimer); blurTimer = null }
+  if (isNative) {
+    try {
+      await Keyboard.removeAllListeners()
+      // Back to the default for the rest of the app (chat inputs, forms)
+      if (platform === 'ios') {
+        await Keyboard.setResizeMode({ mode: 'native' })
+      }
+      // Pas d'App.removeAllListeners() : il supprimait l'écoute du retour au premier plan
+    } catch (error) {
+      console.error('Keyboard cleanup failed:', error)
+    }
   }
 })
 
 // ── Login ────────────────────────────────────────────────────────────────────
 const login = async () => {
+  if (loading.value) return
+
+  const username = user.username.trim()
+  const password = user.password
+  if (!username || !password) {
+    errorMessage.message = t('translation.loginMissingFields')
+    errorMessage.show = true
+    return
+  }
+
+  user.username = username
   loading.value = true
   errorMessage.show = false
 
-  if (user.username.endsWith(' ')) {
-    user.username = user.username.trimEnd()
-  }
-
   try {
     axios.defaults.headers.common['Authorization'] = ''
-    const response = await axios.post(`/api/Login_PROF`, user)
+    const response = await axios.post(`/api/Login_PROF`, { username, password })
 
     const token = response.data.token
 
     Cookies.set('token', token)
     localStorage.setItem('msidcom_prof_token', token)
-    localStorage.setItem('msidcom_prof_login', JSON.stringify(user))
+    // Jamais le mot de passe : il était enregistré en clair sur le téléphone
+    localStorage.setItem('msidcom_prof_login', JSON.stringify({ username }))
 
     await Preferences.set({ key: 'authToken-prof', value: token })
 
     axios.defaults.headers.common['Authorization'] = 'token ' + token
 
-    if (Capacitor.isNativePlatform() || Notification.permission !== 'denied') {
-      await initializeFCM()
+    if (Capacitor.isNativePlatform() ||
+      (typeof Notification !== 'undefined' && Notification.permission !== 'denied')) {
+      // Pas attendu : sur iOS le jeton peut tarder (autorisation, APNs) et ne doit pas
+      // bloquer l'utilisateur sur cet écran
+      initializeFCM().catch((err) => console.error('Push registration failed:', err))
     }
 
     router.push({ name: 'app-panel' })
 
   } catch (error) {
     console.error('Login error:', error)
-    errorMessage.message = error.response?.data?.error || 'Login failed'
+    errorMessage.message = resolveErrorMessage(error)
     errorMessage.show = true
   } finally {
     loading.value = false

@@ -67,20 +67,22 @@ import {
   DialogTitle,
 } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n';
-import { useDownloadBase64 } from '@/composables/useDownloadBase64';
+import { useApercuFichier } from '@/composables/useApercuFichier';
 
 const useWidget = useWidgetStore()
 const useStudent = useStudentStore()
 const { t } = useI18n()
-const { downloadBase64 } = useDownloadBase64()
+const { ouvrirApercu } = useApercuFichier()
 
 const closeModal = () => {
   useStudent.focusedAbscence = null
   useWidget.justifyModal = false
 }
 
+// Le justificatif s'ouvre en aperçu (avec un bouton pour le télécharger) à la place de cette fenêtre
 const handleDownload = (base64String) => {
-  downloadBase64(base64String, 'justification')
+  closeModal()
+  ouvrirApercu(base64String, 'justification')
 }
 </script>
 

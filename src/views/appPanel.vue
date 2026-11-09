@@ -3,12 +3,15 @@
     <div class="flex h-fit pt-safe-top bg-[#e9f3c7]">
       <div class="w-full  h-fit p-3 flex items-center">
 
-        <div class="flex-1">
-          <img src="@/assets/pics/inlineLogo.png" class="w-40" alt="">
+        <div class="flex-1 min-w-0">
+          <!-- Mode nuit : même logo, texte en clair -->
+          <img :src="estNuit ? inlineLogoNuit : inlineLogo" class="w-40 max-w-full" alt="">
         </div>
 
 
         <div class="flex gap-3 items-center ml-auto">
+          <!-- Mode jour / mode nuit, à côté des notifications -->
+          <commun-theme-toggle class="btn-sm w-[44px] h-[44px] bg-transparent" />
           <router-link :to="{ name: 'notifications-panel' }"
             class="btn btn-sm w-[44px] h-[44px] bg-transparent shadow-none  p-0 relative">
             <span v-if="useNotif.unreadCount > 0"
@@ -74,8 +77,13 @@ import { useNotificationBadge } from '@/stores/notifications';
 import { useFirebaseMessaging } from '@/composables/useFirebaseMessaging';
 import { useSafeArea } from '@/composables/useSafeArea';
 import { useRouter } from 'vue-router';
+import { useTheme } from '@/composables/useTheme';
+import communThemeToggle from '@/components/commun/communThemeToggle.vue';
+import inlineLogo from '@/assets/pics/inlineLogo.png';
+import inlineLogoNuit from '@/assets/pics/inlineLogoNuit.png';
 
 useSafeArea();
+const { estNuit } = useTheme();
 const { fcmToken, notification, error, attachMessagingListeners } = useFirebaseMessaging();
 const useWidget = useWidgetStore();
 const useNotif = useNotificationBadge();

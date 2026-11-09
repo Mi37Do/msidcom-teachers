@@ -15,4 +15,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  // Retire console.log / console.debug du build de production (les erreurs restent)
+  esbuild: {
+    pure: ['console.log', 'console.debug'],
+  },
 })

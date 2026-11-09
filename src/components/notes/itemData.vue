@@ -6,19 +6,9 @@
         {{ item.prenom }} {{ item.nom }}</span>
     </span>
     <span class="my-auto truncate flex items-center gap-3 w-full justify-between">
-      <span v-if="!selectedNotes" class="font-medium flex-1 truncate">N/A</span>
-      <span v-else class="font-medium flex-1 truncate">
-        <span v-if="tab === 'avrege'">{{ selectedNotes.moyenne ? selectedNotes.moyenne : 'N/A' }}</span>
-        <span v-if="tab === 'attendance'">{{ selectedNotes.assiduite ? selectedNotes.assiduite : 'N/A' }}</span>
-        <span v-if="tab === 'test' || tab === 'test_1'">{{ selectedNotes.test_1 ? selectedNotes.test_1 : 'N/A' }}</span>
-        <span v-if="tab === 'test_2'">{{ selectedNotes.test_1 ? selectedNotes.test_2 : 'N/A' }}</span>
-        <span v-if="tab === 'homework' || tab === 'homework_1'">{{ selectedNotes.devoir_1 ? selectedNotes.devoir_1 :
-          'N/A' }}</span>
-        <span v-if="tab === 'homework_2'">{{ selectedNotes.devoir_1 ? selectedNotes.devoir_2 : 'N/A' }}</span>
-        <span v-if="tab === 'exam'">{{ selectedNotes.examens ? selectedNotes.examens : 'N/A' }}</span>
-      </span>
-
-      <button v-if="useWidget.currentYear && !currentTabValue" @click="() => {
+      <!-- Une note de 0 est une vraie note : seule une note absente s'affiche N/A -->
+      <span class="font-medium flex-1 truncate">{{ currentTabValue ?? 'N/A' }}</span>
+      <button v-if="useWidget.currentYear && (currentTabValue === null || currentTabValue === undefined)" @click="() => {
         tempNotes.Trimestre = trimester
         tempNotes.matiere_spec = specialite
         Object.assign(useWidget.addNote, {
@@ -26,7 +16,8 @@
           type: tab,
           type_fr: tab === 'avrege' ? 'moyenne' : tab === 'attendance' ? 'assiduite' : (tab === 'test' || tab === 'test_1') ? 'test_1' : tab === 'test_2' ? 'test_2' : (tab === 'homework' || tab === 'homework_1') ? 'devoir_1' : tab === 'homework_2' ? 'devoir_2' : 'examens',
           open: true,
-          note: selectedNotes ? selectedNotes : tempNotes,
+          // Copie : la fenêtre modifiait la ligne affichée, et annuler laissait la valeur saisie
+          note: selectedNotes ? { ...selectedNotes } : { ...tempNotes },
           student: item.eleve_id
         })
       }"

@@ -77,8 +77,11 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const useWidget = useWidgetStore()
   try {
-    await useWidget.initData()
-    //  useWidget.getWebConfig()
+    // Le profil n'est chargé que s'il manque (ouverture de l'app, juste après la connexion).
+    // Avant, chaque changement d'écran attendait un appel à /api/Userinfo_sql_Apps/.
+    if (to.meta.requireAuth && !useWidget.authUser.isAuthenticated) {
+      await useWidget.initData()
+    }
 
     if (to.meta.requireAuth && !useWidget.authUser.isAuthenticated) {
       next({ name: 'login-view' })

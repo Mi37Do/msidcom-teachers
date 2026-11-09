@@ -133,7 +133,6 @@ const { t } = useI18n();
 import calendar from '@/assets/icons/calendar.vue';
 import AngleIcon from '@/assets/icons/angleIcon.vue';
 import filterIcon from '@/assets/icons/filterIcon.vue';
-import { useI18n } from 'vue-i18n';
 import calendarItem from '../calendar/calendarItem.vue';
 import { useEventStore } from '@/stores/events';
 
@@ -144,7 +143,6 @@ const currentDate = ref(new Date());
 const view = ref('month');
 const useWidget = useWidgetStore()
 const draggedEvent = ref(null);
-const { t } = useI18n()
 const emits = defineEmits(['currentDate'])
 
 onMounted(() => {

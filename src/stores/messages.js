@@ -14,7 +14,7 @@ export const useMessagesStore = defineStore('messages', () => {
   const getChats = async (id) => {
     try {
       if (id) {
-        let response = await axios.get(`/api/discussions/${id}`)
+        let response = await axios.get(`/api/discussions/${id}/`)
         focusedChat.value = response.data
       } else {
         let response = await axios.get(`/api/discussions_user_sql/`)

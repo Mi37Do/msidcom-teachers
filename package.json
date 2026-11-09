@@ -37,6 +37,7 @@
     "firebase": "^13.0.0",
     "flag-icons": "^7.5.0",
     "js-cookie": "^3.0.5",
+    "pdfjs-dist": "6.4.299",
     "pinia": "^3.0.1",
     "v-calendar": "^3.1.2",
     "v-viewer": "^3.0.22",

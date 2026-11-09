@@ -39,7 +39,7 @@
 
 
         <span class="font-semibold">
-          {{ format(useStudent.focusedStudent.birthday, 'dd/MM/yyyy') }}</span>
+          {{ dateNaissance }}</span>
       </DisclosurePanel>
     </Disclosure>
 
@@ -91,7 +91,7 @@ import angleIcon from '@/assets/icons/angleIcon.vue';
 import noTimeWarning from '@/assets/icons/noTimeWarning.vue';
 import commentPrimary from '@/assets/icons/commentPrimary.vue';
 import { useI18n } from 'vue-i18n';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { useWidgetStore } from '@/stores/widget';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
@@ -105,14 +105,21 @@ const router = useRouter()
 
 const useStudent = useStudentStore()
 
+// Le serveur enregistre « Feminin » sans accent
 const translatedGender = computed(() => {
   if (!useStudent.focusedStudent) return ''
   if (useStudent.focusedStudent.sexe === 'Masculin') return t('translation.male')
-  if (useStudent.focusedStudent.sexe === 'Féminin') return t('translation.female')
-  return useStudent.focusedStudent.sexe
+  if (useStudent.focusedStudent.sexe === 'Feminin' || useStudent.focusedStudent.sexe === 'Féminin') return t('translation.female')
+  return useStudent.focusedStudent.sexe || t('translation.notApplicable')
 })
 
-console.log(useStudent.focusedStudent);
+// Sans date de naissance, format() affichait 01/01/1970
+const dateNaissance = computed(() => {
+  const valeur = useStudent.focusedStudent?.birthday
+  if (!valeur) return t('translation.notApplicable')
+  const date = parseISO(String(valeur))
+  return isValid(date) ? format(date, 'dd/MM/yyyy') : t('translation.notApplicable')
+})
 
 </script>
 

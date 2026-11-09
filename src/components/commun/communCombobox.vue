@@ -1,12 +1,14 @@
 <template>
   <div>
-    <Combobox v-model="selected">
+    <Combobox v-model="selectedItem">
       <div class="relative">
         <div class="relative w-full">
           <ComboboxInput autocomplete="off" :required="required"
-            class="w-full pixa-input placeholder:capitalize ring-inset focus:ring-0 pl-4 pr-8"
+            :class="useWidget.userLanguage === 'ar' ? ' pl-8 pr-4' : ' pl-4 pr-8'"
+            class="w-full pixa-input placeholder:capitalize ring-inset focus:ring-0"
             :displayValue="(item) => item.designation" @change="query = $event.target.value" />
-          <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+          <ComboboxButton :class="useWidget.userLanguage === 'ar' ? 'left-0' : 'right-0'"
+            class="absolute inset-y-0  flex items-center pr-2">
             <angle-icon class="h-5 w-5 fill-slate-500" aria-hidden="true" />
           </ComboboxButton>
         </div>
@@ -53,22 +55,23 @@ import {
 } from '@headlessui/vue'
 import checkIcon from '@/assets/icons/checkIcon.vue'
 import angleIcon from '@/assets/icons/angleIcon.vue'
+import { useWidgetStore } from '@/stores/widget'
 import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 const props = defineProps(['list', 'required', 'selected', 'placehonder', 'top'])
 const emits = defineEmits(['onSelectedItem'])
 let query = ref('')
-const selected = ref('')
+const selectedItem = ref('')
+const useWidget = useWidgetStore()
+const { t } = useI18n()
 
 onMounted(() => {
-  if (props.selected) selected.value = props.list.find(item => item.id === props.selected)
+  if (props.selected) selectedItem.value = props.list.find(item => item.id === props.selected)
 
 })
 
 watch(() => props.selected, () => {
-  selected.value = props.selected ? props.list.find(item => item.id === props.selected) : ''
+  selectedItem.value = props.selected ? props.list.find(item => item.id === props.selected) : ''
 })
 
 let filteredList = computed(() =>
@@ -82,12 +85,12 @@ let filteredList = computed(() =>
     )
 )
 
-watch(() => selected.value, () => {
-  emits('onSelectedItem', selected.value.id)
+watch(() => selectedItem.value, () => {
+  emits('onSelectedItem', selectedItem.value.id)
 })
 
 const selectItem = (id) => {
-  selected.value = props.list.find(item => item.id === id)
+  selectedItem.value = props.list.find(item => item.id === id)
   emits('onSelectedItem', id)
 }
 

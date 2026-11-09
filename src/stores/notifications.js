@@ -170,7 +170,8 @@ export const useNotificationBadge = defineStore('notifications', () => {
   // Initialize badge only - uses non-paginated endpoint for app launch
   const initializeBadge = async () => {
     try {
-      const response = await axios.get('/api/Notifications_sql')
+      // Seulement les non lues : sans ?unread=1, chaque ouverture téléchargeait tout l'historique
+      const response = await axios.get('/api/Notifications_sql/', { params: { unread: 1 } })
       notifications.value = response.data.Notifications ?? []
       const newUnreadCount = notifications.value.filter((n) => !n.is_read).length
       await updateBadgeCount(newUnreadCount)

@@ -8,7 +8,7 @@
       </span>
 
       <div
-        v-if="differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) < 24 && differenceInHours(new Date(), parse(item.date_debut, 'yyyy-MM-dd', new Date())) > 0"
+        v-if="differenceInHours(parse(item.date_debut, 'yyyy-MM-dd', new Date()), new Date()) >= 0 && differenceInHours(parse(item.date_debut, 'yyyy-MM-dd', new Date()), new Date()) < 25"
         class="w-fit px-2 flex items-center font-medium h-6 bg-error/20 rounded-full text-error">24h</div>
     </div>
 
@@ -30,7 +30,7 @@
 
     <div class="flex gap-1.5 font-medium text-gray-500">
       <span class="">{{ t('translation.publishedOn') }} </span>
-      <span class="my-auto truncate ">{{ format(item.created, 'dd-MM-yyyy HH:mm') }}</span>
+      <span class="my-auto truncate ">{{ item.created ? format(item.created, 'dd-MM-yyyy') : '' }}</span>
     </div>
 
 
@@ -41,11 +41,11 @@
 import fileAlt from '@/assets/icons/fileAlt.vue';
 import { differenceInHours, format, parse } from 'date-fns';
 import { ref } from 'vue';
-import { useDownloadFile } from '@/composables/downloadFile';
+import { useApercuFichier } from '@/composables/useApercuFichier';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
-const { downloadFile } = useDownloadFile()
+const { ouvrirApercu } = useApercuFichier()
 
 const props = defineProps(['item'])
 const rootElement = ref(null)
@@ -56,7 +56,7 @@ defineExpose({ rootElement })
 const saveFile = (base64String) => {
   let uniqueName = `examen_${props.item.specialite_designations.replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}`
 
-  downloadFile(uniqueName, base64String)
+  ouvrirApercu(base64String, uniqueName)
 }
 </script>
 

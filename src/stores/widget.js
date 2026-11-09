@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import i18n from '@/i18n'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { useRouter } from 'vue-router'
 import { useRoomStore } from './rooms'
 import { useSubjectStore } from './subjects'
 import { Preferences } from '@capacitor/preferences'
@@ -11,7 +10,6 @@ import { Preferences } from '@capacitor/preferences'
 export const useWidgetStore = defineStore('widget', () => {
   const navBar = ref(false)
   const userLanguage = ref('fr')
-  const router = useRouter()
   const useSubject = useSubjectStore()
   const useRooms = useRoomStore()
   const annee = ref([])
@@ -222,7 +220,7 @@ export const useWidgetStore = defineStore('widget', () => {
   const notifications = ref([])
   const getNotifications = async () => {
     try {
-      let response = await axios.get('/api/Notifications_sql')
+      let response = await axios.get('/api/Notifications_sql/')
       console.log(response.data.Notifications)
       notifications.value = response.data.Notifications
     } catch (error) {}
@@ -230,8 +228,13 @@ export const useWidgetStore = defineStore('widget', () => {
 
   const initData = async () => {
     // First, try to get token from Preferences (persistent storage)
-    const { value } = await Preferences.get({ key: 'authToken-prof' })
-    console.log('Token from Preferences:', value)
+    let value
+    try {
+      ;({ value } = await Preferences.get({ key: 'authToken-prof' }))
+      console.log('Token from Preferences:', value ? 'present' : 'none')
+    } catch (error) {
+      console.error('Failed to read auth token from Preferences:', error)
+    }
 
     if (value) {
       // Set the token in cookies and axios headers
@@ -240,16 +243,22 @@ export const useWidgetStore = defineStore('widget', () => {
     }
 
     try {
-      let response = await axios.get('/api/Userinfo_sql_Apps')
+      let response = await axios.get('/api/Userinfo_sql_Apps/')
       authUser.isAuthenticated = true
       authUser.userDetail = response.data.User[0]
 
-      currentYear.value = response.data.Annee[0]
+      currentYear.value = response.data.Annee?.[0] ?? null
 
+      // Le compte de l'école (le prof n'est jamais ADMIN)
+      manager.value = authUser.userDetail?.manager_id ?? null
 
-      adminDiscussion.value = response.data.discuss[0].id
-
-      manager.value = response.data.type === 'ADMIN' ? response.data.id : response.data.manager_id
+      // La conversation avec l'école (le serveur la renvoie en premier). Sans conversation,
+      // discuss[0].id plantait et le prof était renvoyé à l'écran de connexion.
+      const discussions = response.data.discuss ?? []
+      const avecEcole = discussions.find(
+        (d) => d.from_user_id === manager.value || d.to_user_id === manager.value,
+      )
+      adminDiscussion.value = (avecEcole ?? discussions[0])?.id ?? null
 
       //  await getNotifications()
     } catch (error) {
@@ -266,9 +275,33 @@ export const useWidgetStore = defineStore('widget', () => {
     }
   }
 
+  // Oublie la session sur l'appareil (déconnexion, session expirée), même si le
+  // serveur n'a pas pu être prévenu
+  const clearSession = async () => {
+    authUser.isAuthenticated = false
+    authUser.userDetail = null
+    adminDiscussion.value = null
+    manager.value = null
+    currentYear.value = null
+    axios.defaults.headers.common['Authorization'] = ''
+    Cookies.remove('token')
+    localStorage.removeItem('msidcom_prof_token')
+    localStorage.removeItem('msidcom_prof_login')
+    try {
+      await Preferences.remove({ key: 'authToken-prof' })
+    } catch (error) {
+      console.error('Failed to remove auth token from Preferences:', error)
+    }
+  }
+
+  // Toast ids only need to be unique within the session (sans id, la disparition
+  // d'un toast effaçait tous les autres)
+  const createId = () =>
+    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
   const addToast = (item) => {
     toasts.value.push({
-      // id: uuid.v1(),
+      id: createId(),
       color: item.color,
       msg: item.msg,
     })
@@ -370,6 +403,7 @@ export const useWidgetStore = defineStore('widget', () => {
     getLanguage,
     setLanguage,
     initData,
+    clearSession,
     authUser,
     addEditSpecialite,
     addEditRoom,

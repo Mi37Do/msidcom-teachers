@@ -3,12 +3,15 @@
     <span class="loading loading-spinner loading-sm"></span>
   </div>
 
+  <!-- Aucune matière de l'enseignant pour cette classe : message au lieu d'un écran planté -->
+  <commun-no-data v-else-if="tempSpecialites.length <= 0" />
+
   <div v-else class="w-full h-full flex flex-col gap-[20px] overflow-hidden px-6">
 
 
     <commun-dropdown :list="tempSpecialites" :selected="selectedSpecialite" @on-selected-item="async (id) => {
       selectedSpecialite = id
-      specialiteFilter = tempSpecialites.find(i => i.id === id).specialite
+      specialiteFilter = tempSpecialites.find(i => i.id === id)?.specialite ?? null
       await loadNotes(selectedSpecialite)
     }"></commun-dropdown>
 
@@ -31,10 +34,6 @@
     </div>
     <div class="w-full flex-1 overflow-hidden">
 
-      <!--
-      <commun-no-data v-if="abscences.length <= 0" />
-v-else
- -->
       <communTable>
 
         <template #table_header>
@@ -55,69 +54,50 @@ v-else
           <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2 capitalize">
             <span class="my-auto"> {{ t(`translation.attendance`) }}</span>
             <div class="flex items-center justify-between">
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).assiduite ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).assiduite : 'N/A'}}</span>
+              <span> {{ valeur('assiduite') }}</span>
 
             </div>
           </div>
 
           <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
-            <span class="my-auto"> {{ t(`translation.test`) }} {{tempSpecialites.find(i => i.id ===
-              selectedSpecialite).nbr_test > 1 ?
-              1 : null}}</span>
+            <span class="my-auto"> {{ t(`translation.test`) }} {{ matiereChoisie?.nbr_test > 1 ? 1 : null }}</span>
             <div class="flex items-center justify-between">
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).test_1 ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).test_1 : 'N/A'}} </span>
+              <span> {{ valeur('test_1') }} </span>
 
             </div>
           </div>
 
-          <div v-if="tempSpecialites.find(i => i.id === selectedSpecialite).nbr_test > 1"
+          <div v-if="matiereChoisie?.nbr_test > 1"
             class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.test`) }} 2</span>
 
             <div class="flex items-center justify-between">
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).test_2 ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).test_2 : 'N/A'}} </span>
+              <span> {{ valeur('test_2') }} </span>
 
             </div>
 
 
           </div>
           <div class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
-            <span class="my-auto"> {{ t(`translation.homework`) }} {{tempSpecialites.find(i => i.id ===
-              selectedSpecialite).nbr_devoir >
-              1 ?
-              1 : null}}</span>
+            <span class="my-auto"> {{ t(`translation.homework`) }} {{ matiereChoisie?.nbr_devoir > 1 ? 1 : null
+              }}</span>
 
             <div class="flex items-center justify-between">
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).devoir_1 ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).devoir_1 : 'N/A'}} </span>
+              <span> {{ valeur('devoir_1') }} </span>
 
             </div>
           </div>
-          <div v-if="tempSpecialites.find(i => i.id === selectedSpecialite).nbr_devoir > 1"
+          <div v-if="matiereChoisie?.nbr_devoir > 1"
             class="w-full h-12 border-b border-border-color grid grid-cols-2 gap-1.5  px-[16px] py-2">
             <span class="my-auto"> {{ t(`translation.homework`) }} 2</span>
 
             <div class="flex items-center justify-between">
 
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).devoir_2 ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).devoir_2 : 'N/A'}}</span>
+              <span> {{ valeur('devoir_2') }}</span>
 
 
             </div>
@@ -128,10 +108,7 @@ v-else
 
             <div class="flex items-center justify-between">
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).examens ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).examens : 'N/A'}}</span>
+              <span> {{ valeur('examens') }}</span>
 
             </div>
 
@@ -142,10 +119,7 @@ v-else
 
             <div class="flex items-center justify-between">
 
-              <span> {{tempNotes.find(i => i.matiere_spec === selectedSpecialite) && tempNotes.find(i => i.matiere_spec
-                ===
-                selectedSpecialite).moyenne ? tempNotes.find(i => i.matiere_spec ===
-                  selectedSpecialite).moyenne : 'N/A'}}</span>
+              <span> {{ valeur('moyenne') }}</span>
 
             </div>
           </div>
@@ -159,14 +133,11 @@ v-else
 <script setup>
 import communTable from '@/components/commun/communTable.vue';
 import communDropdown from '@/components/commun/communDropdown.vue';
-import edit from '@/assets/icons/edit.vue';
+import communNoData from '@/components/commun/communNoData.vue';
 import axios from 'axios';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useStudentStore } from '@/stores/students';
-import pdfIcon from '@/assets/icons/pdfIcon.vue';
-import { useSubjectStore } from '@/stores/subjects';
 import { useWidgetStore } from '@/stores/widget';
 import { useRoomStore } from '@/stores/rooms';
 import addNoteModal from '@/components/notes/addNoteModal.vue';
@@ -174,10 +145,8 @@ import addNoteModal from '@/components/notes/addNoteModal.vue';
 
 const { t } = useI18n()
 const route = useRoute()
-const fullColumns = ref(1)
-const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
-const useSubject = useSubjectStore()
+const useRoom = useRoomStore()
 const loading = ref(true)
 const selectedTrimester = ref('First')
 const trimesters = ref(['First', 'Second', 'Third'])
@@ -185,10 +154,8 @@ const trimesters = ref(['First', 'Second', 'Third'])
 const notes = ref([])
 const tempNotes = ref([])
 const tempSpecialites = ref([])
-const useRoom = useRoomStore()
 const selectedSpecialite = ref(null)
 const specialiteFilter = ref(null)
-const matierSpecialites = ref([])
 
 const tempNote = reactive({
   moyenne: null,
@@ -198,64 +165,54 @@ const tempNote = reactive({
   test_2: null,
   Trimestre: null, matiere_spec: null,
   devoir_2: null, examens: null,
-  anne: '7e837ea2-228f-4826-a882-5ae56a1d895e'
+  anne: null
 })
 
+// Matière choisie et note correspondante du trimestre affiché
+const matiereChoisie = computed(() => tempSpecialites.value.find((i) => i.id === selectedSpecialite.value))
+const noteChoisie = computed(() => tempNotes.value.find((i) => i.matiere_spec === selectedSpecialite.value))
+// Une note de 0 s'affiche (avant : « N/A » car 0 était traité comme vide)
+const valeur = (champ) => noteChoisie.value?.[champ] ?? 'N/A'
+
 onMounted(async () => {
-
-
-
   try {
-    let response = await axios.get(`/api/Notes/?eleve=${route.params.studentId}`)
-    notes.value = response.data
-
-
-    // Fetch matieres for the class
+    // Matières que le prof enseigne dans cette classe (emploi du temps)
     const responseMatiere = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
       class_id: route.params.id
     })
+    const matieresDeLaClasse = new Set((responseMatiere.data.Matiere ?? []).map((m) => m.matiere_id))
+    const matieresDuProf = new Set(
+      (useWidget.authUser.userDetail?.matieres?.matiere ?? []).map((m) => m.id),
+    )
 
-    const matieres = responseMatiere.data.Matiere
-    const specialite = localStorage.getItem('specialite')
-    const userMatieres = useWidget.authUser.userDetail.matieres.matiere
+    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu
+    let specialite = localStorage.getItem('specialite')
+    if (!specialite || specialite === 'null' || specialite === 'undefined') {
+      await useRoom.getClasses(route.params.id)
+      specialite = useRoom.focusedClass?.specialite
+    }
 
-    // Fetch all matiere specialites in parallel
-    const promises = userMatieres.map(async (matiere) => {
-      await useSubject.getMatiereSpecialite(
-        null,
-        `matiere=${matiere.id}&specialite=${specialite}`
-      )
+    // Une seule requête pour le niveau (avant : une requête par matière, qui écrivaient
+    // toutes dans le même store ; sans niveau, la requête partait avec specialite=null)
+    const responseSpec = specialite
+      ? await axios.get('/api/Matiere_spec/', { params: { specialite } })
+      : { data: [] }
+    tempSpecialites.value = responseSpec.data
+      .filter((spec) => matieresDeLaClasse.has(spec.matiere) && matieresDuProf.has(spec.matiere))
+      .map((item) => ({
+        id: item.id,
+        designation: item.matiere_designations,
+        specialite: item.specialite,
+        nbr_test: item.nbr_test,
+        nbr_devoir: item.nbr_devoir
+      }))
 
-      // Filter items that match matieres
-      return useSubject.matiereSpecialite.filter(spec =>
-        matieres.some(m => m.matiere_id === spec.matiere)
-      )
-    })
-
-    const results = await Promise.all(promises)
-    matierSpecialites.value = results.flat()
-
-    console.log(useSubject.matiereSpecialite)
-
-    // Map to tempSpecialite
-    tempSpecialites.value = matierSpecialites.value.map(item => ({
-      id: item.id,
-      designation: item.matiere_designations,
-      specialite: item.specialite,
-      nbr_test: item.nbr_test,
-      nbr_devoir: item.nbr_devoir
-    }))
-
-    // Set default values with safety check
     if (tempSpecialites.value.length > 0) {
       selectedSpecialite.value = tempSpecialites.value[0].id
       specialiteFilter.value = tempSpecialites.value[0].specialite
     }
 
-    tempNotes.value = response.data.filter(item => item.Trimestre === selectedTrimester.value)
-
-
-
+    await loadNotes()
   } catch (error) {
     console.error(error)
 
@@ -264,18 +221,18 @@ onMounted(async () => {
       color: 'red'
     })
 
+  } finally {
+    loading.value = false
   }
-
-  loading.value = false
 })
 
 
 
 const addTempNote = (note, tab) => {
-  console.log(note)
-
   tempNote.Trimestre = selectedTrimester.value
   tempNote.matiere_spec = selectedSpecialite.value
+  // Année en cours (avant : un identifiant d'année écrit en dur)
+  tempNote.anne = useWidget.currentYear?.id ?? null
   Object.assign(useWidget.addNote, {
     add: note ? true : false,
     type: tab,
@@ -284,13 +241,14 @@ const addTempNote = (note, tab) => {
     note: note ? note : tempNote,
     student: route.params.studentId
   })
-  console.log(useWidget.addNote)
-
 }
 
 const loadNotes = async () => {
   try {
-    let response = await axios.get(`/api/Notes/?eleve=${route.params.studentId}`)
+    // Année en cours seulement : un redoublant retrouvait sinon ses notes de l'an passé
+    const params = { eleve: route.params.studentId }
+    if (useWidget.currentYear?.id) params.anne = useWidget.currentYear.id
+    let response = await axios.get(`/api/Notes/`, { params })
     notes.value = response.data
 
     tempNotes.value = response.data.filter(item => item.Trimestre === selectedTrimester.value)
@@ -298,6 +256,8 @@ const loadNotes = async () => {
     console.error(error)
   }
 }
+
+defineExpose({ addTempNote })
 
 </script>
 

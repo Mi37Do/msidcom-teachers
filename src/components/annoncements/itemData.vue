@@ -28,7 +28,7 @@ import Trash from '@/assets/icons/trash.vue';
 import { useWidgetStore } from '@/stores/widget';
 import { format } from 'date-fns';
 import fileAlt from '@/assets/icons/fileAlt.vue';
-import { useDownloadFile } from '@/composables/downloadFile';
+import { useApercuFichier } from '@/composables/useApercuFichier';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
@@ -41,11 +41,12 @@ const translatedType = computed(() => {
   if (props.item.type === 'Devoir') return t('translation.homeworkTypeLabel')
   return t('translation.otherType')
 })
-const { downloadFile } = useDownloadFile()
+const { ouvrirApercu } = useApercuFichier()
 
+// Aperçu de la pièce jointe, avec un bouton pour la télécharger dans son format d'origine
 const saveFile = (base64String) => {
   let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}`
-  downloadFile(uniqueName, base64String)
+  ouvrirApercu(base64String, uniqueName)
 }
 </script>
 

@@ -2,86 +2,89 @@ import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Toast } from '@capacitor/toast'
 import { Capacitor } from '@capacitor/core'
 import { FileOpener } from '@capacitor-community/file-opener'
+import i18n from '@/i18n'
+import { analyserFichier, base64VersOctets, nomFichier } from '@/utils/fichiers'
+
+const t = (cle) => i18n.global.t(`translation.${cle}`)
+
+const toast = async (text, duration = 'short') => {
+  try {
+    await Toast.show({ text, duration })
+  } catch (error) {
+    console.error('Toast failed:', error)
+  }
+}
 
 /**
- * Composable to download a Base64 file
+ * Enregistre un fichier base64 sur l'appareil (Téléchargements sur Android, Documents sur iOS,
+ * téléchargement du navigateur sur le web), puis l'ouvre si autoOpen.
+ * Accepte « data:<type>;base64,xxxx » ou le contenu base64 seul.
  */
 export function useDownloadFile() {
-  const downloadFile = async (
-    filename,
-    base64String,
-    mimeType = 'application/pdf',
-    autoOpen = true,
-  ) => {
+  const downloadFile = async (filename, base64String, mimeType = null, autoOpen = true) => {
     try {
-      await Toast.show({ text: 'Downloading...', duration: 'short' })
-
-      // Extract MIME type and Base64 content
-      const [metadata, base64Content] = base64String.split(',')
-
-      // Infer file extension and MIME type
-      let extension = '.bin'
-      let detectedMimeType = mimeType
-
-      if (metadata.includes('pdf')) {
-        extension = '.pdf'
-        detectedMimeType = 'application/pdf'
-      } else if (metadata.includes('png')) {
-        extension = '.png'
-        detectedMimeType = 'image/png'
-      } else if (metadata.includes('jpeg') || metadata.includes('jpg')) {
-        extension = '.jpg'
-        detectedMimeType = 'image/jpeg'
+      if (!base64String || typeof base64String !== 'string') {
+        throw new Error('base64String is required')
       }
 
-      const fileName = filename || `downloaded_file${extension}`
+      await toast(t('downloadInProgress'))
 
+      // Format d'origine : type lu dans l'en-tête « data: », sinon dans le contenu (avant, un
+      // fichier sans en-tête repartait en PDF). Le nom porte l'extension de ce format : iOS et
+      // Android en ont besoin pour l'ouvrir
+      const { type, extension, base64: base64Content } = analyserFichier(base64String, mimeType)
+      const fileName = nomFichier(filename, extension)
+
+      const platform = Capacitor.getPlatform()
+
+      if (platform === 'web') {
+        const blob = new Blob([base64VersOctets(base64Content)], { type })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(link.href)
+        await toast(t('fileDownloaded'))
+        return fileName
+      }
+
+      // Sans « encoding », Filesystem écrit les octets du base64 (avec Encoding.UTF8 le fichier
+      // contenait le texte base64 et ne s'ouvrait pas)
       let result
-
-      if (Capacitor.getPlatform() === 'android') {
-        // Save into Android Downloads folder
-        result = await Filesystem.writeFile({
-          path: `Download/${fileName}`,
-          data: base64Content,
-          directory: Directory.ExternalStorage,
-        })
+      if (platform === 'android') {
+        try {
+          result = await Filesystem.writeFile({
+            path: `Download/${fileName}`,
+            data: base64Content,
+            directory: Directory.ExternalStorage,
+          })
+        } catch (error) {
+          // Dossier Téléchargements inaccessible sur certaines versions d'Android : copie
+          // dans l'espace de l'app, que l'on peut quand même ouvrir
+          console.error('Download folder not writable, using app storage:', error)
+          result = await Filesystem.writeFile({ path: fileName, data: base64Content, directory: Directory.Cache })
+        }
       } else {
-        // iOS → Documents folder
-        result = await Filesystem.writeFile({
-          path: fileName,
-          data: base64Content,
-          directory: Directory.Documents,
-        })
+        result = await Filesystem.writeFile({ path: fileName, data: base64Content, directory: Directory.Documents })
       }
 
-      await Toast.show({ text: 'Download complete ✅', duration: 'short' })
-      console.log('File saved:', fileName, result.uri)
+      await toast(t('fileDownloaded'))
 
-      // Open the file automatically if autoOpen is true
-      if (autoOpen && Capacitor.isNativePlatform()) {
+      if (autoOpen) {
         try {
-          // Remove 'file://' prefix for Android compatibility
-          const filePath = result.uri.replace('file://', '')
-
-          await FileOpener.open({
-            filePath: filePath,
-            contentType: detectedMimeType,
-          })
-
-          console.log('File opened successfully!')
+          await FileOpener.open({ filePath: result.uri, contentType: type })
         } catch (openError) {
           console.error('Could not open file:', openError)
-          await Toast.show({
-            text: 'File saved but could not be opened',
-            duration: 'long',
-          })
+          await toast(t('fileNotOpened'), 'long')
         }
       }
 
       return result.uri
     } catch (e) {
-      console.error('Unable to save file', e)
-      await Toast.show({ text: 'Download failed ❌', duration: 'long' })
+      console.error('Unable to save file:', e)
+      await toast(t('downloadFailed'), 'long')
       throw e
     }
   }

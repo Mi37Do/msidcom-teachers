@@ -58,9 +58,13 @@ export function useFirebaseMessaging() {
 
     // On registration success, get the token
     PushNotifications.addListener('registration', async (token) => {
-      fcmToken.value = token.value
-      console.log('✅ Push registration success, token:', token.value)
-      await sendTokenToBackend(token.value)
+      try {
+        fcmToken.value = token.value
+        console.log('✅ Push registration success')
+        await sendTokenToBackend(token.value)
+      } catch (err) {
+        console.error('Error handling FCM token:', err)
+      }
     })
 
     // On registration error
@@ -140,14 +144,15 @@ export function useFirebaseMessaging() {
       let permStatus = await PushNotifications.checkPermissions()
       console.log('Current permission status:', permStatus)
 
-      if (permStatus.receive === 'prompt') {
+      if (permStatus.receive === 'prompt' || permStatus.receive === 'prompt-with-rationale') {
         permStatus = await PushNotifications.requestPermissions()
         console.log('Permission request result:', permStatus)
       }
 
       if (permStatus.receive !== 'granted') {
         error.value = 'Push notification permission denied'
-        throw new Error('User denied permissions!')
+        console.warn('Push notification permission not granted')
+        return
       }
 
       // Register with Apple / Google to receive push via APNS/FCM
@@ -163,6 +168,7 @@ export function useFirebaseMessaging() {
 
   // Listen for web foreground messages
   const listenForWebMessages = () => {
+    if (!messaging) return
     onMessage(messaging, (payload) => {
       console.log('Message received:', payload)
       notification.value = payload
@@ -219,8 +225,7 @@ export function useFirebaseMessaging() {
         '/api/device/register/',
         {
           token: token,
-          device_type: isNative ? 'mobile' : 'web',
-          platform: Capacitor.getPlatform(), // 'ios', 'android', or 'web'
+          device_type: Capacitor.getPlatform(), // 'ios', 'android' or 'web' (choix du modèle DeviceToken)
         },
         {
           headers: {
@@ -259,13 +264,17 @@ export function useFirebaseMessaging() {
   const attachMessagingListeners = async () => {
     if (isNative) {
       setupNativeListeners()
-      const permStatus = await PushNotifications.checkPermissions()
-      if (permStatus.receive !== 'granted') return
-      // Re-registering is what surfaces a rotated token; the backend call in
-      // the `registration` listener is skipped when the token is unchanged.
-      await PushNotifications.register()
+      try {
+        const permStatus = await PushNotifications.checkPermissions()
+        if (permStatus.receive !== 'granted') return
+        // Re-registering is what surfaces a rotated token; the backend call in
+        // the `registration` listener is skipped when the token is unchanged.
+        await PushNotifications.register()
+      } catch (err) {
+        console.error('❌ Error attaching push listeners:', err)
+      }
     } else {
-      if (Notification.permission !== 'granted') return
+      if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return
       if (listenersInitialized) return
       listenersInitialized = true
       listenForWebMessages()
@@ -278,9 +287,13 @@ export function useFirebaseMessaging() {
   // Get delivered notifications (native only)
   const getDeliveredNotifications = async () => {
     if (isNative) {
-      const notificationList = await PushNotifications.getDeliveredNotifications()
-      console.log('Delivered notifications:', notificationList)
-      return notificationList
+      try {
+        const { notifications } = await PushNotifications.getDeliveredNotifications()
+        return notifications
+      } catch (err) {
+        console.error('Error getting delivered notifications:', err)
+        return []
+      }
     }
     return []
   }
@@ -288,7 +301,11 @@ export function useFirebaseMessaging() {
   // Remove all delivered notifications (native only)
   const removeAllNotifications = async () => {
     if (isNative) {
-      await PushNotifications.removeAllDeliveredNotifications()
+      try {
+        await PushNotifications.removeAllDeliveredNotifications()
+      } catch (err) {
+        console.error('Error removing delivered notifications:', err)
+      }
     }
   }
 

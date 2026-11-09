@@ -1,6 +1,7 @@
 // src/firebase.js
 import { initializeApp } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
+import { Capacitor } from '@capacitor/core'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAw7XYVCQBiLBGYw3Dd_f51RHkOJLF-YMc',
@@ -15,6 +16,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-const messaging = getMessaging(app)
+// Firebase Cloud Messaging (Web SDK) only works in a real browser — it needs
+// Service Worker/IndexedDB/PushManager, which aren't available the same way
+// under Capacitor's WKWebView (capacitor://localhost). Calling getMessaging()
+// there throws synchronously, which breaks the module graph for anything that
+// imports this file. Native push goes through @capacitor-firebase/messaging
+// instead, so only initialize the Web SDK messaging service on the web.
+let messaging = null
+if (!Capacitor.isNativePlatform()) {
+  try {
+    messaging = getMessaging(app)
+  } catch (err) {
+    console.error('Firebase Messaging unsupported in this environment:', err)
+  }
+}
 
 export { messaging, getToken, onMessage }

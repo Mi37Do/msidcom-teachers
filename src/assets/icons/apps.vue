@@ -1,5 +1,5 @@
 <template>
-  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"
+  <svg class="icone-sombre" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink">
     <rect y="-0.00872803" width="25" height="25" fill="url(#pattern0_84_29)" />
     <defs>
