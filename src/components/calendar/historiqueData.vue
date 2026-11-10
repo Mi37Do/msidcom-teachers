@@ -4,8 +4,7 @@
     <span :class="item.type === 'Absence' ? 'text-error' : 'text-warning'"
       class="my-auto truncate flex items-center gap-3">
       <span class="font-medium truncate flex-1">
-        {{ item.type
-        }}</span>
+        {{ item.type === 'Absence' ? t('translation.absenceType') : t('translation.lateType') }}</span>
     </span>
     <span class="my-auto truncate flex flex-col justify-center ">
       <span class="font-medium truncate flex-1">
@@ -43,7 +42,9 @@ import { useStudentStore } from '@/stores/students';
 import fileAlt from '@/assets/icons/fileAlt.vue';
 import { useWidgetStore } from '@/stores/widget';
 import { format } from 'date-fns';
+import { useI18n } from 'vue-i18n';
 const props = defineProps(['item'])
+const { t } = useI18n()
 const useStudent = useStudentStore()
 const useWidget = useWidgetStore()
 

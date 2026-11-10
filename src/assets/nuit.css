@@ -14,11 +14,31 @@
   --nuit-survol: #2c3b55;
   --nuit-bordure: #334155;
   --nuit-bordure-forte: #475569;
-  --nuit-texte: #e2e8f0;
-  --nuit-texte-doux: #94a3b8;
-  --nuit-texte-faible: #7c8aa0;
-  --nuit-titre: #f1f5f9;
+  /* Textes : jamais de blanc pur, qui scintille sur fond sombre */
+  --nuit-texte: #d8dee8;
+  --nuit-texte-doux: #9aa7b9;
+  --nuit-texte-faible: #8b9ab0;
+  --nuit-titre: #e7ebf1;
   --nuit-entete: #18233a;
+  /* Couleurs de marque version nuit : moins saturées que le jour. Les teintes « -plein »
+     servent de fond (boutons, pastilles), les autres de texte et d'icône */
+  --nuit-turquoise: #52c4b2;
+  --nuit-turquoise-plein: #2b7367;
+  --nuit-turquoise-survol: #33857a;
+  --nuit-citron: #d3e68f;
+  --nuit-citron-fond: rgb(206 238 94 / 0.13);
+  --nuit-violet: #b6a9f2;
+  --nuit-violet-plein: #5b4bb0;
+  --nuit-petrole: #72c5d3;
+  --nuit-petrole-plein: #1d5863;
+  --nuit-ambre: #e8c172;
+  --nuit-rose: #f0919f;
+  --nuit-rouge: #ee8a8a;
+  --nuit-rouge-plein: #c44a4a;
+  --nuit-rouge-survol: #b03f3f;
+  --nuit-vert: #62cfa1;
+  --nuit-vert-plein: #2f9e78;
+  --nuit-bleu: #8fb2f2;
   color-scheme: dark;
 }
 
@@ -104,9 +124,83 @@
   background-color: rgb(245 158 11 / 0.16);
 }
 
-/* Pastilles vert clair : texte sombre pour rester lisible */
+/* Pastilles vert citron : teinte légère et texte citron, au lieu du vert fluo */
 [data-theme='nuit'] .bg-primary-2 {
-  color: #1e293b;
+  background-color: var(--nuit-citron-fond);
+  color: var(--nuit-citron);
+  fill: var(--nuit-citron);
+}
+
+/* ---------------------- Couleurs vives adoucies ---------------------- */
+/* Boutons turquoise : turquoise profond, texte clair lisible (le turquoise du jour
+   éblouit et rend le texte blanc difficile à lire) */
+[data-theme='nuit'] .btn-primary {
+  background-color: var(--nuit-turquoise-plein);
+  border-color: var(--nuit-turquoise-plein);
+  color: var(--nuit-titre);
+  fill: var(--nuit-titre);
+}
+
+[data-theme='nuit'] .btn-primary:hover {
+  background-color: var(--nuit-turquoise-survol);
+  border-color: var(--nuit-turquoise-survol);
+}
+
+/* Pastilles pleines avec texte blanc (états, date choisie) : version teintée */
+[data-theme='nuit'] .bg-primary.text-white {
+  background-color: rgb(73 197 177 / 0.18);
+  color: var(--nuit-turquoise);
+}
+
+[data-theme='nuit'] .bg-warning.text-white {
+  background-color: rgb(241 180 52 / 0.16);
+  color: var(--nuit-ambre);
+}
+
+[data-theme='nuit'] .bg-error.text-white {
+  background-color: rgb(239 96 121 / 0.16);
+  color: var(--nuit-rose);
+}
+
+[data-theme='nuit'] :is(.bg-primary, .bg-warning, .bg-error).text-white .bg-white {
+  background-color: currentColor;
+}
+
+/* Boutons rouges (supprimer, se déconnecter) et pastilles de compteur */
+[data-theme='nuit'] .bg-red-500 {
+  background-color: var(--nuit-rouge-plein);
+}
+
+[data-theme='nuit'] .bg-red-600,
+[data-theme='nuit'] .hover\:bg-red-600:hover {
+  background-color: var(--nuit-rouge-survol);
+}
+
+[data-theme='nuit'] nav .nav-badge {
+  background-color: var(--nuit-rouge-plein);
+}
+
+[data-theme='nuit'] .bg-emerald-500 {
+  background-color: var(--nuit-vert-plein);
+}
+
+/* Avatars et bandeaux colorés */
+[data-theme='nuit'] .bg-primary-3 {
+  background-color: var(--nuit-violet-plein);
+}
+
+[data-theme='nuit'] .bg-secondary-2 {
+  background-color: var(--nuit-petrole-plein);
+}
+
+[data-theme='nuit'] .bg-secondary-2\/30 {
+  background-color: rgb(29 88 99 / 0.3);
+}
+
+/* Texte blanc sur ces bandeaux : blanc adouci */
+[data-theme='nuit'] .bg-secondary-2 .text-white,
+[data-theme='nuit'] .bg-secondary-2.text-white {
+  color: var(--nuit-titre);
 }
 
 [data-theme='nuit'] .bg-glass-effect,
@@ -204,44 +298,85 @@
   color: var(--nuit-texte-doux);
 }
 
-/* Couleurs de marque ou d'alerte trop sombres sur fond sombre : version plus claire */
+/* Couleurs de marque et d'alerte : trop sombres ou trop vives sur fond sombre,
+   remplacées par une version claire et moins saturée */
 [data-theme='nuit'] .text-secondary-2,
 [data-theme='nuit'] .text-\[\#00778B\] {
-  color: #3cc3d6;
+  color: var(--nuit-petrole);
 }
 
 [data-theme='nuit'] .fill-secondary-2,
 [data-theme='nuit'] .fill-\[\#00778B\] {
-  fill: #3cc3d6;
+  fill: var(--nuit-petrole);
 }
 
 [data-theme='nuit'] .border-secondary-2 {
-  border-color: #3cc3d6;
+  border-color: var(--nuit-petrole);
 }
 
-[data-theme='nuit'] .text-primary-3 {
-  color: #a08bf7;
+[data-theme='nuit'] .text-primary-3,
+[data-theme='nuit'] .text-purple-500,
+[data-theme='nuit'] .text-violet-500 {
+  color: var(--nuit-violet);
 }
 
 [data-theme='nuit'] .fill-primary-3 {
-  fill: #a08bf7;
+  fill: var(--nuit-violet);
+}
+
+[data-theme='nuit'] .text-warning,
+[data-theme='nuit'] .text-amber-500,
+[data-theme='nuit'] .text-amber-600,
+[data-theme='nuit'] .text-orange-500 {
+  color: var(--nuit-ambre);
+}
+
+[data-theme='nuit'] .fill-warning,
+[data-theme='nuit'] .fill-amber-500,
+[data-theme='nuit'] .fill-amber-600 {
+  fill: var(--nuit-ambre);
+}
+
+[data-theme='nuit'] .border-warning {
+  border-color: rgb(232 193 114 / 0.6);
+}
+
+[data-theme='nuit'] .text-error,
+[data-theme='nuit'] .text-\[\#EF6079\] {
+  color: var(--nuit-rose);
+}
+
+[data-theme='nuit'] .fill-error,
+[data-theme='nuit'] .fill-\[\#EF6079\] {
+  fill: var(--nuit-rose);
 }
 
 [data-theme='nuit'] .text-red-500,
+[data-theme='nuit'] .text-red-600,
 [data-theme='nuit'] .text-red-700 {
-  color: #f87171;
+  color: var(--nuit-rouge);
 }
 
 [data-theme='nuit'] .fill-red-500 {
-  fill: #f87171;
+  fill: var(--nuit-rouge);
 }
 
-[data-theme='nuit'] .text-amber-600 {
-  color: #f59e0b;
+[data-theme='nuit'] .border-red-500 {
+  border-color: rgb(238 138 138 / 0.6);
 }
 
-[data-theme='nuit'] .fill-amber-600 {
-  fill: #f59e0b;
+[data-theme='nuit'] .text-emerald-500,
+[data-theme='nuit'] .text-emerald-600,
+[data-theme='nuit'] .text-success {
+  color: var(--nuit-vert);
+}
+
+[data-theme='nuit'] .border-emerald-500 {
+  border-color: rgb(98 207 161 / 0.6);
+}
+
+[data-theme='nuit'] .text-blue-500 {
+  color: var(--nuit-bleu);
 }
 
 /* -------------------------------- Icônes -------------------------------- */
@@ -339,6 +474,11 @@
   background-color: rgb(239 68 68 / 0.15);
 }
 
+[data-theme='nuit'] .red-btn-ghost {
+  color: var(--nuit-rouge);
+  fill: var(--nuit-rouge);
+}
+
 /* -------------------------------- Champs -------------------------------- */
 [data-theme='nuit'] .pixa-input,
 [data-theme='nuit'] .pixa-input-icon,
@@ -377,26 +517,71 @@
   fill: var(--nuit-texte);
 }
 
-/* Onglet actif de la barre du bas (vert clair) : icône foncée, comme le jour */
-[data-theme='nuit'] nav a.router-link-active .icone-sombre {
-  filter: none;
+/* Onglet actif de la barre du bas : vert citron fluo le jour, teinte citron légère la nuit */
+[data-theme='nuit'] .nav-principale a.router-link-active {
+  background: var(--nuit-citron-fond);
+  color: var(--nuit-citron);
+  fill: var(--nuit-citron);
 }
 
-/* Cartes au fond pastel (événements) : texte et icônes foncés, comme le jour */
+/* Icône (image noire) de l'onglet actif : teintée citron */
+[data-theme='nuit'] .nav-principale a.router-link-active .icone-sombre {
+  filter: invert(0.92) sepia(0.6) saturate(2.6) hue-rotate(28deg) brightness(0.95);
+}
+
+/* Onglets des écrans (turquoise le jour) : turquoise profond */
+[data-theme='nuit'] nav:not(.nav-principale) a.router-link-active {
+  background: var(--nuit-turquoise-plein);
+  color: var(--nuit-titre);
+  fill: var(--nuit-titre);
+}
+
+/* Cartes de couleur (emploi du temps, événements) : fond sombre teinté et accent adouci
+   au lieu des pastels clairs du jour (couleurs dans src/utils/couleursCartes.js) */
+[data-theme='nuit'] .carte-couleur {
+  background: var(--carte-fond-nuit);
+  color: var(--carte-accent-nuit);
+}
+
+[data-theme='nuit'] .carte-fond {
+  background: var(--carte-fond-nuit);
+}
+
+[data-theme='nuit'] .carte-accent {
+  color: var(--carte-accent-nuit);
+}
+
+[data-theme='nuit'] .carte-accent-fond {
+  background: var(--carte-accent-nuit);
+}
+
+[data-theme='nuit'] .carte-accent-fill {
+  fill: var(--carte-accent-nuit);
+}
+
+[data-theme='nuit'] .carte-couleur.border-border-color {
+  border-color: transparent;
+}
+
+/* Bouton d'une carte : contour dans la couleur de la carte */
+[data-theme='nuit'] .carte-bouton,
+[data-theme='nuit'] .carte-bouton:hover {
+  background: transparent;
+  border: 1px solid var(--carte-accent-nuit);
+  color: var(--carte-accent-nuit);
+}
+
 [data-theme='nuit'] .carte-pastel {
-  color: #313638;
-  fill: #313638;
-}
-
-[data-theme='nuit'] .carte-pastel .text-gray-500 {
-  color: #4b5563;
-}
-
-[data-theme='nuit'] .carte-pastel .icone-sombre {
-  filter: none;
+  color: var(--nuit-texte);
+  fill: var(--nuit-texte);
 }
 
 /* --------------------------- Page de connexion --------------------------- */
 [data-theme='nuit'] .page-connexion {
   background-image: linear-gradient(to top right, #0e3340 0%, #172033 70%, #12463f 100%);
+}
+
+/* Formes décoratives des coins (vert citron et bleu vifs) : estompées */
+[data-theme='nuit'] .deco-connexion {
+  opacity: 0.35;
 }

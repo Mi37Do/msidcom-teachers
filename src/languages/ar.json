@@ -337,8 +337,8 @@
     "completed": "مكتمل",
     "in_progress": "قيد التنفيذ",
     "justified": "مبرر",
-    "unjustified": "غير مبرر",    "min_50_char": "اكتب رسالتك هنا",
-
+    "unjustified": "غير مبرر",
+    "min_50_char": "اكتب رسالتك هنا",
     "absent": "غائب",
     "present": "حاضر",
     "disciplinaryManagement": "الإدارة التأديبية",
@@ -412,6 +412,12 @@
     "zoomArriere": "تصغير",
     "attachment": "مرفق",
     "darkMode": "الوضع الليلي",
-    "lightMode": "الوضع النهاري"
+    "lightMode": "الوضع النهاري",
+    "validated": "مؤكدة",
+    "confirmSignalStudent": "ماذا تريد أن تبلغ عن {name}؟",
+    "absenceSignaled": "تم الإبلاغ عن الغياب.",
+    "lateSignaled": "تم الإبلاغ عن التأخير.",
+    "signaledToday": "تم الإبلاغ اليوم",
+    "viewJustification": "عرض التبرير"
   }
 }

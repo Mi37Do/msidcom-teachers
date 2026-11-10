@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import CommunLanguagesSwitcherModal from './components/commun/communLanguagesSwitcherModal.vue';
 import CommunApercuFichier from './components/commun/communApercuFichier.vue';
+import CommunToasts from './components/commun/communToasts.vue';
 import { useWidgetStore } from './stores/widget'
 import { styliserBarresSysteme } from './composables/useTheme'
 
@@ -23,5 +24,7 @@ onMounted(async () => {
     <RouterView />
     <!-- Aperçu des pièces jointes, ouvert depuis n'importe quel écran -->
     <CommunApercuFichier />
+    <!-- Messages de succès et d'erreur (avant : jamais affichés, les erreurs passaient inaperçues) -->
+    <CommunToasts />
   </div>
 </template>

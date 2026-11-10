@@ -19,18 +19,18 @@
               <div v-else class="w-full flex-1 overflow-hidden flex flex-col gap-3">
 
                 <div class="w-full flex items-center justify-between overflow-x-auto hidden-scrollbar  px-6">
-                  <div class="w-fit rounded-[16px] flex gap-1 p-1 pixa-border">
+                  <div class="w-full rounded-[16px] flex gap-1 p-1 pixa-border">
                     <router-link :to="{ name: 'main-student-view' }"
                       :class="route.name === 'main-student-view' ? ' btn-primary' : 'btn-ghost'"
-                      class="btn btn-sm pixa-btn-navigation w-48">{{ t('translation.generalInfo') }}</router-link>
+                      class="btn btn-sm pixa-btn-navigation flex-1 min-w-0 h-auto min-h-8 py-1 px-2 whitespace-normal leading-tight">{{ t('translation.generalInfo') }}</router-link>
                     <router-link :to="{ name: 'notes-student-view' }"
                       :class="route.name === 'notes-student-view' ? ' btn-primary' : 'btn-ghost'"
-                      class="btn btn-sm pixa-btn-navigation w-20">{{
+                      class="btn btn-sm pixa-btn-navigation flex-1 min-w-0 h-auto min-h-8 py-1 px-2 whitespace-normal leading-tight">{{
                         t('translation.notes')
                       }}</router-link>
                     <router-link :to="{ name: 'abscences-student-view' }"
                       :class="route.name === 'abscences-student-view' ? 'btn-primary' : 'btn-ghost'"
-                      class="btn btn-sm pixa-btn-navigation w-52">{{
+                      class="btn btn-sm pixa-btn-navigation flex-1 min-w-0 h-auto min-h-8 py-1 px-2 whitespace-normal leading-tight">{{
                         t('translation.abscences')
                       }}</router-link>
                   </div>

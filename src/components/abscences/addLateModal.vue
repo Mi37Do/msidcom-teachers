@@ -180,14 +180,12 @@ const itemToAdd = reactive({
 const tempFileName = ref('')
 
 
-const roundToNearest = (val, step) => Math.round(val / step) * step;
-
-// Default time shown when the modal opens; the picker writes straight into it
-const defaultTime = () => ({
-  hours: 7,
-  // rounding 56-59 up would give 60, which is not a valid minute
-  minutes: Math.min(roundToNearest(Number(format(new Date(), 'mm')), 5), 55)
-});
+// Heure proposée à l'ouverture : maintenant, aux 5 minutes près (avant : 7 h avec les minutes
+// actuelles, par exemple 07:55 à 9 h 55). Le sélecteur écrit directement dedans.
+const defaultTime = () => {
+  const maintenant = new Date()
+  return { hours: maintenant.getHours(), minutes: Math.floor(maintenant.getMinutes() / 5) * 5 }
+};
 
 const hoursTime = reactive(defaultTime());
 

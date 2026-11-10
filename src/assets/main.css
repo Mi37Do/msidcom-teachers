@@ -545,3 +545,32 @@ input[type='number'] {
 .btn-error {
   @apply text-white;
 }
+
+/* Cartes de couleur (emploi du temps, événements) : couleurs posées par
+   src/utils/couleursCartes.js ; version nuit dans nuit.css */
+.carte-couleur {
+  background: var(--carte-fond);
+  color: var(--carte-accent);
+}
+
+.carte-fond {
+  background: var(--carte-fond);
+}
+
+.carte-accent {
+  color: var(--carte-accent);
+}
+
+.carte-accent-fond {
+  background: var(--carte-accent);
+}
+
+.carte-accent-fill {
+  fill: var(--carte-accent);
+}
+
+/* Bouton coloré d'une carte (inscription à un événement) : même couleur au survol */
+.carte-bouton,
+.carte-bouton:hover {
+  background: var(--carte-accent);
+}

@@ -1,7 +1,9 @@
 <template>
-  <div v-auto-animate class="absolute flex flex-col gap-1.5 bottom-6 right-6 max-w-80 overflow-hidden z-50">
-    <!--  -->
-    <commun-toast v-for="item in useWidget.toasts" :item="item" :key="item" />
+  <!-- Messages de succès / d'erreur : en haut de l'écran, sous l'encoche, au-dessus des fenêtres -->
+  <div v-auto-animate role="status" aria-live="polite"
+    class="fixed inset-x-0 z-[1000] flex flex-col items-center gap-1.5 px-4 pointer-events-none"
+    :style="{ top: 'calc(var(--safe-area-top, 0px) + 12px)' }">
+    <commun-toast v-for="item in useWidget.toasts" :item="item" :key="item.id" />
   </div>
 </template>
 

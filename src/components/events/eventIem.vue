@@ -1,7 +1,7 @@
 <template>
-  <div :style="{ background: currentTheme.primary }" class="carte-pastel w-full  rounded-xl overflow-hidden flex ">
+  <div :style="variablesCarte(couleur)" class="carte-pastel carte-fond w-full  rounded-xl overflow-hidden flex ">
     <div class="w-3 h-full relative flex-none">
-      <div :style="{ background: currentTheme.secondary }" class="w-full h-96  absolute inset-0"></div>
+      <div class="carte-accent-fond w-full h-96  absolute inset-0"></div>
     </div>
     <div class="flex-1 overflow-hidden">
       <Disclosure v-slot="{ open }">
@@ -10,7 +10,7 @@
         }"
           class="flex w-full justify-between rounded-lg  px-4 py-2 text-left text-sm font-medium  focus:outline-none focus-visible:ring  h-16 items-center">
           <div class="flex-1 h-full flex flex-col overflow-hidden">
-            <span :style="{ color: currentTheme.secondary }" class="text-lg font-medium truncate capitalize">{{
+            <span class="carte-accent text-lg font-medium truncate capitalize">{{
               item.titre
               }} </span>
 
@@ -41,8 +41,8 @@
             @click="() => {
               useEvent.focusedEvents = item
               useWidget.subscriptionModal = true
-            }" :style="{ background: currentTheme.secondary }"
-            class="btn btn-sm pixa-btn text-white border-0">{{ t('translation.register') }}</button>
+            }"
+            class="carte-accent-fond carte-bouton btn btn-sm pixa-btn text-white border-0">{{ t('translation.register') }}</button>
           <span
             v-if="item.sous_inscription && (item.Subscribed_details.subscribed_prof_details.find(i => i.prof_id === useWidget.authUser.userDetail.id))"
             class="font-semibold uppercase">{{ t('translation.alreadyRegistered') }}</span>
@@ -53,12 +53,12 @@
 </template>
 
 <script setup>
+import { couleurCarteAuHasard, variablesCarte } from '@/utils/couleursCartes'
 import angleIcon from '@/assets/icons/angleIcon.vue';
 import { useEventStore } from '@/stores/events';
 import { useWidgetStore } from '@/stores/widget';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { format, parse } from 'date-fns';
-import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps(['item'])
@@ -67,15 +67,8 @@ const useWidget = useWidgetStore()
 const useEvent = useEventStore()
 const { t } = useI18n()
 
-const themes = [
-  { id: 1, primary: '#D4E5FF', secondary: '#002D72' },
-  { id: 2, primary: '#FFECC5', secondary: '#F1B434' },
-  { id: 3, primary: '#E5DDFF', secondary: '#7E5EEE' },
-  { id: 4, primary: '#FFBABE', secondary: '#EF6079' },
-  { id: 5, primary: '#D0EDF2', secondary: '#00778B' },
-];
 
-const currentTheme = ref(themes[Math.floor(Math.random() * themes.length)]);
+const couleur = couleurCarteAuHasard()
 </script>
 
 <style lang="scss" scoped></style>

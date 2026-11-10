@@ -39,7 +39,7 @@
 
     <div class="flex h-fit bg-white   pb-safe-bottom">
 
-      <nav class="w-full h-fit border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
+      <nav class="nav-principale w-full h-fit border-t border-border-color grid grid-cols-4 py-1.5 px-6 gap-3">
         <router-link :to="{ name: 'classes-panel' }" class="btn m-auto w-full btn-ghost relative">
           <ruler class="w-5" />
           <span v-if="useNotif.studentsUnreadCount > 0" class="nav-badge">{{

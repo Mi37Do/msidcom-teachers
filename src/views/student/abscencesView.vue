@@ -4,6 +4,7 @@
   </div>
 
   <div v-else class="w-full h-full flex flex-col gap-[16px] overflow-hidden px-6">
+    <view-justify-modal />
     <!-- Filter Controls -->
     <div class="flex gap-3 flex-col">
       <div class="flex relative flex-1">
@@ -49,17 +50,16 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { parseISO, format, subDays } from 'date-fns';
 
 // Components
 import communTable from '@/components/commun/communTable.vue';
 import communNoData from '@/components/commun/communNoData.vue';
 import itemData from '@/components/students/abscences/itemData.vue';
 import communDropdown from '@/components/commun/communDropdown.vue';
-import Calendar from '@/assets/icons/calendar.vue';
+import viewJustifyModal from '@/components/abscences/viewJustifyModal.vue';
 import filterIcon from '@/assets/icons/filterIcon.vue';
 
 // Stores
@@ -74,10 +74,6 @@ const useWidget = useWidgetStore();
 const loading = ref(true);
 const fullColumns = ref(1);
 const selectedType = ref('All');
-const mask = ref({ input: 'DD-MM-YYYY' });
-
-const rangeFrom = ref(null)
-const rangeTo = ref(null)
 
 const filters = computed(() => [
   { id: 'All', designation: t('translation.all') },
@@ -111,6 +107,8 @@ const handleTypeFilterChange = (id) => {
 // Lifecycle hooks
 onMounted(async () => {
   try {
+    // Pas d'anciennes absences d'un autre élève pendant le chargement
+    useStudent.abscences = []
     await useStudent.getAbscences(route.params.studentId, 'student')
   } catch (error) {
     console.error(error);

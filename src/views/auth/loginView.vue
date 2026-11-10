@@ -2,8 +2,8 @@
   <div
     class="page-connexion w-full min-h-screen grid gap-6 bg-gradient-to-tr from-background-3/50 via-background-2/50 to-background-1 from-0% via-75% to-100% relative">
 
-    <img src="@/assets/pics/bluePartLogo.svg" class="w-40 absolute bottom-0 left-0" alt="">
-    <img src="@/assets/pics/greenPartLogo.svg" class="w-40 absolute top-0 right-0" alt="">
+    <img src="@/assets/pics/bluePartLogo.svg" class="deco-connexion w-40 absolute bottom-0 left-0" alt="">
+    <img src="@/assets/pics/greenPartLogo.svg" class="deco-connexion w-40 absolute top-0 right-0" alt="">
 
     <div class="w-full flex flex-col justify-center items-center gap-6 z-10 py-6 px-10 transition-all duration-300">
       <div class="w-full h-fit my-auto flex justify-center">
@@ -18,7 +18,7 @@
 
           <!-- ── Collapsible chrome – fade + slide out ───────────────────── -->
           <Transition name="kb-collapse">
-            <div v-if="!hideAuxContent" class="flex items-center pixa-title my-2">
+            <div v-if="!hideAuxContent" class="flex items-center text-center pixa-title !leading-tight my-2">
               {{ t('translation.appTitle') }}
             </div>
           </Transition>

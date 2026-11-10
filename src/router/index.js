@@ -71,6 +71,11 @@ const router = createRouter({
         },
       ],
     },
+    // Adresse inconnue (lien de notification obsolète…) : avant, un écran blanc
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
 

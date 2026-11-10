@@ -59,17 +59,14 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
+  // Les erreurs remontent à l'écran, qui affiche le message (avant : liste vide sans explication)
   const getAbscences = async (id, student) => {
-    try {
-      if (student) {
-        let response = await axios.post('/api/Abs_Retard_par_Eleve_sql/', {
-          eleve_id: id,
-        })
-        abscences.value = response.data.Abs_Retards
-        filtredAbscences.value = response.data.Abs_Retards
-      }
-    } catch (error) {
-      console.error(error)
+    if (student) {
+      let response = await axios.post('/api/Abs_Retard_par_Eleve_sql/', {
+        eleve_id: id,
+      })
+      abscences.value = response.data.Abs_Retards ?? []
+      filtredAbscences.value = abscences.value
     }
   }
 

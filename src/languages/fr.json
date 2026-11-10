@@ -339,7 +339,7 @@
     "justified": "Justifié",
     "unjustified": "Non justifié",
     "absent": "Absent",
-     "min_50_char": "Tapez votre message ici",
+    "min_50_char": "Tapez votre message ici",
     "present": "Présent",
     "disciplinaryManagement": "gestion disciplinaire",
     "bulletinAndNotes": "bulletin et notes",
@@ -412,6 +412,12 @@
     "zoomArriere": "réduire",
     "attachment": "Pièce jointe",
     "darkMode": "mode nuit",
-    "lightMode": "mode jour"
+    "lightMode": "mode jour",
+    "validated": "Validée",
+    "confirmSignalStudent": "Que voulez-vous signaler pour {name} ?",
+    "absenceSignaled": "Absence signalée.",
+    "lateSignaled": "Retard signalé.",
+    "signaledToday": "Signalé aujourd'hui",
+    "viewJustification": "Voir la justification"
   }
 }

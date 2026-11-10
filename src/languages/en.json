@@ -412,6 +412,12 @@
     "zoomArriere": "zoom out",
     "attachment": "Attachment",
     "darkMode": "dark mode",
-    "lightMode": "light mode"
+    "lightMode": "light mode",
+    "validated": "Validated",
+    "confirmSignalStudent": "What do you want to report for {name}?",
+    "absenceSignaled": "Absence reported.",
+    "lateSignaled": "Lateness reported.",
+    "signaledToday": "Reported today",
+    "viewJustification": "View justification"
   }
 }

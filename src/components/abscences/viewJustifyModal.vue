@@ -26,11 +26,18 @@
 
               <div class="flex-1 flex flex-col gap-3 items-center">
 
+                <div v-if="useStudent.focusedAbscence?.date_heure_abs" class="w-full text-slate-600">
+                  <span class="font-medium" :class="useStudent.focusedAbscence.type === 'Absence' ? 'text-error' : 'text-warning'">
+                    {{ useStudent.focusedAbscence.type === 'Absence' ? t('translation.absenceType') : t('translation.lateType') }}
+                  </span>
+                  · {{ format(new Date(useStudent.focusedAbscence.date_heure_abs), 'dd/MM/yyyy HH:mm') }}
+                </div>
+
                 <div v-if="useStudent.focusedAbscence?.commentaire" class="form-control w-full">
                   <div class="label">
                     <span class="label-text capitalize">{{ t('translation.comment') }}</span>
                   </div>
-                  {{ useStudent.focusedAbscence.commentaire }}
+                  <p class="whitespace-pre-line break-words auto-dir">{{ useStudent.focusedAbscence.commentaire }}</p>
                 </div>
 
                 <div v-if="useStudent.focusedAbscence?.justification" class="form-control w-full">
@@ -38,9 +45,10 @@
                     <span class="label-text capitalize">{{ t('translation.justification_file') }}</span>
                   </div>
                   <button type="button"
-                    class="btn btn-sm pixa-btn-form btn-ghost w-20 border border-primary relative"
+                    class="btn btn-sm pixa-btn-form btn-ghost w-fit px-4 border border-primary text-primary flex items-center gap-2"
                     @click="handleDownload(useStudent.focusedAbscence.justification)">
-                    <upload-cloud />
+                    <eye class="w-4 fill-primary" />
+                    <span>{{ t('translation.viewJustification') }}</span>
                   </button>
                 </div>
 
@@ -57,7 +65,8 @@
 <script setup>
 import { useWidgetStore } from '@/stores/widget';
 import { useStudentStore } from '@/stores/students';
-import uploadCloud from '@/assets/icons/uploadCloud.vue';
+import eye from '@/assets/icons/eye.vue';
+import { format } from 'date-fns';
 import timesSquare from '@/assets/icons/timesSquare.vue';
 import {
   TransitionRoot,
@@ -81,8 +90,13 @@ const closeModal = () => {
 
 // Le justificatif s'ouvre en aperçu (avec un bouton pour le télécharger) à la place de cette fenêtre
 const handleDownload = (base64String) => {
+  const absence = useStudent.focusedAbscence
+  // Nom du fichier téléchargé : type, élève (dans la fiche d'un élève) et date
+  const morceaux = [absence?.type || 'justification']
+  if (absence?.nom || absence?.prenom) morceaux.push(absence.nom, absence.prenom)
+  if (absence?.date_heure_abs) morceaux.push(format(new Date(absence.date_heure_abs), 'dd_MM_yyyy'))
   closeModal()
-  ouvrirApercu(base64String, 'justification')
+  ouvrirApercu(base64String, morceaux.filter(Boolean).join('_'))
 }
 </script>
 

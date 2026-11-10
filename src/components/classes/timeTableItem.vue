@@ -3,8 +3,8 @@
     <div v-if="sideOptions" class="w-8 mr-2">
       <slot name="side_options"></slot>
     </div>
-    <div :style="{ color: currentTheme.secondary, background: currentTheme.primary }"
-      class="flex-1 h-full  rounded-[10px] p-4 border border-border-color flex flex-col items-center overflow-hidden gap-2">
+    <div :style="variablesCarte(couleur)"
+      class="carte-couleur flex-1 h-full  rounded-[10px] p-4 border border-border-color flex flex-col items-center overflow-hidden gap-2">
       <span class="font-semibold truncate">
         {{ item.matiere_designations }} - {{ item.type_cour }}</span>
       <span class="capitalize">{{ t('translation.room') }} {{ item.salle_designations }}</span>
@@ -23,50 +23,18 @@
 </template>
 
 <script setup>
+import { couleurCarteAuHasard, variablesCarte } from '@/utils/couleursCartes'
 const props = defineProps(['sideOptions', 'item', 'room', 'teacher', 'subject'])
 import { format, parse } from 'date-fns'
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const themes = [
-  {
-    id: 1,
-    primary: '#D4E5FF',
-    secondary: '#002D72',
-  },
-  {
-    id: 2,
-    primary: '#FFECC5',
-    secondary: '#F1B434',
-  },
-  {
-    id: 3,
-    primary: '#E5DDFF',
-    secondary: '#7E5EEE',
-  },
-  {
-    id: 4,
-    primary: '#FFBABE',
-    secondary: '#EF6079',
-  },
-  {
-    id: 5,
-    primary: '#D0EDF2',
-    secondary: '#00778B',
-  },
-]
 
 const { t } = useI18n()
 
-function getRandomTheme() {
-  const index = Math.floor(Math.random() * themes.length)
-  return themes[index]
-}
 
-// Example usage
-const currentTheme = ref(getRandomTheme())
+const couleur = couleurCarteAuHasard()
 </script>
 
 <style lang="scss" scoped></style>
