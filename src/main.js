@@ -18,11 +18,22 @@ import FR from '@/languages/fr.json'
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
 import axios from 'axios'
+import { oublierFichiersModifies } from '@/composables/useApercuFichier'
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 
 axios.defaults.baseURL = import.meta.env.VITE_MSIDCOM_API
 axios.defaults.timeout = 20000
+
+// Listes légères : le serveur n'y envoie qu'une indication « fichier » à la place des pièces
+// jointes, bulletins et photos, chargés seulement à l'ouverture (useApercuFichier.ouvrirFichierDe).
+// Sans ce paramètre (anciennes versions de l'app), il renvoie les fichiers comme avant.
+// Une modification envoyée au serveur oublie les fichiers de la fiche gardés en mémoire.
+axios.interceptors.request.use((config) => {
+  config.params = { ...(config.params || {}), fichiers: 'indication' }
+  if (config.method && config.method.toLowerCase() !== 'get') oublierFichiersModifies(config.url)
+  return config
+})
 
 
 const app = createApp(App)

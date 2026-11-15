@@ -80,9 +80,8 @@ const selectedType = ref('Tout')
 
 onMounted(async () => {
   try {
-    await useRoom.getExams()
-
-    await useRoom.getClasses();
+    // Examens et classes : indépendants, chargés en même temps
+    await Promise.all([useRoom.getExams(), useRoom.getClasses()])
 
     const niveaux = new Map()
     for (const classe of useRoom.classes ?? []) {

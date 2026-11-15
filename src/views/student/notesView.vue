@@ -176,28 +176,30 @@ const valeur = (champ) => noteChoisie.value?.[champ] ?? 'N/A'
 
 onMounted(async () => {
   try {
-    // Matières que le prof enseigne dans cette classe (emploi du temps)
-    const responseMatiere = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
-      class_id: route.params.id
-    })
+    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu. Une seule requête
+    // pour le niveau (avant : une requête par matière, qui écrivaient toutes dans le même store ;
+    // sans niveau, la requête partait avec specialite=null)
+    const chargerCoefficients = async () => {
+      let specialite = localStorage.getItem('specialite')
+      if (!specialite || specialite === 'null' || specialite === 'undefined') {
+        await useRoom.getClasses(route.params.id)
+        specialite = useRoom.focusedClass?.specialite
+      }
+      return specialite ? (await axios.get('/api/Matiere_spec/', { params: { specialite } })).data : []
+    }
+
+    // Matières que le prof enseigne dans cette classe (emploi du temps) et coefficients du niveau :
+    // indépendants, chargés en même temps plutôt que l'un après l'autre
+    const [responseMatiere, coefficients] = await Promise.all([
+      axios.post(`/api/matiere_par_Prof_Classe_sql/`, { class_id: route.params.id }),
+      chargerCoefficients(),
+    ])
     const matieresDeLaClasse = new Set((responseMatiere.data.Matiere ?? []).map((m) => m.matiere_id))
     const matieresDuProf = new Set(
       (useWidget.authUser.userDetail?.matieres?.matiere ?? []).map((m) => m.id),
     )
 
-    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu
-    let specialite = localStorage.getItem('specialite')
-    if (!specialite || specialite === 'null' || specialite === 'undefined') {
-      await useRoom.getClasses(route.params.id)
-      specialite = useRoom.focusedClass?.specialite
-    }
-
-    // Une seule requête pour le niveau (avant : une requête par matière, qui écrivaient
-    // toutes dans le même store ; sans niveau, la requête partait avec specialite=null)
-    const responseSpec = specialite
-      ? await axios.get('/api/Matiere_spec/', { params: { specialite } })
-      : { data: [] }
-    tempSpecialites.value = responseSpec.data
+    tempSpecialites.value = coefficients
       .filter((spec) => matieresDeLaClasse.has(spec.matiere) && matieresDuProf.has(spec.matiere))
       .map((item) => ({
         id: item.id,

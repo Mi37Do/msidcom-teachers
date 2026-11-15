@@ -13,7 +13,7 @@
       , 'dd/MM/yyyy - HH:mm') }}</span>
 
     <span>{{ item.description }}</span>
-    <div v-if="item.piece_juinte" @click="saveFile(item.piece_juinte)"
+    <div v-if="item.piece_juinte" @click="saveFile"
       class="px-2.5 py-1.5 w-fit text-primary bg-primary/20 rounded-md text-xs font-medium flex gap-1.5 items-center">
       <file-alt class="w-5 fill-primary" />
       {{ t('translation.attachments') }}
@@ -41,12 +41,13 @@ const translatedType = computed(() => {
   if (props.item.type === 'Devoir') return t('translation.homeworkTypeLabel')
   return t('translation.otherType')
 })
-const { ouvrirApercu } = useApercuFichier()
+const { ouvrirFichierDe } = useApercuFichier()
 
-// Aperçu de la pièce jointe, avec un bouton pour la télécharger dans son format d'origine
-const saveFile = (base64String) => {
+// Aperçu de la pièce jointe, avec un bouton pour la télécharger dans son format d'origine.
+// La liste n'a que l'indication « fichier » : la pièce jointe est chargée depuis la fiche de l'annonce
+const saveFile = () => {
   let uniqueName = `${format(new Date(), 'dd_MMM_yyyy')}`
-  ouvrirApercu(base64String, uniqueName)
+  ouvrirFichierDe(props.item, { ressource: 'Annonce_prof', champ: 'piece_juinte', nom: uniqueName })
 }
 </script>
 

@@ -20,7 +20,7 @@
     </div>
 
 
-    <button v-if="item.file" @click="saveFile(item.file)"
+    <button v-if="item.file" @click="saveFile"
       class="flex gap-3 items-center bg-primary/20 fill-primary py-1.5 px-2.5 rounded-lg text-primary font-medium text-xs w-fit">
       <div class="flex justify-center">
         <file-alt :class="'fill-primary'" class="w-5" />
@@ -45,18 +45,18 @@ import { useApercuFichier } from '@/composables/useApercuFichier';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
-const { ouvrirApercu } = useApercuFichier()
+const { ouvrirFichierDe } = useApercuFichier()
 
 const props = defineProps(['item'])
 const rootElement = ref(null)
 
 defineExpose({ rootElement })
 
-// Trigger from UI
-const saveFile = (base64String) => {
-  let uniqueName = `examen_${props.item.specialite_designations.replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}`
+// Aperçu du sujet. La liste n'a que l'indication « fichier » : il est chargé depuis la fiche de l'examen
+const saveFile = () => {
+  let uniqueName = `examen_${(props.item.specialite_designations || '').replace(/\s+/g, '_').toLowerCase()}_${props.item.date_debut}`
 
-  ouvrirApercu(base64String, uniqueName)
+  ouvrirFichierDe(props.item, { ressource: 'Examens', champ: 'file', nom: uniqueName })
 }
 </script>
 

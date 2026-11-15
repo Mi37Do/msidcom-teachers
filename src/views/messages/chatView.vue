@@ -40,7 +40,8 @@
       </div>
     </div>
 
-    <div v-viewer class="flex-1 overflow-hidden  bg-white">
+    <!-- Photos : aperçu de l'app au toucher (useApercuFichier), pas de second visualiseur -->
+    <div class="flex-1 overflow-hidden  bg-white">
       <div ref="chatContainer" class="h-full overflow-auto">
         <div class="h-fit flex flex-col gap-2 p-3">
           <message-item v-for="(msg, index) in useMessages.messages" :key="msg.id" :message="msg" :side="index % 2" />
@@ -178,10 +179,11 @@ const loadingFalse = () => {
 // Combined mounted hook
 onMounted(async () => {
   useMessages.messages = []
-  await useMessages.getChats(useWidget.adminDiscussion)
-  console.log(useMessages.focusedChat);
-
-  await useMessages.getMessages(useWidget.adminDiscussion)
+  // Discussion et messages : indépendants, chargés en même temps
+  await Promise.all([
+    useMessages.getChats(useWidget.adminDiscussion),
+    useMessages.getMessages(useWidget.adminDiscussion),
+  ])
 
   // Add scroll event listener
   if (chatContainer.value) {

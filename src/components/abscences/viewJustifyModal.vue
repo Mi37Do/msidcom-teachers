@@ -46,7 +46,7 @@
                   </div>
                   <button type="button"
                     class="btn btn-sm pixa-btn-form btn-ghost w-fit px-4 border border-primary text-primary flex items-center gap-2"
-                    @click="handleDownload(useStudent.focusedAbscence.justification)">
+                    @click="handleDownload">
                     <eye class="w-4 fill-primary" />
                     <span>{{ t('translation.viewJustification') }}</span>
                   </button>
@@ -81,7 +81,7 @@ import { useApercuFichier } from '@/composables/useApercuFichier';
 const useWidget = useWidgetStore()
 const useStudent = useStudentStore()
 const { t } = useI18n()
-const { ouvrirApercu } = useApercuFichier()
+const { ouvrirFichierDe } = useApercuFichier()
 
 const closeModal = () => {
   useStudent.focusedAbscence = null
@@ -89,14 +89,20 @@ const closeModal = () => {
 }
 
 // Le justificatif s'ouvre en aperçu (avec un bouton pour le télécharger) à la place de cette fenêtre
-const handleDownload = (base64String) => {
+// La liste n'a que l'indication « fichier » : le justificatif est chargé depuis la fiche de l'absence
+// (absence d'un élève, ou du professeur dans son calendrier)
+const handleDownload = () => {
   const absence = useStudent.focusedAbscence
   // Nom du fichier téléchargé : type, élève (dans la fiche d'un élève) et date
   const morceaux = [absence?.type || 'justification']
   if (absence?.nom || absence?.prenom) morceaux.push(absence.nom, absence.prenom)
   if (absence?.date_heure_abs) morceaux.push(format(new Date(absence.date_heure_abs), 'dd_MM_yyyy'))
   closeModal()
-  ouvrirApercu(base64String, morceaux.filter(Boolean).join('_'))
+  ouvrirFichierDe(absence, {
+    ressource: absence?.eleve_id ? 'Abs_Retard_Eleve' : 'Abs_Retard_Prof',
+    champ: 'justification',
+    nom: morceaux.filter(Boolean).join('_'),
+  })
 }
 </script>
 

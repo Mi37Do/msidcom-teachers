@@ -170,28 +170,31 @@ const tabs = computed(() => {
 
 onMounted(async () => {
   try {
-    // Matières que le prof enseigne dans cette classe (emploi du temps)
-    const response = await axios.post(`/api/matiere_par_Prof_Classe_sql/`, {
-      class_id: route.params.id
-    })
+    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu. Une seule requête
+    // pour le niveau (avant : une requête par matière en parallèle, qui écrivaient toutes dans
+    // le même store et donnaient une liste fausse)
+    const chargerCoefficients = async () => {
+      let specialite = localStorage.getItem('specialite')
+      if (!specialite || specialite === 'null' || specialite === 'undefined') {
+        await useRoom.getClasses(route.params.id)
+        specialite = useRoom.focusedClass?.specialite
+      }
+      return specialite ? (await axios.get('/api/Matiere_spec/', { params: { specialite } })).data : []
+    }
+
+    // Matières que le prof enseigne dans cette classe (emploi du temps), coefficients du niveau et
+    // élèves : indépendants, chargés en même temps plutôt que l'un après l'autre
+    const [response, coefficients] = await Promise.all([
+      axios.post(`/api/matiere_par_Prof_Classe_sql/`, { class_id: route.params.id }),
+      chargerCoefficients(),
+      useStudent.getStudents(null, route.params.id),
+    ])
     const matieresDeLaClasse = new Set((response.data.Matiere ?? []).map((m) => m.matiere_id))
     const matieresDuProf = new Set(
       (useWidget.authUser.userDetail?.matieres?.matiere ?? []).map((m) => m.id),
     )
 
-    // Niveau de la classe : mémorisé à l'ouverture de la classe, sinon relu
-    let specialite = localStorage.getItem('specialite')
-    if (!specialite || specialite === 'null' || specialite === 'undefined') {
-      await useRoom.getClasses(route.params.id)
-      specialite = useRoom.focusedClass?.specialite
-    }
-
-    // Une seule requête pour le niveau (avant : une requête par matière en parallèle, qui
-    // écrivaient toutes dans le même store et donnaient une liste fausse)
-    const responseSpec = specialite
-      ? await axios.get('/api/Matiere_spec/', { params: { specialite } })
-      : { data: [] }
-    tempSpecialite.value = responseSpec.data
+    tempSpecialite.value = coefficients
       .filter((spec) => matieresDeLaClasse.has(spec.matiere) && matieresDuProf.has(spec.matiere))
       .map((item) => ({
         id: item.id,
@@ -203,7 +206,6 @@ onMounted(async () => {
 
     selectedSpecialite.value = tempSpecialite.value[0]?.id ?? null
 
-    await useStudent.getStudents(null, route.params.id)
     if (selectedSpecialite.value) {
       await loadNotes(selectedSpecialite.value)
     }

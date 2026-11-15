@@ -33,8 +33,11 @@
 
               <div class="flex items-center gap-3 w-full mt-1.5">
 
-                <div class="w-11 h-11 bg-[#F5F5F5] p-0.5 rounded-lg overflow-hidden">
+                <!-- Initiales du parent : la liste des convocations ne charge plus les photos -->
+                <div class="w-11 h-11 bg-[#F5F5F5] p-0.5 rounded-lg overflow-hidden flex items-center justify-center">
                   <img v-if="item.parent_image" :src="item.parent_image" alt="" class="object-cover">
+                  <span v-else class="uppercase font-semibold">{{ item.parent_first_name?.[0] }}{{
+                    item.parent_last_name?.[0] }}</span>
                 </div>
 
                 <span class="text-[18px]">{{ item.parent_first_name }} {{
