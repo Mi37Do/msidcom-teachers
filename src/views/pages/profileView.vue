@@ -117,8 +117,18 @@ const useSubject = useSubjectStore()
 const { fcmToken } = useFirebaseMessaging();
 const { t } = useI18n()
 const loading = ref(true)
-// Matières de l'enseignant (liste vide si le profil n'en a pas)
-const matieresProf = computed(() => useWidget.authUser.userDetail?.matieres?.matiere ?? [])
+// Matières de l'enseignant (liste vide si le profil n'en a pas), sans doublon : une école
+// peut avoir la même matière saisie deux fois avec une casse différente (« Anglais » et
+// « anglais »), et le prof lié aux deux la voyait affichée deux fois
+const matieresProf = computed(() => {
+  const dejaVues = new Set()
+  return (useWidget.authUser.userDetail?.matieres?.matiere ?? []).filter((m) => {
+    const nom = (m?.designation ?? '').trim().toLowerCase()
+    if (!nom || dejaVues.has(nom)) return false
+    dejaVues.add(nom)
+    return true
+  })
+})
 
 onMounted(() => {
   loading.value = false
