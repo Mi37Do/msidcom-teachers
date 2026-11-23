@@ -189,13 +189,13 @@ onMounted(async () => {
       chargerCoefficients(),
       useStudent.getStudents(null, route.params.id),
     ])
+    // Matières que le prof enseigne dans cette classe : elles viennent de l'emploi du temps. Les
+    // matières de sa fiche ne sont qu'une indication pour filtrer les profs à la création d'une
+    // séance : les exiger en plus cachait des matières enseignées dans la saisie des notes
     const matieresDeLaClasse = new Set((response.data.Matiere ?? []).map((m) => m.matiere_id))
-    const matieresDuProf = new Set(
-      (useWidget.authUser.userDetail?.matieres?.matiere ?? []).map((m) => m.id),
-    )
 
     tempSpecialite.value = coefficients
-      .filter((spec) => matieresDeLaClasse.has(spec.matiere) && matieresDuProf.has(spec.matiere))
+      .filter((spec) => matieresDeLaClasse.has(spec.matiere))
       .map((item) => ({
         id: item.id,
         designation: item.matiere_designations,
