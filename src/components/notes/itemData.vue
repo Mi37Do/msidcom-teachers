@@ -3,7 +3,7 @@
     class="w-full py-2 h-12 border-b border-border-color hover:bg-slate-50 px-3 grid gap-1.5 grid-cols-2">
     <span class="my-auto truncate flex items-center gap-3">
       <span class="font-medium">
-        {{ item.prenom }} {{ item.nom }}</span>
+        {{ item.nom }} {{ item.prenom }}</span>
     </span>
     <span class="my-auto truncate flex items-center gap-3 w-full justify-between">
       <!-- Une note de 0 est une vraie note : seule une note absente s'affiche N/A -->
